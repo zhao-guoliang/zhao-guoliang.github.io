@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>linux-进程间通信 | Hexo</title>
+  <title>使用SIGCHILD信号回收子进程空间 | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="linux-进程间通信 | Hexo">
+  <meta name="description" content="使用SIGCHILD信号回收子进程空间 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Oops～，我崩溃了！找不到你想要的页面 :(">
 <meta property="og:type" content="website">
@@ -567,19 +567,27 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-linux-进程间通信" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-linux-使用SIGCHILD信号回收子进程空间" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">linux-进程间通信</h1>
+        <h1 class="article-title">使用SIGCHILD信号回收子进程空间</h1>
     
     <div class="article-meta">
         
         
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Linux">Linux</a>
+            
+        </span>
         
         
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-08-10 15:19:29'>2024-08-10 15:19</time>
+            Created At : <time class="date" title='Updated At: 2024-08-13 19:43:33'>2024-08-13 19:43</time>
         
     </div>
     <div class="article-meta">
@@ -601,7 +609,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%94%B9%E8%BF%9B"><span class="toc-text">关键改进</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -617,7 +625,115 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+        <pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;csignal&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+
+void sigchld_handler(int signum) &#123;
+    // 保存和恢复 errno，防止在信号处理程序中改变 errno 导致其他代码出现意外行为
+    int saved_errno = errno;
+
+    // 使用循环等待所有已终止的子进程
+    while (true) &#123;
+        pid_t pid = waitpid(-1, nullptr, WNOHANG);
         
+        if (pid &gt; 0) &#123;
+            // 子进程成功终止，进行处理
+            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; pid &lt;&lt; &quot; terminated.&quot; &lt;&lt; std::endl;
+        &#125; else if (pid == 0) &#123;
+            // 没有已终止的子进程
+            break;
+        &#125; else &#123;
+            // 发生错误，检查错误类型
+            if (errno == ECHILD) &#123;
+                // 没有更多的子进程
+                break;
+            &#125; else if (errno == EINTR) &#123;
+                // 调用被中断，继续循环处理
+                continue;
+            &#125; else &#123;
+                // 其他错误，打印错误信息
+                perror(&quot;waitpid&quot;);
+                break;
+            &#125;
+        &#125;
+    &#125;
+
+    // 恢复 errno
+    errno = saved_errno;
+&#125;
+
+int main() &#123;
+    // 设置 SIGCHLD 信号处理函数
+    struct sigaction sa;
+    sa.sa_handler = sigchld_handler;
+    sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
+    sigemptyset(&amp;sa.sa_mask);
+
+    if (sigaction(SIGCHLD, &amp;sa, nullptr) == -1) &#123;
+        perror(&quot;sigaction&quot;);
+        return 1;
+    &#125;
+
+    const int NUM_CHILDREN = 5; // 要创建的子进程数量
+
+    for (int i = 0; i &lt; NUM_CHILDREN; ++i) &#123;
+        pid_t pid = fork();
+
+        if (pid == -1) &#123;
+            // fork 失败
+            perror(&quot;fork&quot;);
+            return 1;
+        &#125; else if (pid == 0) &#123;
+            // 子进程
+            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; getpid() &lt;&lt; &quot; started.&quot; &lt;&lt; std::endl;
+            sleep(2); // 模拟子进程执行一些工作
+            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; getpid() &lt;&lt; &quot; exiting.&quot; &lt;&lt; std::endl;
+            return 0;
+        &#125; else &#123;
+            // 父进程
+            std::cout &lt;&lt; &quot;Parent created child process &quot; &lt;&lt; pid &lt;&lt; std::endl;
+        &#125;
+    &#125;
+
+    // 父进程持续运行，等待所有子进程终止
+    while (true) &#123;
+        pause(); // 暂停父进程，等待信号到来
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<h3 id="关键改进"><a href="#关键改进" class="headerlink" title="关键改进"></a>关键改进</h3><ol>
+<li><p><strong>保存和恢复 <code>errno</code></strong>:</p>
+<ul>
+<li>在信号处理函数中，可能会改变全局的 <code>errno</code> 变量。为了防止干扰到其他代码，首先保存 <code>errno</code>，并在信号处理函数结束时恢复它的原始值。</li>
+</ul>
+</li>
+<li><p><strong>更细致的 <code>waitpid</code> 错误处理</strong>:</p>
+<ul>
+<li><code>waitpid</code> 可能返回 -1 表示出错，因此我们检查 <code>errno</code> 来确定错误类型。<ul>
+<li>如果 <code>errno == ECHILD</code>，表示没有更多的子进程，此时可以退出循环。</li>
+<li>如果 <code>errno == EINTR</code>，表示系统调用被中断，应继续循环，以确保没有遗漏的子进程。</li>
+<li>其他任何错误都通过 <code>perror</code> 打印出来，以便调试。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>防止信号丢失和信号竞争条件</strong>:</p>
+<ul>
+<li>即使多个子进程在非常短的时间内几乎同时终止，这种循环也能够正确处理所有的终止事件，避免丢失任何信号。</li>
+</ul>
+</li>
+<li><p><strong>信号掩码</strong>:</p>
+<ul>
+<li>使用 <code>sigemptyset(&amp;sa.sa_mask)</code> 清空信号掩码，确保在处理 <code>SIGCHLD</code> 信号时，不会阻塞其他信号的到来。</li>
+</ul>
+</li>
+</ol>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>通过这些改进，<code>sigchld_handler</code> 函数变得更加健壮，能够更好地处理各种边界情况和错误情况，从而确保父进程能够正确清理所有已终止的子进程，避免僵尸进程的产生。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
