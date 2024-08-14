@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>tags | Hexo</title>
+  <title>linux-慢速系统调用被信号中断 | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="tags | Hexo">
+  <meta name="description" content="linux-慢速系统调用被信号中断 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Oops～，我崩溃了！找不到你想要的页面 :(">
 <meta property="og:type" content="website">
@@ -585,19 +585,27 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="tags-" class="article article-type-tags" itemscope itemprop="blogPost">
+        <article id="post-linux-慢速系统调用被信号中断" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">tags</h1>
+        <h1 class="article-title">linux-慢速系统调用被信号中断</h1>
     
     <div class="article-meta">
         
         
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Linux">Linux</a>
+            
+        </span>
         
         
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-07-26 10:54:42'>2018-09-30 18:23</time>
+            Created At : <time class="date" title='Updated At: 2024-08-13 23:09:32'>2024-08-13 20:04</time>
         
     </div>
     <div class="article-meta">
@@ -619,7 +627,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%87%AA%E5%8A%A8%E9%87%8D%E6%96%B0%E5%90%AF%E5%8A%A8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">1. 自动重新启动系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%8B%E5%8A%A8%E5%A4%84%E7%90%86-EINTR-%E9%94%99%E8%AF%AF"><span class="toc-text">2. 手动处理 EINTR 错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E9%9D%9E%E9%98%BB%E5%A1%9E-I-O"><span class="toc-text">3. 使用非阻塞 I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -635,7 +643,60 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>慢速系统调用（如 <code>read</code>、<code>write</code>、<code>accept</code>、<code>recv</code>、<code>sleep</code> 等）在某些情况下会被信号中断。当这些系统调用在等待某个事件（例如等待输入&#x2F;输出或计时器到期）时，如果接收到一个信号，并且信号处理程序执行完毕后系统调用未完成，系统调用会返回一个错误，并且 <code>errno</code> 会被设置为 <code>EINTR</code>（表示系统调用被中断）。处理这些情况的方式有几种，具体取决于应用程序的需求。</p>
+<h3 id="1-自动重新启动系统调用"><a href="#1-自动重新启动系统调用" class="headerlink" title="1. 自动重新启动系统调用"></a>1. <strong>自动重新启动系统调用</strong></h3><p>   使用 <code>sigaction</code> 设置信号处理函数时，可以指定 <code>SA_RESTART</code> 标志，这会自动重新启动那些可以重新启动的慢速系统调用。当系统调用被信号中断后，内核会在信号处理程序返回后自动重启该系统调用。</p>
+<pre><code class="cpp">struct sigaction sa;
+sa.sa_handler = signal_handler;
+sa.sa_flags = SA_RESTART; // 自动重新启动系统调用
+sigemptyset(&amp;sa.sa_mask);
+if (sigaction(SIGINT, &amp;sa, nullptr) == -1) &#123;
+    perror(&quot;sigaction&quot;);
+    return 1;
+&#125;
+</code></pre>
+<p>   <strong>注意</strong>: 并非所有系统调用都能被自动重启，只有那些被标记为“可以重启”的系统调用（例如 <code>read</code>、<code>write</code> 等）才会自动重新启动。</p>
+<h3 id="2-手动处理-EINTR-错误"><a href="#2-手动处理-EINTR-错误" class="headerlink" title="2. 手动处理 EINTR 错误"></a>2. <strong>手动处理 <code>EINTR</code> 错误</strong></h3><p>   在某些情况下，应用程序可能希望在系统调用被中断后，决定是否重新执行系统调用。为此，你可以手动检查 <code>errno</code> 是否等于 <code>EINTR</code>，并在必要时重新执行该系统调用。</p>
+<p>   这里是一个手动处理 <code>EINTR</code> 错误的示例：</p>
+<pre><code class="cpp">ssize_t read_data(int fd, void *buf, size_t count) &#123;
+    ssize_t result;
+    while (true) &#123;
+        result = read(fd, buf, count);
+        if (result == -1) &#123;
+            if (errno == EINTR) &#123;
+                // 系统调用被信号中断，重试
+                continue;
+            &#125; else &#123;
+                // 其他错误，处理或返回
+                perror(&quot;read&quot;);
+                break;
+            &#125;
+        &#125;
+        break; // 成功读取或遇到不可恢复的错误，退出循环
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<p>   <strong>这种方法的优点</strong>是你可以在每次中断后决定是否要重新尝试调用。某些情况下，应用程序可能不希望自动重试，例如希望捕获到中断并做一些特殊的处理。</p>
+<h3 id="3-使用非阻塞-I-O"><a href="#3-使用非阻塞-I-O" class="headerlink" title="3. 使用非阻塞 I&#x2F;O"></a>3. <strong>使用非阻塞 I&#x2F;O</strong></h3><p>   在某些场景下，你可以通过将文件描述符设置为非阻塞模式来避免因信号中断而阻塞的系统调用。这样，即使系统调用被信号中断，它也不会导致整个程序阻塞。你可以使用 <code>fcntl</code> 设置文件描述符为非阻塞模式：</p>
+<pre><code class="cpp">int flags = fcntl(fd, F_GETFL, 0);
+if (flags == -1) &#123;
+    perror(&quot;fcntl&quot;);
+    return -1;
+&#125;
+
+if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) &#123;
+    perror(&quot;fcntl&quot;);
+    return -1;
+&#125;
+</code></pre>
+<p>   <strong>非阻塞 I&#x2F;O 的缺点</strong>是它可能需要更多的代码来处理部分完成的 I&#x2F;O 操作，并且需要反复检查操作的完成状态。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li><strong>自动重新启动系统调用</strong>：使用 <code>SA_RESTART</code> 标志，适合那些希望系统调用自动恢复的场景。</li>
+<li><strong>手动处理 <code>EINTR</code> 错误</strong>：提供更大的灵活性，适合需要对中断做特殊处理的应用。</li>
+<li><strong>使用非阻塞 I&#x2F;O</strong>：避免阻塞的系统调用，并使程序能够在 I&#x2F;O 操作期间做其他事情。</li>
+</ul>
+<p>选择哪种方法取决于你的应用需求以及希望如何处理信号中断的场景。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>

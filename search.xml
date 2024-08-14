@@ -4,7 +4,45 @@
   
     
     <entry>
-      <title>使用SIGCHILD信号回收子进程空间</title>
+      <title>return和exit</title>
+      <link href="/2024/08/14/linux-return-he-exit/"/>
+      <url>/2024/08/14/linux-return-he-exit/</url>
+      
+        <content type="html"><![CDATA[<p>在Linux多线程开发中，<code>return</code> 和 <code>exit()</code> 的作用有所不同，特别是在处理线程和进程的退出时：</p><ol><li><p><strong><code>return</code></strong>:</p><ul><li><strong>在主线程中使用</strong>：如果你在主线程（即<code>main</code>函数）中使用<code>return</code>，它会导致整个程序终止，所有的线程都会结束。<code>main</code>函数的<code>return</code>值会作为进程的退出状态码。</li><li><strong>在子线程中使用</strong>：如果你在子线程中使用<code>return</code>，仅仅是退出当前线程，而不会影响其他线程或整个进程。当前线程的退出状态码会被传递给<code>pthread_join()</code>，如果其他线程调用了这个函数。</li></ul></li><li><p><strong><code>exit()</code></strong>:</p><ul><li><code>exit()</code> 是一个进程级别的退出函数。无论在主线程还是子线程中调用<code>exit()</code>，它都会终止整个进程，所有的线程都会立即被终止。进程的退出状态码会由<code>exit()</code>的参数指定。</li></ul></li><li><p><strong>总结</strong>:</p><ul><li>使用<code>return</code>可以退出当前线程，而不会影响其他线程或整个进程（在子线程中）。</li><li>使用<code>exit()</code>会强制退出整个进程，包括所有线程，因此应谨慎使用，通常只在主线程中调用。</li></ul></li></ol><p>如果你需要在子线程中退出，而不影响其他线程或进程，可以使用<code>pthread_exit()</code>来替代<code>return</code>或<code>exit()</code>。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>linux-慢速系统调用被信号中断</title>
+      <link href="/2024/08/13/linux-man-su-xi-tong-diao-yong-bei-xin-hao-zhong-duan/"/>
+      <url>/2024/08/13/linux-man-su-xi-tong-diao-yong-bei-xin-hao-zhong-duan/</url>
+      
+        <content type="html"><![CDATA[<p>慢速系统调用（如 <code>read</code>、<code>write</code>、<code>accept</code>、<code>recv</code>、<code>sleep</code> 等）在某些情况下会被信号中断。当这些系统调用在等待某个事件（例如等待输入&#x2F;输出或计时器到期）时，如果接收到一个信号，并且信号处理程序执行完毕后系统调用未完成，系统调用会返回一个错误，并且 <code>errno</code> 会被设置为 <code>EINTR</code>（表示系统调用被中断）。处理这些情况的方式有几种，具体取决于应用程序的需求。</p><h3 id="1-自动重新启动系统调用"><a href="#1-自动重新启动系统调用" class="headerlink" title="1. 自动重新启动系统调用"></a>1. <strong>自动重新启动系统调用</strong></h3><p>   使用 <code>sigaction</code> 设置信号处理函数时，可以指定 <code>SA_RESTART</code> 标志，这会自动重新启动那些可以重新启动的慢速系统调用。当系统调用被信号中断后，内核会在信号处理程序返回后自动重启该系统调用。</p><pre><code class="cpp">struct sigaction sa;sa.sa_handler = signal_handler;sa.sa_flags = SA_RESTART; // 自动重新启动系统调用sigemptyset(&amp;sa.sa_mask);if (sigaction(SIGINT, &amp;sa, nullptr) == -1) &#123;    perror(&quot;sigaction&quot;);    return 1;&#125;</code></pre><p>   <strong>注意</strong>: 并非所有系统调用都能被自动重启，只有那些被标记为“可以重启”的系统调用（例如 <code>read</code>、<code>write</code> 等）才会自动重新启动。</p><h3 id="2-手动处理-EINTR-错误"><a href="#2-手动处理-EINTR-错误" class="headerlink" title="2. 手动处理 EINTR 错误"></a>2. <strong>手动处理 <code>EINTR</code> 错误</strong></h3><p>   在某些情况下，应用程序可能希望在系统调用被中断后，决定是否重新执行系统调用。为此，你可以手动检查 <code>errno</code> 是否等于 <code>EINTR</code>，并在必要时重新执行该系统调用。</p><p>   这里是一个手动处理 <code>EINTR</code> 错误的示例：</p><pre><code class="cpp">ssize_t read_data(int fd, void *buf, size_t count) &#123;    ssize_t result;    while (true) &#123;        result = read(fd, buf, count);        if (result == -1) &#123;            if (errno == EINTR) &#123;                // 系统调用被信号中断，重试                continue;            &#125; else &#123;                // 其他错误，处理或返回                perror(&quot;read&quot;);                break;            &#125;        &#125;        break; // 成功读取或遇到不可恢复的错误，退出循环    &#125;    return result;&#125;</code></pre><p>   <strong>这种方法的优点</strong>是你可以在每次中断后决定是否要重新尝试调用。某些情况下，应用程序可能不希望自动重试，例如希望捕获到中断并做一些特殊的处理。</p><h3 id="3-使用非阻塞-I-O"><a href="#3-使用非阻塞-I-O" class="headerlink" title="3. 使用非阻塞 I&#x2F;O"></a>3. <strong>使用非阻塞 I&#x2F;O</strong></h3><p>   在某些场景下，你可以通过将文件描述符设置为非阻塞模式来避免因信号中断而阻塞的系统调用。这样，即使系统调用被信号中断，它也不会导致整个程序阻塞。你可以使用 <code>fcntl</code> 设置文件描述符为非阻塞模式：</p><pre><code class="cpp">int flags = fcntl(fd, F_GETFL, 0);if (flags == -1) &#123;    perror(&quot;fcntl&quot;);    return -1;&#125;if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) &#123;    perror(&quot;fcntl&quot;);    return -1;&#125;</code></pre><p>   <strong>非阻塞 I&#x2F;O 的缺点</strong>是它可能需要更多的代码来处理部分完成的 I&#x2F;O 操作，并且需要反复检查操作的完成状态。</p><h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul><li><strong>自动重新启动系统调用</strong>：使用 <code>SA_RESTART</code> 标志，适合那些希望系统调用自动恢复的场景。</li><li><strong>手动处理 <code>EINTR</code> 错误</strong>：提供更大的灵活性，适合需要对中断做特殊处理的应用。</li><li><strong>使用非阻塞 I&#x2F;O</strong>：避免阻塞的系统调用，并使程序能够在 I&#x2F;O 操作期间做其他事情。</li></ul><p>选择哪种方法取决于你的应用需求以及希望如何处理信号中断的场景。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>使用SIGCHLD信号回收子进程空间</title>
       <link href="/2024/08/13/linux-shi-yong-sigchild-xin-hao-hui-shou-zi-jin-cheng-kong-jian/"/>
       <url>/2024/08/13/linux-shi-yong-sigchild-xin-hao-hui-shou-zi-jin-cheng-kong-jian/</url>
       

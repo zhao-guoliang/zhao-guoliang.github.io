@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>tags | Hexo</title>
+  <title>return和exit | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="tags | Hexo">
+  <meta name="description" content="return和exit | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Oops～，我崩溃了！找不到你想要的页面 :(">
 <meta property="og:type" content="website">
@@ -585,19 +585,27 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="tags-" class="article article-type-tags" itemscope itemprop="blogPost">
+        <article id="post-linux-return和exit" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">tags</h1>
+        <h1 class="article-title">return和exit</h1>
     
     <div class="article-meta">
         
         
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Linux">Linux</a>
+            
+        </span>
         
         
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-07-26 10:54:42'>2018-09-30 18:23</time>
+            Created At : <time class="date" title='Updated At: 2024-08-14 10:00:57'>2024-08-14 10:00</time>
         
     </div>
     <div class="article-meta">
@@ -635,7 +643,28 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>在Linux多线程开发中，<code>return</code> 和 <code>exit()</code> 的作用有所不同，特别是在处理线程和进程的退出时：</p>
+<ol>
+<li><p><strong><code>return</code></strong>:</p>
+<ul>
+<li><strong>在主线程中使用</strong>：如果你在主线程（即<code>main</code>函数）中使用<code>return</code>，它会导致整个程序终止，所有的线程都会结束。<code>main</code>函数的<code>return</code>值会作为进程的退出状态码。</li>
+<li><strong>在子线程中使用</strong>：如果你在子线程中使用<code>return</code>，仅仅是退出当前线程，而不会影响其他线程或整个进程。当前线程的退出状态码会被传递给<code>pthread_join()</code>，如果其他线程调用了这个函数。</li>
+</ul>
+</li>
+<li><p><strong><code>exit()</code></strong>:</p>
+<ul>
+<li><code>exit()</code> 是一个进程级别的退出函数。无论在主线程还是子线程中调用<code>exit()</code>，它都会终止整个进程，所有的线程都会立即被终止。进程的退出状态码会由<code>exit()</code>的参数指定。</li>
+</ul>
+</li>
+<li><p><strong>总结</strong>:</p>
+<ul>
+<li>使用<code>return</code>可以退出当前线程，而不会影响其他线程或整个进程（在子线程中）。</li>
+<li>使用<code>exit()</code>会强制退出整个进程，包括所有线程，因此应谨慎使用，通常只在主线程中调用。</li>
+</ul>
+</li>
+</ol>
+<p>如果你需要在子线程中退出，而不影响其他线程或进程，可以使用<code>pthread_exit()</code>来替代<code>return</code>或<code>exit()</code>。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
