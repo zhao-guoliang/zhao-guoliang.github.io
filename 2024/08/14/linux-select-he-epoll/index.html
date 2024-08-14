@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Linux配置环境变量 | Hexo</title>
+  <title>linux-select和epoll | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="Linux配置环境变量 | Hexo">
+  <meta name="description" content="linux-select和epoll | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Oops～，我崩溃了！找不到你想要的页面 :(">
 <meta property="og:type" content="website">
@@ -594,9 +594,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-Linux配置环境变量" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-linux-select和epoll" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Linux配置环境变量</h1>
+        <h1 class="article-title">linux-select和epoll</h1>
     
     <div class="article-meta">
         
@@ -606,7 +606,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-07-26 21:03:46'>2024-07-26 20:05</time>
+            Created At : <time class="date" title='Updated At: 2024-08-14 21:14:48'>2024-08-14 21:09</time>
         
     </div>
     <div class="article-meta">
@@ -628,7 +628,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-text">2. 函数原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">3. 使用步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">4. 简单示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">6. 优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-1"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">2. 函数原型与使用步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-epoll-create"><span class="toc-text">2.1 epoll_create</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-epoll-ctl"><span class="toc-text">2.2 epoll_ctl</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-epoll-wait"><span class="toc-text">2.3 epoll_wait</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-text">3. 工作模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-epoll-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">4. epoll 的优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-text">6. 示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-epoll-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-text">7. epoll 的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -644,25 +644,304 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>当你在终端中输入 <code>echo $PATH</code> 并按回车，你会看到一系列由冒号分隔的目录路径。<code>$PATH</code> 是一个环境变量，它告诉你的系统在哪里查找可执行命令。每当你在终端输入一个命令，系统就会在 <code>$PATH</code> 变量列出的目录中搜索对应的可执行文件。</p>
-<p><code>$PATH</code> 变量的值通常包括以下目录：</p>
-<ul>
-<li><code>/usr/local/bin</code>: 用户安装的本地应用程序的可执行文件。</li>
-<li><code>/usr/bin</code>: 系统提供的标准应用程序。</li>
-<li><code>/bin</code>: 基础的系统命令。</li>
-<li><code>/usr/sbin</code>: 系统管理员使用的系统命令。</li>
-<li><code>/sbin</code>: 基础的系统管理命令。</li>
-<li><code>~/bin</code>: 用户个人的可执行文件目录。</li>
-<li><code>/usr/local/sbin</code>: 类似于 <code>/usr/local/bin</code>，但用于系统管理命令。</li>
+        <p><code>select</code> 是一种用于多路复用 I&#x2F;O 操作的系统调用，在处理多个文件描述符时非常有用。它允许程序在等待多个文件描述符的状态变化时阻塞，从而在网络编程和并发 I&#x2F;O 操作中广泛应用。</p>
+<h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. <strong>基本概念</strong></h3><ul>
+<li><strong>多路复用 I&#x2F;O</strong>: 在网络编程中，通常需要同时处理多个 I&#x2F;O 操作，如监视多个套接字的状态。<code>select</code> 允许程序同时等待多个文件描述符的状态变化，如读、写或异常情况，而不必为每个文件描述符创建一个线程。</li>
+<li><strong>文件描述符（File Descriptor）</strong>: 在UNIX&#x2F;Linux系统中，文件描述符是一个整数，表示打开的文件、套接字或其他I&#x2F;O资源。</li>
 </ul>
-<p>例如，<code>$PATH</code> 的输出可能类似于：</p>
-<p><strong>&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;bin:&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;sbin:~&#x2F;bin</strong></p>
-<p>这意味着当你在终端中输入 <code>ls</code>、<code>cd</code> 或任何其他命令时，系统会在这些目录中查找匹配的可执行文件。</p>
-<p>你可以通过以下步骤将 &#x2F;usr&#x2F;local&#x2F;lib 添加到 PATH 环境变量中：<br>打开终端。<br>使用以下命令将 &#x2F;usr&#x2F;local&#x2F;lib 添加到当前会话的 PATH 环境变量：<br><code>export PATH=$PATH:/usr/local/lib</code><br>这只会在当前终端会话中生效。如果你关闭终端，设置将会丢失。</p>
-<p>如果你希望永久性地将 &#x2F;usr&#x2F;local&#x2F;lib 添加到 PATH 环境变量中，你需要将上述命令添加到你的 shell 配置文件中。具体步骤如下：<br>对于 bash，编辑 ~&#x2F;.bashrc 文件：<br><code>echo &#39;export PATH=$PATH:/usr/local/lib&#39; &gt;&gt; ~/.bashrc</code></p>
-<p>使配置文件生效：</p>
-<p><code>source ~/.bashrc</code></p>
-<p>这样，&#x2F;usr&#x2F;local&#x2F;lib 将被永久添加到 PATH 环境变量中，并在你每次打开新的终端会话时生效。</p>
+<h3 id="2-函数原型"><a href="#2-函数原型" class="headerlink" title="2. 函数原型"></a>2. <strong>函数原型</strong></h3><pre><code class="c">#include &lt;sys/select.h&gt;
+#include &lt;sys/time.h&gt;
+#include &lt;unistd.h&gt;
+
+int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+</code></pre>
+<ul>
+<li><p><code>nfds</code>: 需要监视的文件描述符的数量。通常设置为所有文件描述符中最大值加1。</p>
+</li>
+<li><p><code>readfds</code>: 指向 <code>fd_set</code> 结构体的指针，用于监视可读的文件描述符集合。</p>
+</li>
+<li><p><code>writefds</code>: 指向 <code>fd_set</code> 结构体的指针，用于监视可写的文件描述符集合。</p>
+</li>
+<li><p><code>exceptfds</code>: 指向 <code>fd_set</code> 结构体的指针，用于监视异常状态的文件描述符集合。</p>
+</li>
+<li><p><code>timeout</code>: 指向 <code>timeval</code> 结构体的指针，表示等待的超时时间。如果 <code>timeout</code> 为 <code>NULL</code>，则 <code>select</code> 会无限期地阻塞直到有文件描述符发生变化。</p>
+</li>
+<li><p><strong>返回值</strong>:</p>
+<ul>
+<li>成功时，返回值为文件描述符集合中发生变化的文件描述符数量。</li>
+<li>如果超时返回，返回值为 0。</li>
+<li>如果出错，返回值为 -1，且 <code>errno</code> 被设置为适当的错误代码。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-使用步骤"><a href="#3-使用步骤" class="headerlink" title="3. 使用步骤"></a>3. <strong>使用步骤</strong></h3><ol>
+<li><strong>设置文件描述符集</strong>: 使用 <code>FD_ZERO</code> 清空文件描述符集，然后使用 <code>FD_SET</code> 将需要监视的文件描述符加入集合中。</li>
+<li><strong>调用 <code>select</code></strong>: 传递文件描述符集合，<code>select</code> 将阻塞直到至少一个文件描述符的状态发生变化，或超时时间到。</li>
+<li><strong>检查结果</strong>: 使用 <code>FD_ISSET</code> 检查哪些文件描述符发生了状态变化，然后处理相应的 I&#x2F;O 操作。</li>
+<li><strong>处理超时</strong>: 如果 <code>select</code> 返回 0，表示已超时，可以根据应用需要处理这个情况。</li>
+</ol>
+<h3 id="4-简单示例"><a href="#4-简单示例" class="headerlink" title="4. 简单示例"></a>4. <strong>简单示例</strong></h3><p>   下面是一个简单的例子，演示如何使用 <code>select</code> 监视标准输入和一个套接字的可读性：</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;sys/select.h&gt;
+#include &lt;sys/time.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() &#123;
+    fd_set readfds;
+    struct timeval timeout;
+    int retval;
+
+    FD_ZERO(&amp;readfds);  // 清空文件描述符集
+    FD_SET(STDIN_FILENO, &amp;readfds);  // 监视标准输入
+
+    timeout.tv_sec = 5;  // 超时等待5秒
+    timeout.tv_usec = 0;
+
+    retval = select(STDIN_FILENO + 1, &amp;readfds, NULL, NULL, &amp;timeout);
+
+    if (retval == -1) &#123;
+        perror(&quot;select()&quot;);
+    &#125; else if (retval) &#123;
+        printf(&quot;Data is available now.\n&quot;);
+        if (FD_ISSET(STDIN_FILENO, &amp;readfds)) &#123;
+            char buffer[100];
+            read(STDIN_FILENO, buffer, sizeof(buffer));
+            printf(&quot;Input: %s\n&quot;, buffer);
+        &#125;
+    &#125; else &#123;
+        printf(&quot;No data within five seconds.\n&quot;);
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<h3 id="5-常见应用场景"><a href="#5-常见应用场景" class="headerlink" title="5. 常见应用场景"></a>5. <strong>常见应用场景</strong></h3><ul>
+<li><strong>网络服务器</strong>: 在服务器端同时处理多个客户端连接时，<code>select</code> 可以用于监视多个客户端套接字的读写状态。</li>
+<li><strong>并发 I&#x2F;O</strong>: 在不使用多线程或多进程的情况下，<code>select</code> 可以帮助处理多个 I&#x2F;O 设备，如文件、套接字或管道。</li>
+<li><strong>超时控制</strong>: <code>select</code> 允许程序在等待 I&#x2F;O 操作时设置超时，以避免长时间阻塞。</li>
+</ul>
+<h3 id="6-优缺点"><a href="#6-优缺点" class="headerlink" title="6. 优缺点"></a>6. <strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>:<ul>
+<li>简单易用，跨平台支持良好。</li>
+<li>无需创建大量线程或进程，节省资源。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>:<ul>
+<li><code>select</code> 的性能在大量文件描述符（通常超过1024个）时会显著下降。</li>
+<li>每次调用 <code>select</code> 都需要重新设置文件描述符集合，效率较低。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>select</code> 是一个在网络编程和并发 I&#x2F;O 中广泛使用的系统调用，通过监视多个文件描述符的状态变化来实现 I&#x2F;O 多路复用。虽然 <code>select</code> 在处理少量文件描述符时表现良好，但在处理大量文件描述符时性能较差，因此在现代应用中，<code>poll</code> 和 <code>epoll</code> 等替代方案可能更合适。</p>
+<p><code>epoll</code> 是 Linux 内核提供的一种高效的 I&#x2F;O 多路复用机制，相比于传统的 <code>select</code> 和 <code>poll</code>，<code>epoll</code> 能够更高效地处理大量并发连接，尤其是在处理大规模网络服务时表现出色。</p>
+<h3 id="1-基本概念-1"><a href="#1-基本概念-1" class="headerlink" title="1. 基本概念"></a>1. <strong>基本概念</strong></h3><ul>
+<li><strong>I&#x2F;O 多路复用</strong>: 允许程序同时监视多个文件描述符的 I&#x2F;O 事件，并在任一文件描述符就绪时进行相应的处理。这种机制在网络服务器、事件驱动的应用程序中广泛使用。</li>
+<li><strong>epoll</strong>: <code>epoll</code> 是 Linux 提供的 I&#x2F;O 多路复用接口，具有高效的事件通知机制，通过减少内核与用户空间的切换次数以及优化数据结构来提升性能。</li>
+</ul>
+<h3 id="2-函数原型与使用步骤"><a href="#2-函数原型与使用步骤" class="headerlink" title="2. 函数原型与使用步骤"></a>2. <strong>函数原型与使用步骤</strong></h3><p>   <code>epoll</code> 主要包括三个系统调用：<code>epoll_create</code>、<code>epoll_ctl</code> 和 <code>epoll_wait</code>。</p>
+<h4 id="2-1-epoll-create"><a href="#2-1-epoll-create" class="headerlink" title="2.1 epoll_create"></a>2.1 <strong>epoll_create</strong></h4><pre><code class="c">int epoll_create(int size);
+</code></pre>
+<ul>
+<li><strong>参数</strong>:<ul>
+<li><code>size</code>: 在 Linux 2.6.8 之前，此参数用于建议内核初始分配的空间大小。现在已被忽略，但必须大于零。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>:<ul>
+<li>成功时返回 <code>epoll</code> 实例的文件描述符。</li>
+<li>失败时返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+</li>
+<li><strong>说明</strong>: <code>epoll_create</code> 用于创建一个 <code>epoll</code> 实例，该实例用于管理将要监视的文件描述符集合。</li>
+</ul>
+<p>   <strong>示例</strong>:</p>
+<pre><code class="c">int epfd = epoll_create(1);
+if (epfd == -1) &#123;
+    perror(&quot;epoll_create&quot;);
+    exit(EXIT_FAILURE);
+&#125;
+</code></pre>
+<h4 id="2-2-epoll-ctl"><a href="#2-2-epoll-ctl" class="headerlink" title="2.2 epoll_ctl"></a>2.2 <strong>epoll_ctl</strong></h4><pre><code class="c">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+</code></pre>
+<ul>
+<li><strong>参数</strong>:<ul>
+<li><code>epfd</code>: <code>epoll</code> 实例的文件描述符，由 <code>epoll_create</code> 返回。</li>
+<li><code>op</code>: 表示操作类型，包括 <code>EPOLL_CTL_ADD</code>（注册新的 fd 到 epoll）、<code>EPOLL_CTL_MOD</code>（修改已注册 fd 的监听事件）、<code>EPOLL_CTL_DEL</code>（从 epoll 中删除一个 fd）。</li>
+<li><code>fd</code>: 需要操作的文件描述符。</li>
+<li><code>event</code>: 指向 <code>epoll_event</code> 结构体的指针，描述监听的事件类型和关联的数据。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>:<ul>
+<li>成功时返回 0。</li>
+<li>失败时返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+</li>
+</ul>
+<p>   <strong>示例</strong>:</p>
+<pre><code class="c">struct epoll_event event;
+event.events = EPOLLIN;  // 监听可读事件
+event.data.fd = sockfd;  // 设置事件关联的文件描述符
+
+if (epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &amp;event) == -1) &#123;
+    perror(&quot;epoll_ctl: sockfd&quot;);
+    exit(EXIT_FAILURE);
+&#125;
+</code></pre>
+<h4 id="2-3-epoll-wait"><a href="#2-3-epoll-wait" class="headerlink" title="2.3 epoll_wait"></a>2.3 <strong>epoll_wait</strong></h4><pre><code class="c">int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+</code></pre>
+<ul>
+<li><strong>参数</strong>:<ul>
+<li><code>epfd</code>: <code>epoll</code> 实例的文件描述符。</li>
+<li><code>events</code>: 用于存储从内核得到的事件的数组。</li>
+<li><code>maxevents</code>: 每次调用最多返回的事件数。这个值必须大于 0。</li>
+<li><code>timeout</code>: 等待事件发生的超时时间（毫秒）。-1 表示无限等待，0 表示立即返回。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>:<ul>
+<li>成功时返回就绪的文件描述符数量。</li>
+<li>超时返回 0。</li>
+<li>失败时返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+</li>
+</ul>
+<p>   <strong>示例</strong>:</p>
+<pre><code class="c">struct epoll_event events[MAX_EVENTS];
+int nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
+if (nfds == -1) &#123;
+    perror(&quot;epoll_wait&quot;);
+    exit(EXIT_FAILURE);
+&#125;
+
+for (int n = 0; n &lt; nfds; ++n) &#123;
+    if (events[n].events &amp; EPOLLIN) &#123;
+        // 处理可读事件
+    &#125;
+&#125;
+</code></pre>
+<h3 id="3-工作模式"><a href="#3-工作模式" class="headerlink" title="3. 工作模式"></a>3. <strong>工作模式</strong></h3><p>   <code>epoll</code> 具有两种主要的工作模式：</p>
+<ul>
+<li><strong>水平触发（Level Triggered, LT）</strong>:<ul>
+<li>默认工作模式，类似于 <code>select</code> 和 <code>poll</code> 的行为。当文件描述符就绪时，会持续通知，直到事件被处理。</li>
+</ul>
+</li>
+<li><strong>边缘触发（Edge Triggered, ET）</strong>:<ul>
+<li>高效模式，仅当文件描述符从未就绪变为就绪时才通知一次。通常配合非阻塞 I&#x2F;O 使用，避免因未处理的事件导致高 CPU 占用。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-epoll-的优点"><a href="#4-epoll-的优点" class="headerlink" title="4. epoll 的优点"></a>4. <strong>epoll 的优点</strong></h3><ul>
+<li><strong>高效性</strong>: <code>epoll</code> 内部使用红黑树（用于管理监控的文件描述符）和链表（用于保存待处理的就绪文件描述符），相比 <code>select</code> 和 <code>poll</code>，无需每次调用时重新遍历文件描述符列表，因此在处理大量文件描述符时性能表现更优。</li>
+<li><strong>不受文件描述符限制</strong>: <code>select</code> 有最大文件描述符数量限制，而 <code>epoll</code> 没有这一限制，因此更适合高并发场景。</li>
+<li><strong>事件驱动机制</strong>: 边缘触发模式下，<code>epoll</code> 仅在状态发生变化时通知用户，减少不必要的系统调用。</li>
+</ul>
+<h3 id="5-常见应用场景-1"><a href="#5-常见应用场景-1" class="headerlink" title="5. 常见应用场景"></a>5. <strong>常见应用场景</strong></h3><ul>
+<li><strong>高并发网络服务器</strong>: <code>epoll</code> 常用于构建高性能网络服务器，如 Nginx、Redis 等，能高效处理大量并发连接。</li>
+<li><strong>事件驱动的系统</strong>: 如消息队列、事件通知系统等，需要高效监控大量 I&#x2F;O 事件的场景。</li>
+</ul>
+<h3 id="6-示例代码"><a href="#6-示例代码" class="headerlink" title="6. 示例代码"></a>6. <strong>示例代码</strong></h3><p>   下面是一个使用 <code>epoll</code> 的简单服务器示例，展示如何使用 <code>epoll</code> 处理多个客户端连接的 I&#x2F;O 事件：</p>
+<pre><code class="c">#include &lt;sys/epoll.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;netinet/in.h&gt;
+
+#define MAX_EVENTS 10
+#define PORT 8080
+
+int main() &#123;
+    int server_fd, new_socket, epfd;
+    struct sockaddr_in address;
+    int addrlen = sizeof(address);
+
+    struct epoll_event event, events[MAX_EVENTS];
+
+    // 创建监听套接字
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) &#123;
+        perror(&quot;socket failed&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+
+    if (bind(server_fd, (struct sockaddr *)&amp;address, sizeof(address)) &lt; 0) &#123;
+        perror(&quot;bind failed&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+    if (listen(server_fd, 3) &lt; 0) &#123;
+        perror(&quot;listen&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    // 创建 epoll 实例
+    epfd = epoll_create(1);
+    if (epfd == -1) &#123;
+        perror(&quot;epoll_create1&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    // 将 server_fd 添加到 epoll 实例中
+    event.events = EPOLLIN;
+    event.data.fd = server_fd;
+    if (epoll_ctl(epfd, EPOLL_CTL_ADD, server_fd, &amp;event) == -1) &#123;
+        perror(&quot;epoll_ctl&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    // 循环等待事件
+    while (1) &#123;
+        int nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
+        if (nfds == -1) &#123;
+            perror(&quot;epoll_wait&quot;);
+            exit(EXIT_FAILURE);
+        &#125;
+
+        for (int n = 0; n &lt; nfds; ++n) &#123;
+            if (events[n].data.fd == server_fd) &#123;
+                // 接受新的连接
+                new_socket = accept(server_fd, (struct sockaddr *)&amp;address, (socklen_t*)&amp;addrlen);
+                if (new_socket == -1) &#123;
+                    perror(&quot;accept&quot;);
+                    exit(EXIT_FAILURE);
+                &#125;
+                event.events = EPOLLIN;
+                event.data.fd = new_socket;
+                if (epoll_ctl(epfd, EPOLL_CTL_ADD, new_socket, &amp;event) == -1) &#123;
+                    perror(&quot;epoll_ctl&quot;);
+                    exit(EXIT_FAILURE);
+                &#125;
+            &#125; else &#123;
+                // 处理已连接的客户端数据
+                char buffer[1024] = &#123;0&#125;;
+                int bytes_read = read(events[n].data.fd, buffer, sizeof(buffer));
+                if (bytes_read == -1) &#123;
+                    perror(&quot;read&quot;);
+                    close(events[n].data.fd);
+                &#125; else if (bytes_read == 0) &#123;
+                    // 客户端断开连接
+
+
+                    close(events[n].data.fd);
+                &#125; else &#123;
+                    printf(&quot;Received: %s\n&quot;, buffer);
+                    // 回送数据
+                    write(events[n].data.fd, buffer, bytes_read);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    close(server_fd);
+    return 0;
+&#125;
+</code></pre>
+<h3 id="7-epoll-的缺点"><a href="#7-epoll-的缺点" class="headerlink" title="7. epoll 的缺点"></a>7. <strong>epoll 的缺点</strong></h3><ul>
+<li><strong>仅支持 Linux</strong>: <code>epoll</code> 是 Linux 特有的系统调用，因此在跨平台开发中需要考虑兼容性问题。</li>
+<li><strong>复杂度较高</strong>: 相较于 <code>select</code>，<code>epoll</code> 的 API 使用稍复杂，特别是在处理边缘触发模式时，需要开发者更加细致地处理 I&#x2F;O 事件。</li>
+</ul>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>epoll</code> 是 Linux 上高效的 I&#x2F;O 多路复用机制，特别适合处理大量并发连接的网络服务。通过减少系统调用和优化数据结构，<code>epoll</code> 提供了比传统的 <code>select</code> 和 <code>poll</code> 更高的性能，是现代高性能网络服务器和事件驱动系统的核心技术之一。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>

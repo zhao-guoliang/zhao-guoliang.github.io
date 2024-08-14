@@ -243,7 +243,7 @@
     <li>
         <div class="all active" data-rel="All">All
             
-                <small>(24)</small>
+                <small>(25)</small>
             
         </div>
     </li>
@@ -298,7 +298,7 @@
         
     </div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="24">
+<input type="hidden" id="yelog_site_posts_number" value="25">
 
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
@@ -350,6 +350,15 @@
 
     
     <nav id="title-list-nav">
+        
+        
+        <a  class="All "
+           href="/2024/08/14/linux-select-he-epoll/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-select和epoll">linux-select和epoll</span>
+            <span class="post-date" title="2024-08-14 21:09:14">2024/08/14</span>
+        </a>
         
         
         <a  class="All Linux "
@@ -605,7 +614,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-08-14 10:00:57'>2024-08-14 10:00</time>
+            Created At : <time class="date" title='Updated At: 2024-08-14 10:01:56'>2024-08-14 10:00</time>
         
     </div>
     <div class="article-meta">
@@ -645,7 +654,7 @@
       
         <p>在Linux多线程开发中，<code>return</code> 和 <code>exit()</code> 的作用有所不同，特别是在处理线程和进程的退出时：</p>
 <ol>
-<li><p><strong><code>return</code></strong>:</p>
+<li><p><strong><code>return</code></strong>:（返回到调用者那里去）</p>
 <ul>
 <li><strong>在主线程中使用</strong>：如果你在主线程（即<code>main</code>函数）中使用<code>return</code>，它会导致整个程序终止，所有的线程都会结束。<code>main</code>函数的<code>return</code>值会作为进程的退出状态码。</li>
 <li><strong>在子线程中使用</strong>：如果你在子线程中使用<code>return</code>，仅仅是退出当前线程，而不会影响其他线程或整个进程。当前线程的退出状态码会被传递给<code>pthread_join()</code>，如果其他线程调用了这个函数。</li>
