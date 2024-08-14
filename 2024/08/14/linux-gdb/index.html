@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>解决spawn-fcgi:child exited with:127报错 | Hexo</title>
+  <title>gdb调试 | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="解决spawn-fcgi:child exited with:127报错 | Hexo">
+  <meta name="description" content="gdb调试 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Oops～，我崩溃了！找不到你想要的页面 :(">
 <meta property="og:type" content="website">
@@ -603,19 +603,27 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-127报错" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-linux-gdb" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">解决spawn-fcgi:child exited with:127报错</h1>
+        <h1 class="article-title">gdb调试</h1>
     
     <div class="article-meta">
         
         
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Linux">Linux</a>
+            
+        </span>
         
         
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-08-01 15:06:40'>2024-02-01 13:53</time>
+            Created At : <time class="date" title='Updated At: 2024-08-14 21:43:56'>2024-08-14 21:34</time>
         
     </div>
     <div class="article-meta">
@@ -637,7 +645,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">1. 基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E7%BC%96%E8%AF%91%E7%A8%8B%E5%BA%8F"><span class="toc-text">1.1 编译程序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E5%90%AF%E5%8A%A8-GDB"><span class="toc-text">1.2 启动 GDB</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B0%83%E8%AF%95%E4%BC%9A%E8%AF%9D"><span class="toc-text">2. 调试会话</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E8%AE%BE%E7%BD%AE%E6%96%AD%E7%82%B9"><span class="toc-text">2.1 设置断点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E5%88%A0%E9%99%A4%E5%92%8C%E6%9F%A5%E7%9C%8B%E6%96%AD%E7%82%B9"><span class="toc-text">2.2 删除和查看断点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E8%BF%90%E8%A1%8C%E5%92%8C%E5%81%9C%E6%AD%A2"><span class="toc-text">2.3 运行和停止</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8F%98%E9%87%8F%E5%92%8C%E5%86%85%E5%AD%98%E6%A3%80%E6%9F%A5"><span class="toc-text">3. 变量和内存检查</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E6%9F%A5%E7%9C%8B%E5%8F%98%E9%87%8F%E5%80%BC"><span class="toc-text">3.1 查看变量值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AD%98%E5%86%85%E5%AE%B9"><span class="toc-text">3.2 查看内存内容</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%B0%83%E7%94%A8%E6%A0%88%E5%92%8C%E5%87%BD%E6%95%B0"><span class="toc-text">4. 调用栈和函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E6%9F%A5%E7%9C%8B%E8%B0%83%E7%94%A8%E6%A0%88"><span class="toc-text">4.1 查看调用栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E6%9F%A5%E7%9C%8B%E5%87%BD%E6%95%B0%E4%BF%A1%E6%81%AF"><span class="toc-text">4.2 查看函数信息</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E8%B0%83%E8%AF%95"><span class="toc-text">5. 多线程调试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-text">5.1 查看线程信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-%E5%9C%A8%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E8%AE%BE%E7%BD%AE%E6%96%AD%E7%82%B9"><span class="toc-text">5.2 在多线程中设置断点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E9%AB%98%E7%BA%A7%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF"><span class="toc-text">6. 高级调试技术</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E6%9D%A1%E4%BB%B6%E6%96%AD%E7%82%B9"><span class="toc-text">6.1 条件断点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E7%9B%91%E8%A7%86%E7%82%B9"><span class="toc-text">6.2 监视点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95"><span class="toc-text">6.3 动态调试</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E8%B0%83%E8%AF%95%E7%AC%A6%E5%8F%B7%E5%92%8C%E6%96%87%E4%BB%B6"><span class="toc-text">7. 调试符号和文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-%E5%8A%A0%E8%BD%BD%E7%AC%A6%E5%8F%B7%E6%96%87%E4%BB%B6"><span class="toc-text">7.1 加载符号文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-%E5%8A%A0%E8%BD%BD%E7%A8%8B%E5%BA%8F"><span class="toc-text">7.2 加载程序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E4%BD%BF%E7%94%A8-GDB-%E8%84%9A%E6%9C%AC"><span class="toc-text">8. 使用 GDB 脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-1-%E7%BC%96%E5%86%99-GDB-%E8%84%9A%E6%9C%AC"><span class="toc-text">8.1 编写 GDB 脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-%E6%89%A7%E8%A1%8C-GDB-%E8%84%9A%E6%9C%AC"><span class="toc-text">8.2 执行 GDB 脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E8%B0%83%E8%AF%95%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81"><span class="toc-text">9. 调试优化代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E8%B0%83%E8%AF%95%E5%8A%A8%E6%80%81%E5%BA%93"><span class="toc-text">10. 调试动态库</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -653,18 +661,196 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>解决spawn-fcgi:child exited with: 127报错</p>
-<p>spawn-fcgi:child exited with: 127<br>原因：没有找到动态库</p>
-<p>输入指令：ldd 你要运行的程序名<br>来查看缺少的库，如图我确少的是 libfcgi.so.0<br><img src="/images/1722491883237.png"></p>
-<p>解决方案<br>先执行命令，查找所缺文件位置，比如我的（你实际操作时候一定要记住库名换成自己的，-name后面）</p>
-<p><code>find usr/local/lib/ -name &quot;libfcgi.so&quot;</code></p>
-<p><img src="/images/1722492061360.png"></p>
-<p>得到库文件所在路径<code>/usr/local/lib</code></p>
-<p>再执行<code>sudo vi /etc/ld.so.conf</code><br>在文件里添加你得到的库文件路径<code>/usr/local/lib</code>，之后保存退出</p>
-<p><img src="/images/1722492201079.png"></p>
-<p>最后执行<code>sudo ldconfig</code></p>
-<p>再回到原来目录重新编译运行就成功了</p>
-<p><img src="/images/1722492227287.png"></p>
+        <h3 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1. 基本使用"></a>1. <strong>基本使用</strong></h3><h4 id="1-1-编译程序"><a href="#1-1-编译程序" class="headerlink" title="1.1 编译程序"></a>1.1 <strong>编译程序</strong></h4><p>确保编译时包含调试信息：</p>
+<pre><code class="bash">gcc -g -o myprogram myprogram.c
+</code></pre>
+<h4 id="1-2-启动-GDB"><a href="#1-2-启动-GDB" class="headerlink" title="1.2 启动 GDB"></a>1.2 <strong>启动 GDB</strong></h4><pre><code class="bash">gdb myprogram
+</code></pre>
+<p>可以附带参数来启动程序：</p>
+<pre><code class="bash">gdb --args myprogram arg1 arg2
+</code></pre>
+<h3 id="2-调试会话"><a href="#2-调试会话" class="headerlink" title="2. 调试会话"></a>2. <strong>调试会话</strong></h3><h4 id="2-1-设置断点"><a href="#2-1-设置断点" class="headerlink" title="2.1 设置断点"></a>2.1 <strong>设置断点</strong></h4><ul>
+<li><p><strong>在函数入口设置断点</strong>：</p>
+<pre><code class="gdb">(gdb) break main
+</code></pre>
+</li>
+<li><p><strong>在特定行设置断点</strong>：</p>
+<pre><code class="gdb">(gdb) break myfile.c:42
+</code></pre>
+</li>
+<li><p><strong>设置条件断点</strong>（只有在条件满足时断点才会触发）：</p>
+<pre><code class="gdb">(gdb) break 42 if x &gt; 10
+</code></pre>
+</li>
+</ul>
+<h4 id="2-2-删除和查看断点"><a href="#2-2-删除和查看断点" class="headerlink" title="2.2 删除和查看断点"></a>2.2 <strong>删除和查看断点</strong></h4><ul>
+<li><p><strong>删除所有断点</strong>：</p>
+<pre><code class="gdb">(gdb) delete
+</code></pre>
+</li>
+<li><p><strong>删除指定断点</strong>：</p>
+<pre><code class="gdb">(gdb) delete 1
+</code></pre>
+</li>
+<li><p><strong>查看所有断点</strong>：</p>
+<pre><code class="gdb">(gdb) info breakpoints
+</code></pre>
+</li>
+</ul>
+<h4 id="2-3-运行和停止"><a href="#2-3-运行和停止" class="headerlink" title="2.3 运行和停止"></a>2.3 <strong>运行和停止</strong></h4><ul>
+<li><p><strong>运行程序</strong>：</p>
+<pre><code class="gdb">(gdb) run
+</code></pre>
+</li>
+<li><p><strong>停止程序</strong>（如果已经在运行）：</p>
+<pre><code class="gdb">(gdb) kill
+</code></pre>
+</li>
+<li><p><strong>继续执行程序</strong>（直到下一个断点）：</p>
+<pre><code class="gdb">(gdb) continue
+</code></pre>
+</li>
+<li><p><strong>单步执行代码</strong>（进入函数内部）：</p>
+<pre><code class="gdb">(gdb) step
+</code></pre>
+</li>
+<li><p><strong>单步执行代码</strong>（不进入函数内部）：</p>
+<pre><code class="gdb">(gdb) next
+</code></pre>
+</li>
+<li><p><strong>完成当前函数的执行</strong>（并返回到调用者）：</p>
+<pre><code class="gdb">(gdb) finish
+</code></pre>
+</li>
+</ul>
+<h3 id="3-变量和内存检查"><a href="#3-变量和内存检查" class="headerlink" title="3. 变量和内存检查"></a>3. <strong>变量和内存检查</strong></h3><h4 id="3-1-查看变量值"><a href="#3-1-查看变量值" class="headerlink" title="3.1 查看变量值"></a>3.1 <strong>查看变量值</strong></h4><ul>
+<li><p><strong>查看变量的值</strong>：</p>
+<pre><code class="gdb">(gdb) print x
+</code></pre>
+</li>
+<li><p><strong>查看结构体成员</strong>：</p>
+<pre><code class="gdb">(gdb) print myStruct.member
+</code></pre>
+</li>
+<li><p><strong>监视变量的变化</strong>（每次程序停止时自动显示变量值）：</p>
+<pre><code class="gdb">(gdb) display x
+</code></pre>
+</li>
+<li><p><strong>取消监视变量</strong>：</p>
+<pre><code class="gdb">(gdb) undisplay 1
+</code></pre>
+</li>
+</ul>
+<h4 id="3-2-查看内存内容"><a href="#3-2-查看内存内容" class="headerlink" title="3.2 查看内存内容"></a>3.2 <strong>查看内存内容</strong></h4><ul>
+<li><p><strong>查看内存中的内容</strong>（以十六进制格式显示）：</p>
+<pre><code class="gdb">(gdb) x/10x &amp;x
+</code></pre>
+</li>
+<li><p><strong>查看内存中的内容</strong>（以字符格式显示）：</p>
+<pre><code class="gdb">(gdb) x/10c &amp;x
+</code></pre>
+</li>
+</ul>
+<h3 id="4-调用栈和函数"><a href="#4-调用栈和函数" class="headerlink" title="4. 调用栈和函数"></a>4. <strong>调用栈和函数</strong></h3><h4 id="4-1-查看调用栈"><a href="#4-1-查看调用栈" class="headerlink" title="4.1 查看调用栈"></a>4.1 <strong>查看调用栈</strong></h4><ul>
+<li><p><strong>显示调用栈</strong>：</p>
+<pre><code class="gdb">(gdb) backtrace
+</code></pre>
+</li>
+<li><p><strong>显示特定帧的调用栈信息</strong>：</p>
+<pre><code class="gdb">(gdb) frame 2
+</code></pre>
+</li>
+</ul>
+<h4 id="4-2-查看函数信息"><a href="#4-2-查看函数信息" class="headerlink" title="4.2 查看函数信息"></a>4.2 <strong>查看函数信息</strong></h4><ul>
+<li><p><strong>列出当前函数中的所有局部变量</strong>：</p>
+<pre><code class="gdb">(gdb) info locals
+</code></pre>
+</li>
+<li><p><strong>列出当前函数中的所有参数</strong>：</p>
+<pre><code class="gdb">(gdb) info args
+</code></pre>
+</li>
+</ul>
+<h3 id="5-多线程调试"><a href="#5-多线程调试" class="headerlink" title="5. 多线程调试"></a>5. <strong>多线程调试</strong></h3><h4 id="5-1-查看线程信息"><a href="#5-1-查看线程信息" class="headerlink" title="5.1 查看线程信息"></a>5.1 <strong>查看线程信息</strong></h4><ul>
+<li><p><strong>列出所有线程</strong>：</p>
+<pre><code class="gdb">(gdb) info threads
+</code></pre>
+</li>
+<li><p><strong>切换到特定线程</strong>：</p>
+<pre><code class="gdb">(gdb) thread 2
+</code></pre>
+</li>
+<li><p><strong>查看当前线程的信息</strong>：</p>
+<pre><code class="gdb">(gdb) info thread
+</code></pre>
+</li>
+</ul>
+<h4 id="5-2-在多线程中设置断点"><a href="#5-2-在多线程中设置断点" class="headerlink" title="5.2 在多线程中设置断点"></a>5.2 <strong>在多线程中设置断点</strong></h4><ul>
+<li><strong>在特定线程中设置断点</strong>（断点只在该线程触发）：<pre><code class="gdb">(gdb) break myfile.c:42 if (thread_id == 2)
+</code></pre>
+</li>
+</ul>
+<h3 id="6-高级调试技术"><a href="#6-高级调试技术" class="headerlink" title="6. 高级调试技术"></a>6. <strong>高级调试技术</strong></h3><h4 id="6-1-条件断点"><a href="#6-1-条件断点" class="headerlink" title="6.1 条件断点"></a>6.1 <strong>条件断点</strong></h4><ul>
+<li><strong>设置断点，只有在条件满足时才会触发</strong>：<pre><code class="gdb">(gdb) break myfile.c:42 if x &gt; 10
+</code></pre>
+</li>
+</ul>
+<h4 id="6-2-监视点"><a href="#6-2-监视点" class="headerlink" title="6.2 监视点"></a>6.2 <strong>监视点</strong></h4><ul>
+<li><p><strong>设置监视点（在变量的值发生变化时停下）</strong>：</p>
+<pre><code class="gdb">(gdb) watch x
+</code></pre>
+</li>
+<li><p><strong>设置读写监视点（在变量的值被读写时停下）</strong>：</p>
+<pre><code class="gdb">(gdb) awatch x
+</code></pre>
+</li>
+<li><p><strong>设置只读监视点（在变量的值被读取时停下）</strong>：</p>
+<pre><code class="gdb">(gdb) rwatch x
+</code></pre>
+</li>
+</ul>
+<h4 id="6-3-动态调试"><a href="#6-3-动态调试" class="headerlink" title="6.3 动态调试"></a>6.3 <strong>动态调试</strong></h4><ul>
+<li><p><strong>使用 <code>call</code> 执行 C 语言表达式</strong>：</p>
+<pre><code class="gdb">(gdb) call myFunction(1, 2)
+</code></pre>
+</li>
+<li><p><strong>改变变量的值</strong>：</p>
+<pre><code class="gdb">(gdb) set var x = 5
+</code></pre>
+</li>
+</ul>
+<h3 id="7-调试符号和文件"><a href="#7-调试符号和文件" class="headerlink" title="7. 调试符号和文件"></a>7. <strong>调试符号和文件</strong></h3><h4 id="7-1-加载符号文件"><a href="#7-1-加载符号文件" class="headerlink" title="7.1 加载符号文件"></a>7.1 <strong>加载符号文件</strong></h4><ul>
+<li><strong>加载调试符号文件</strong>：<pre><code class="gdb">(gdb) symbol-file myprogram
+</code></pre>
+</li>
+</ul>
+<h4 id="7-2-加载程序"><a href="#7-2-加载程序" class="headerlink" title="7.2 加载程序"></a>7.2 <strong>加载程序</strong></h4><ul>
+<li><strong>重新加载程序和符号信息</strong>：<pre><code class="gdb">(gdb) file myprogram
+</code></pre>
+</li>
+</ul>
+<h3 id="8-使用-GDB-脚本"><a href="#8-使用-GDB-脚本" class="headerlink" title="8. 使用 GDB 脚本"></a>8. <strong>使用 GDB 脚本</strong></h3><h4 id="8-1-编写-GDB-脚本"><a href="#8-1-编写-GDB-脚本" class="headerlink" title="8.1 编写 GDB 脚本"></a>8.1 <strong>编写 GDB 脚本</strong></h4><ul>
+<li><strong>GDB 脚本文件</strong>（如 <code>myscript.gdb</code>）：<pre><code class="gdb">break main
+run
+info locals
+</code></pre>
+</li>
+</ul>
+<h4 id="8-2-执行-GDB-脚本"><a href="#8-2-执行-GDB-脚本" class="headerlink" title="8.2 执行 GDB 脚本"></a>8.2 <strong>执行 GDB 脚本</strong></h4><ul>
+<li><strong>在 GDB 会话中执行脚本</strong>：<pre><code class="gdb">(gdb) source myscript.gdb
+</code></pre>
+</li>
+</ul>
+<h3 id="9-调试优化代码"><a href="#9-调试优化代码" class="headerlink" title="9. 调试优化代码"></a>9. <strong>调试优化代码</strong></h3><ul>
+<li><strong>禁用优化以进行调试</strong>（编译时使用 <code>-O0</code>）：<pre><code class="bash">gcc -g -O0 -o myprogram myprogram.c
+</code></pre>
+</li>
+</ul>
+<h3 id="10-调试动态库"><a href="#10-调试动态库" class="headerlink" title="10. 调试动态库"></a>10. <strong>调试动态库</strong></h3><ul>
+<li><strong>加载动态库中的调试信息</strong>：<pre><code class="gdb">(gdb) set solib-search-path /path/to/libs
+</code></pre>
+</li>
+</ul>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>

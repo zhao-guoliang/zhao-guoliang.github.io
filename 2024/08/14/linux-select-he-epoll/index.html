@@ -243,7 +243,7 @@
     <li>
         <div class="all active" data-rel="All">All
             
-                <small>(25)</small>
+                <small>(26)</small>
             
         </div>
     </li>
@@ -255,7 +255,7 @@
         <div data-rel="Linux">
             
             Linux
-            <small>(7)</small>
+            <small>(8)</small>
         </div>
         
     </li>
@@ -298,7 +298,7 @@
         
     </div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="25">
+<input type="hidden" id="yelog_site_posts_number" value="26">
 
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
@@ -350,6 +350,15 @@
 
     
     <nav id="title-list-nav">
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/14/linux-gdb/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gdb调试">gdb调试</span>
+            <span class="post-date" title="2024-08-14 21:34:19">2024/08/14</span>
+        </a>
         
         
         <a  class="All "
@@ -606,7 +615,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-08-14 21:14:48'>2024-08-14 21:09</time>
+            Created At : <time class="date" title='Updated At: 2024-08-14 21:31:10'>2024-08-14 21:09</time>
         
     </div>
     <div class="article-meta">
@@ -628,7 +637,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-text">2. 函数原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">3. 使用步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">4. 简单示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">6. 优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-1"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">2. 函数原型与使用步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-epoll-create"><span class="toc-text">2.1 epoll_create</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-epoll-ctl"><span class="toc-text">2.2 epoll_ctl</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-epoll-wait"><span class="toc-text">2.3 epoll_wait</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-text">3. 工作模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-epoll-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">4. epoll 的优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-text">6. 示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-epoll-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-text">7. epoll 的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%8A%80%E6%9C%AF"><span class="toc-text">具体技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-text">2. 函数原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">3. 使用步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">4. 简单示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">6. 优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-1"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">2. 函数原型与使用步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-epoll-create"><span class="toc-text">2.1 epoll_create</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-epoll-ctl"><span class="toc-text">2.2 epoll_ctl</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-epoll-wait"><span class="toc-text">2.3 epoll_wait</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-text">3. 工作模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-epoll-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">4. epoll 的优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-text">6. 示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-epoll-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-text">7. epoll 的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -644,7 +653,68 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><code>select</code> 是一种用于多路复用 I&#x2F;O 操作的系统调用，在处理多个文件描述符时非常有用。它允许程序在等待多个文件描述符的状态变化时阻塞，从而在网络编程和并发 I&#x2F;O 操作中广泛应用。</p>
+        <p>IO多路复用技术主要为了解决在网络编程中处理大量并发连接时遇到的问题。下面是IO多路复用技术所解决的关键问题：</p>
+<ol>
+<li><p><strong>性能瓶颈</strong>：</p>
+<ul>
+<li>在传统的网络编程模型中，每个客户端连接都需要一个单独的线程或进程来处理。</li>
+<li>当客户端连接数量非常大时，这种模型会导致大量的线程或进程开销，包括上下文切换和内存管理等。</li>
+</ul>
+</li>
+<li><p><strong>资源管理</strong>：</p>
+<ul>
+<li>传统模型中的每个连接都需要一个线程或进程，这会导致较高的内存和CPU使用率。</li>
+<li>在多路复用模型中，可以使用较少的线程或进程来处理大量的连接，从而更有效地利用资源。</li>
+</ul>
+</li>
+<li><p><strong>并发连接的处理</strong>：</p>
+<ul>
+<li>传统模型难以有效处理大量并发连接，因为每个连接都需要独立的线程或进程。</li>
+<li>多路复用技术允许一个线程或进程同时监听多个文件描述符（通常是网络套接字），从而可以同时处理多个连接。</li>
+</ul>
+</li>
+<li><p><strong>避免轮询</strong>：</p>
+<ul>
+<li>在没有多路复用的情况下，服务器可能需要不断轮询每个连接的状态，以检查是否有数据可以读取或写入。</li>
+<li>多路复用技术允许服务器等待一组文件描述符中的任意一个或多个变为就绪状态，而不是不断轮询。</li>
+</ul>
+</li>
+<li><p><strong>提高性能</strong>：</p>
+<ul>
+<li>通过减少上下文切换和轮询，多路复用技术可以显著提高服务器处理大量并发连接的能力。</li>
+<li>这种方法可以降低CPU和内存的使用率，提高系统的响应时间和吞吐量。</li>
+</ul>
+</li>
+</ol>
+<h3 id="具体技术"><a href="#具体技术" class="headerlink" title="具体技术"></a>具体技术</h3><p>一些常用的IO多路复用技术包括：</p>
+<ul>
+<li><p>**<code>select</code>**：</p>
+<ul>
+<li><code>select</code> 是最早的多路复用技术之一，它允许同时监听多个文件描述符。</li>
+<li>它有一个限制，即最多只能监听 FD_SETSIZE 个文件描述符（通常是 1024）。</li>
+</ul>
+</li>
+<li><p>**<code>poll</code>**：</p>
+<ul>
+<li><code>poll</code> 类似于 <code>select</code>，但是没有文件描述符数量的限制。</li>
+<li><code>poll</code> 仍然使用轮询的方式检查文件描述符的状态，但它的效率通常高于 <code>select</code>。</li>
+</ul>
+</li>
+<li><p>**<code>epoll</code>**：</p>
+<ul>
+<li><code>epoll</code> 是 Linux 内核中的一种高效的多路复用技术。</li>
+<li>它使用边缘触发（edge-triggered）和水平触发（level-triggered）模式来提高性能。</li>
+<li><code>epoll</code> 使用红黑树等数据结构来高效地管理文件描述符。</li>
+</ul>
+</li>
+<li><p>**<code>kqueue</code>**：</p>
+<ul>
+<li><code>kqueue</code> 是 BSD 系统中的多路复用技术。</li>
+<li>它提供了类似于 <code>epoll</code> 的功能，但在 BSD 系统中更为常见。</li>
+</ul>
+</li>
+</ul>
+<p><code>select</code> 是一种用于多路复用 I&#x2F;O 操作的系统调用，在处理多个文件描述符时非常有用。它允许程序在等待多个文件描述符的状态变化时阻塞，从而在网络编程和并发 I&#x2F;O 操作中广泛应用。</p>
 <h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. <strong>基本概念</strong></h3><ul>
 <li><strong>多路复用 I&#x2F;O</strong>: 在网络编程中，通常需要同时处理多个 I&#x2F;O 操作，如监视多个套接字的状态。<code>select</code> 允许程序同时等待多个文件描述符的状态变化，如读、写或异常情况，而不必为每个文件描述符创建一个线程。</li>
 <li><strong>文件描述符（File Descriptor）</strong>: 在UNIX&#x2F;Linux系统中，文件描述符是一个整数，表示打开的文件、套接字或其他I&#x2F;O资源。</li>
