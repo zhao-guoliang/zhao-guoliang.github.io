@@ -243,10 +243,25 @@
     <li>
         <div class="all active" data-rel="All">All
             
-                <small>(28)</small>
+                <small>(37)</small>
             
         </div>
     </li>
+    
+        
+            
+                
+    <li>
+        <div data-rel="数据结构">
+            
+            数据结构
+            <small>(3)</small>
+        </div>
+        
+    </li>
+
+            
+        
     
         
             
@@ -267,9 +282,9 @@
             
                 
     <li>
-        <div data-rel="数据结构">
+        <div data-rel="QT">
             
-            数据结构
+            QT
             <small>(2)</small>
         </div>
         
@@ -298,7 +313,7 @@
         
     </div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="28">
+<input type="hidden" id="yelog_site_posts_number" value="37">
 
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
@@ -350,6 +365,87 @@
 
     
     <nav id="title-list-nav">
+        
+        
+        <a  class="All "
+           href="/2024/11/02/qt-qss-jie-mian-feng-ge-fen-xiang/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT——QSS界面风格分享">QT——QSS界面风格分享</span>
+            <span class="post-date" title="2024-11-02 17:15:50">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/qt-duo-xian-cheng/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT多线程">QT多线程</span>
+            <span class="post-date" title="2024-11-02 17:15:25">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/qt-pei-zhi-dong-tai-ku-jing-tai-ku-tou-wen-jian/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT配置动态库静态库头文件">QT配置动态库静态库头文件</span>
+            <span class="post-date" title="2024-11-02 17:15:03">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/qtest-ce-shi/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QTest测试">QTest测试</span>
+            <span class="post-date" title="2024-11-02 17:14:12">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/visualstudio-da-kai-qt-jie-mian-shan-tui/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Visualstudio打开qt界面闪退">Visualstudio打开qt界面闪退</span>
+            <span class="post-date" title="2024-11-02 17:13:52">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/qt-cheng-xu-da-bao/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT程序打包">QT程序打包</span>
+            <span class="post-date" title="2024-11-02 17:11:39">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/qt-jie-mian-zhong-wen-luan-ma/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT中文乱码">QT中文乱码</span>
+            <span class="post-date" title="2024-11-02 16:58:21">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/22/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="。。。">。。。</span>
+            <span class="post-date" title="2024-08-22 21:41:20">2024/08/22</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/21/lambda-biao-da-shi/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="lambda表达式">lambda表达式</span>
+            <span class="post-date" title="2024-08-21 17:17:25">2024/08/21</span>
+        </a>
         
         
         <a  class="All Linux "
@@ -633,7 +729,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2024-08-17 11:27:48'>2024-08-17 09:53</time>
+            Created At : <time class="date" title='Updated At: 2024-09-04 16:13:10'>2024-08-17 09:53</time>
         
     </div>
     <div class="article-meta">
@@ -874,6 +970,313 @@ DATA max;
 &#125;
 </code></pre>
 </li>
+<li><pre><code class="c">//请问以下代码有什么问题：
+char * s =&quot;AAA&quot;;
+printf(&quot;%s&quot;,s);
+s[0]=&#39;B&#39;;
+printf(&quot;%s&quot;,s);
+//有什么错？
+/*
+char* s = &quot;AAA&quot;;：这一行代码将字符串字面量 &quot;AAA&quot; 的地址赋给了指针 s。在 C/C++ 中，字符串字面量通常存储在只读的内存区域（如 .rodata 段）。因此，通过 s 指向的这段内存通常是不可修改的。
+
+不要修改字符串字面量：在 C/C++ 中，字符串字面量通常存储在只读内存区域，试图修改它们会导致未定义行为，可能会导致程序崩溃。
+使用字符数组：如果需要可修改的字符串，应该使用字符数组而不是指向字符串字面量的指针。这不仅安全，而且是正确的做法。
+*/
+</code></pre>
+</li>
+<li><pre><code class="c">int (*s[10])(int)  //表示的是什么
+</code></pre>
+<p> 答案：int (*s[10])(int) 函数指针数组，每个指针指向一个int func ( int param) 的函数。（或一个有10个指针的数组，每个指针指向一个函数，该函数有一个整型参数并返回一个整型数） </p>
+</li>
+<li><p>c和c++ 中的struct有什么不同？</p>
+<p> c和c++ 中struct的主要区别是c中的struct不可以含有成员函数，而c++ 中的struct可以。c++ 中struct和class的主要区别在于默认的存取权限不同，struct默认为public ，而class默认为private </p>
+</li>
+<li><pre><code class="c">void getmemory(char *p)
+&#123;
+    p=(char *) malloc(100);
+    // strcpy默认给p后面补一个\0
+    strcpy(p,“hello world”);
+&#125;
+int main( )
+&#123;
+    char *str=NULL;
+    getmemory(str);
+    printf(“%s\n”,str);
+    free(str);
+    return 0;
+&#125; //会出现什么问题？
+    
+//
+</code></pre>
+<p><strong>分析：</strong></p>
+<p>这段代码中存在一个问题：在 <code>getmemory</code> 函数中，<code>p</code> 是一个局部变量，它指向动态分配的内存。当你调用 <code>free(str)</code> 时，<code>str</code> 已经不再是有效的指针，因为它没有保存动态分配的内存的地址。</p>
+<p>下面是改进后的代码：</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void getmemory(char **p)
+&#123;
+    *p = (char *)malloc(11);  // 注意：需要分配足够的空间容纳字符串和结束符&#39;\0&#39;
+    if (*p != NULL)
+        strcpy(*p, &quot;hello world&quot;);
+&#125;
+
+int main(void)
+&#123;
+    char *str = NULL;
+    getmemory(&amp;str);
+    if (str != NULL)
+    &#123;
+        printf(&quot;%s\n&quot;, str);
+        free(str);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>在这段改进后的代码中，<code>getmemory</code> 函数接受一个指向指针的指针 <code>char **p</code>，这样就可以更新外部的 <code>str</code> 指针。此外，确保分配足够的空间来存放字符串和结束符 <code>\0</code>。最后，在 <code>main</code> 函数中检查 <code>str</code> 是否为 <code>NULL</code>，防止在释放之前打印无效的字符串。</p>
+<p>现在，这段代码应该能够正确地分配内存、打印字符串，并释放内存。</p>
+</li>
+<li><pre><code class="c">char szstr[10];
+strcpy(szstr,&quot;0123456789&quot;);
+// 产生什么结果？为什么？
+// 越界。 字符串多一个’\0’结束符
+</code></pre>
+</li>
+<li><pre><code class="c">void main()
+&#123;
+    char aa[10];
+    printf(“%d”,strlen(aa));
+&#125;                                          
+// 会出现什么问题？打印结果是是多少？
+// 打印结果未知
+</code></pre>
+</li>
+<li><pre><code class="c">
+struct A
+&#123;
+    char t:4;
+    char k:4;
+    unsigned short i:8;
+    unsigned long m;
+&#125;; 问sizeof(A) = ?
+8
+</code></pre>
+</li>
+<li><pre><code class="c">struct name1
+&#123;
+    char str;
+    short x;
+    int num;
+&#125; ;求sizeof(name1)?
+8
+</code></pre>
+</li>
+<li><pre><code class="c">struct name2
+&#123;
+    char str;
+    int num;
+    short x;
+&#125;; 求sizeof(name2)？
+32:12
+64:12
+</code></pre>
+</li>
+<li><pre><code class="c">// 程序哪里有错误
+wap( int *p1,int *p2 )
+&#123;
+    int  *p;
+    *p = *p1;
+    *p1 = *p2;
+    *p2 = *p;
+&#125;
+// 答案：申请p的时候没有初始化，所以p为野指针。
+</code></pre>
+</li>
+<li><pre><code class="c">(void *)ptr 和(*(void**))ptr 的结果是否相同？其中ptr为同一个指针。
+答案：(void )ptr 和((void**))ptr 值是相同的
+详解：个人理解，void前面的*是取该地址内容的，所以本质一样
+</code></pre>
+</li>
+<li><pre><code class="c">要对绝对地址0x100000赋值，我们可以用
+(unsigned int*)0x100000 = 1234;
+那么要是想让程序跳转到绝对地址是0x100000去执行，应该怎么做？
+答案：((void ()( ))0x100000 ) ( );
+首先要将0x100000强制转换成函数指针,即:
+(void (*)(void))0x100000
+然后再调用它:
+((void (*)(void))0x100000)();
+</code></pre>
+</li>
+<li><pre><code class="c">关键字volatile有什么含意? 并给出三个不同的例子。
+解释：
+当我们说某个变量是 `volatile` 类型时，意味着这个变量的值可能会在编译器不知道的情况下发生变化。这意味着编译器不能对这个变量进行优化，每次访问它时都要从内存中读取或写入最新值。
+
+举个例子，想象一下有一个灯泡开关，你正在编写一个程序来控制它。当你按下开关时，灯泡就会亮起或熄灭。但是，你不能预测别人是否会同时按下开关。在这种情况下，你需要确保每次检查开关状态时，都能得到最新的信息，而不是基于之前的假设。
+
+这就是 `volatile` 关键字的作用。它告诉编译器：“嘿！这个变量的值可能会随时改变，所以我需要每次访问它时都从内存中读取。” 这样，即使其他人（或者其他程序、设备）改变了变量的值，你的程序也能及时发现并作出反应。
+
+简单地说，`volatile` 关键字就是告诉编译器：“别管我，让我自己来处理这个变量！”
+    
+总结来说，volatile 关键字告诉编译器不要对变量进行优化，而是每次都从内存中读取或写入。这对于多线程编程、中断服务例程以及与 I/O 设备交互的情况特别有用。
+</code></pre>
+</li>
+<li><pre><code class="c">头文件中的ifndef/define/endif 干什么用？
+防止头文件被重复引用
+</code></pre>
+</li>
+<li><pre><code class="c">#include  &lt;filename.h&gt;    和	#include  “filename.h” 有什么区别？
+//引用系统文件  自定义文件 
+答案：对于#include &lt;filename.h&gt; ，编译器从标准库路径开始搜索filename.h ; 对于#include “filename.h” ，编译器从用户的工作路径开始搜索filename.h 。
+</code></pre>
+</li>
+<li><pre><code class="c">const   有什么用途？（请至少说明两种）
+(1)可以定义const 常量（2）const 可以修饰函数的参数、返回值，甚至函数的定义体。被const 修饰的东西都受到强制保护，可以预防意外的变动，能提高程序的健壮性。
+</code></pre>
+</li>
+<li><pre><code class="c">32.static有什么用途？（请至少说明两种）
+</code></pre>
+<p>在 C&#x2F;C++ 中，<code>static</code> 关键字有多种用途，取决于它的上下文。以下是 <code>static</code> 在不同上下文中的一些主要作用：</p>
+<ol>
+<li><p><strong>全局变量和局部变量</strong>：<code>static</code> 可以用来修饰全局变量和局部变量。</p>
+<ul>
+<li><p>当 <code>static</code> 修饰全局变量时，它限制了变量的作用域，使其只能在当前源文件中可见。这有助于避免命名冲突和其他潜在的问题。</p>
+</li>
+<li><p>当 <code>static</code> 修饰局部变量时，它改变了变量的生命周期。静态局部变量会在程序运行期间一直存在，而不是在离开作用域后被销毁。每次进入函数时，静态局部变量都会保留之前的状态。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>函数参数</strong>：<code>static</code> 不适用于函数参数，因为参数总是具有自动存储类别。</p>
+</li>
+<li><p><strong>类成员变量</strong>：在 C++ 中，<code>static</code> 可以修饰类成员变量。静态成员变量属于整个类，而非单个对象。这意味着所有对象共享同一份静态成员变量的副本。</p>
+</li>
+<li><p><strong>类成员函数</strong>：在 C++ 中，<code>static</code> 可以修饰类成员函数。静态成员函数不依赖于特定的对象实例，可以直接通过类名调用。它们不能访问非静态成员变量或调用非静态成员函数。</p>
+</li>
+<li><p><strong>模块内部链接性</strong>：在 C&#x2F;C++ 中，<code>extern static</code> 可以用来声明一个具有内部链接性的变量或函数。这意味着该实体只能在当前编译单元中访问，而不能从其他编译单元访问。</p>
+</li>
+<li><p><strong>C++ 中的名称空间范围</strong>：在 C++ 中，<code>static</code> 可以用来限制名称空间中的名字的作用域，使其只在当前名称空间中有效。</p>
+</li>
+<li><p><strong>C++ 中的多态性</strong>：在 C++ 中，<code>virtual</code> 和 <code>static</code> 成员函数都可以实现多态性。<code>virtual</code> 成员函数基于对象的实际类型动态绑定，而 <code>static</code> 成员函数则始终基于函数调用的方式（即类名或对象引用）绑定。</p>
+</li>
+</ol>
+<p>总之，<code>static</code> 关键字在 C&#x2F;C++ 中扮演着重要的角色，用于控制变量的作用域、生命周期和链接性，以及类成员的行为。在编程时，理解 <code>static</code> 的含义和用法非常重要，因为它会影响程序的行为和性能。</p>
+</li>
+<li><p>堆栈溢出一般是由什么原因导致的？</p>
+<p>没有及时回收垃圾资源</p>
+</li>
+<li><p>如何引用一个已经定义过的全局变量？</p>
+<p> 答案：可以用引用头文件的方式，也可以用extern 关键字，如果用引用头文件方式来引用某个在头文件中声明的全局变理，假定你将那个变量写错了，那么在编译期间会报错，如果你用extern 方式引用时，假定你犯了同样的错误，那么在编译期间不会报错，而在连接期间报错。 </p>
+<p>‌<strong>在‌<a target="_blank" rel="noopener" href="https://www.baidu.com/s?word=C%E8%AF%AD%E8%A8%80&sa=re_dqa_zy">C语言</a>中，引用已经定义过的全局变量可以通过两种主要方式实现：使用<code>extern</code>关键字或通过包含定义该变量的头文件。</strong>‌</p>
+<ul>
+<li></li>
+</ul>
+<p>  ‌<strong>使用<code>extern</code>关键字</strong>‌：当全局变量定义在另一个文件中时，可以在当前文件中使用<code>extern</code>关键字来声明该变量，表明该变量已经在其他地方定义过了。例如，如果全局变量在<code>global_vars.c</code>中定义，那么在<code>main.c</code>中可以通过以下方式引用该变量：</p>
+<pre><code class="c">extern int globalVariable;
+</code></pre>
+<p>  这样声明后，就可以在当前文件中使用<code>globalVariable</code>变量了。</p>
+<ul>
+<li></li>
+</ul>
+<p>  ‌<strong>通过包含定义变量的头文件</strong>‌：如果全局变量定义在一个头文件中，那么只需要在需要使用该变量的文件中包含这个头文件即可。例如，如果全局变量在<code>global_vars.h</code>中定义，那么在<code>main.c</code>中可以通过以下方式引用该变量：</p>
+<pre><code class="c">#include &quot;global_vars.h&quot; // 假设全局变量在这个头文件中定义
+</code></pre>
+<p>  包含头文件后，编译器会处理头文件中的全局变量声明，从而允许在当前文件中直接使用这些全局变量。</p>
+<p>这两种方法都可以有效地引用已经定义过的全局变量，选择哪种方法取决于变量的具体定义方式和项目结构</p>
+</li>
+</ol>
+<p>在 C&#x2F;C++ 中，<code>extern</code> 关键字用于声明一个变量或函数已经在其他地方定义过了。它告诉编译器变量或函数存在于外部，但不在当前文件中定义。<code>extern</code> 关键字主要用于解决以下两种情况：</p>
+<ol>
+<li><p><strong>跨文件引用全局变量</strong>：当你有一个全局变量在某个文件中定义，而在其他文件中想要使用它时，你需要在其他文件中使用 <code>extern</code> 关键字声明这个变量。这样，编译器就会知道变量在其他地方定义，而不是在这个文件中定义。</p>
+</li>
+<li><p><strong>声明外部函数</strong>：当你在一个文件中定义了一个函数，但在其他文件中使用它时，你需要在其他文件中使用 <code>extern</code> 关键字声明这个函数。这样，编译器就会知道函数在其他地方定义，而不是在这个文件中定义。</p>
+</li>
+</ol>
+<p>下面是一些使用 <code>extern</code> 关键字的例子：</p>
+<p><strong>全局变量</strong></p>
+<p>首先，在一个文件中定义全局变量：</p>
+<pre><code class="c">// global_variable.cpp
+int g_global_var = 42;
+</code></pre>
+<p>然后，在另一个文件中使用 <code>extern</code> 关键字声明全局变量：</p>
+<pre><code class="c">// main.cpp
+#include &lt;iostream&gt;
+
+extern int g_global_var; // 声明全局变量
+
+int main() &#123;
+    std::cout &lt;&lt; &quot;Global variable value: &quot; &lt;&lt; g_global_var &lt;&lt; std::endl;
+    return 0;
+&#125;
+</code></pre>
+<p><strong>函数</strong></p>
+<p>首先，在一个文件中定义函数：</p>
+<pre><code class="c">// function.cpp
+int add(int a, int b) &#123;
+    return a + b;
+&#125;
+</code></pre>
+<p>然后，在另一个文件中使用 <code>extern</code> 关键字声明函数：</p>
+<pre><code class="c">// main.cpp
+#include &lt;iostream&gt;
+
+extern int add(int, int); // 声明函数
+
+int main() &#123;
+    int result = add(2, 3);
+    std::cout &lt;&lt; &quot;Result of addition: &quot; &lt;&lt; result &lt;&lt; std::endl;
+    return 0;
+&#125;
+</code></pre>
+<p><code>extern</code> 关键字还可以用于延迟变量的初始化。例如，你可以在头文件中声明一个全局变量，然后在某个源文件中初始化它：</p>
+<pre><code class="c">// global_variable.h
+#ifndef GLOBAL_VARIABLE_H
+#define GLOBAL_VARIABLE_H
+
+extern int g_global_var;
+
+#endif // GLOBAL_VARIABLE_H
+</code></pre>
+<pre><code class="c">// global_variable.cpp
+#include &quot;global_variable.h&quot;
+
+int g_global_var = 42;
+</code></pre>
+<pre><code class="c">// main.cpp
+#include &lt;iostream&gt;
+#include &quot;global_variable.h&quot;
+
+int main() &#123;
+    std::cout &lt;&lt; &quot;Global variable value: &quot; &lt;&lt; g_global_var &lt;&lt; std::endl;
+    return 0;
+&#125;
+</code></pre>
+<p>在这个例子中，<code>main.cpp</code> 引用了 <code>g_global_var</code>，但并没有定义它。<code>global_variable.cpp</code> 提供了实际的定义。<code>extern</code> 关键字告诉编译器 <code>g_global_var</code> 已经在其他地方定义了，这样就不会产生多个定义的错误。</p>
+<ol start="25">
+<li><p>全局变量可不可以定义在可被多个.C 文件包含的头文件中？为什么？</p>
+<p> 答案：可以，在不同的C 文件中以static形式来声明同名全局变量。可以在不同的C文件中声明同名的全局变量，前提是其中只能有一个C文件中对此变量赋初值，此时连接不会出错 </p>
+</li>
+<li><p>Heap与stack的差别。</p>
+<p> 答案：Heap是堆，stack是栈。Stack的空间由操作系统自动分配&#x2F;释放，Heap上的空间手动分配&#x2F;释放。Stack空间有限，Heap是很大的自由存储区C 中的malloc 函数分配的内存空间即在堆上,C++中对应的是new 操作符。程序在编译期对变量和函数分配内存都在栈上进行,且程序运行过程中函数调用时参数的传递也在栈上进行。 </p>
+</li>
+<li><p>用宏定义写出swap（x，y），即交换两数。</p>
+</li>
+</ol>
+<pre><code>```c
+#define swap(x, y) (x)=(x)+(y);(y)=(x)–(y);(x)=(x)–(y);
+```
+</code></pre>
+<ol start="28">
+<li><p>39.写一个“标准”宏，这个宏输入两个参数并返回较小的一个。</p>
+<pre><code class="c">#define min(x, y) ((x)&lt;(y)?(x):(y))
+// 结尾没有 ;
+/*
+在 C/C++ 宏定义中，末尾不需要加分号（;）。宏定义是一种文本替换机制，当预处理器遇到宏定义时，它会将宏名及其参数替换为宏体内的文本。因此，分号不是必需的，除非宏体本身需要分号作为语句的一部分。
+
+例如，min(x, y) 这个宏定义会在调用时展开成 (x) &lt; (y) ? (x) : (y)，这是一个表达式，不需要分号结束。当你在代码中使用这个宏时，它会被插入到现有代码中，成为更大的表达式的一部分，或者作为一个独立的语句。在这种情况下，分号由调用方添加，而不是宏定义本身。
+*/
+</code></pre>
+</li>
+<li></li>
 </ol>
 
       
