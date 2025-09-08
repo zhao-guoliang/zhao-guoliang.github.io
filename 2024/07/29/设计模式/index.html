@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -778,72 +778,74 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>工厂设计模式</strong></p>
-<pre><code class="language-c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
+<pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;memory&gt;</span></span>
 
-using namespace std; // 引入 std 命名空间
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std; <span class="hljs-comment">// 引入 std 命名空间</span>
 
-// 抽象产品类
-class Product &#123;
-public:
-    virtual void display() = 0;
-    virtual ~Product() &#123;&#125;
+<span class="hljs-comment">// 抽象产品类</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Product</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Product</span>() &#123;&#125;
 &#125;;
 
-// 具体产品类 A
-class ConcreteProductA : public Product &#123;
-public:
-    void display() override &#123;
-        cout &lt;&lt; &quot;Concrete Product A&quot; &lt;&lt; endl;
+<span class="hljs-comment">// 具体产品类 A</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ConcreteProductA</span> : <span class="hljs-keyword">public</span> Product &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>&#123;
+        cout &lt;&lt; <span class="hljs-string">&quot;Concrete Product A&quot;</span> &lt;&lt; endl;
     &#125;
 &#125;;
 
-// 具体产品类 B
-class ConcreteProductB : public Product &#123;
-public:
-    void display() override &#123;
-        cout &lt;&lt; &quot;Concrete Product B&quot; &lt;&lt; endl;
+<span class="hljs-comment">// 具体产品类 B</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ConcreteProductB</span> : <span class="hljs-keyword">public</span> Product &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>&#123;
+        cout &lt;&lt; <span class="hljs-string">&quot;Concrete Product B&quot;</span> &lt;&lt; endl;
     &#125;
 &#125;;
 
-// 工厂类
-class Factory &#123;
-public:
-    // 静态方法，根据参数创建具体产品对象
-    static unique_ptr&lt;Product&gt; createProduct(char type) &#123;
-        switch (type) &#123;
-            case &#39;A&#39;:
-                return make_unique&lt;ConcreteProductA&gt;();
-            case &#39;B&#39;:
-                return make_unique&lt;ConcreteProductB&gt;();
-            default:
-                return nullptr;
+<span class="hljs-comment">// 工厂类</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Factory</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-comment">// 静态方法，根据参数创建具体产品对象</span>
+    <span class="hljs-function"><span class="hljs-type">static</span> unique_ptr&lt;Product&gt; <span class="hljs-title">createProduct</span><span class="hljs-params">(<span class="hljs-type">char</span> type)</span> </span>&#123;
+        <span class="hljs-keyword">switch</span> (type) &#123;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;A&#x27;</span>:
+                <span class="hljs-keyword">return</span> <span class="hljs-built_in">make_unique</span>&lt;ConcreteProductA&gt;();
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;B&#x27;</span>:
+                <span class="hljs-keyword">return</span> <span class="hljs-built_in">make_unique</span>&lt;ConcreteProductB&gt;();
+            <span class="hljs-keyword">default</span>:
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
         &#125;
     &#125;
 &#125;;
 
-int main() &#123;
-    // 使用工厂创建具体产品 A
-    unique_ptr&lt;Product&gt; productA = Factory::createProduct(&#39;A&#39;);
-    if (productA) &#123;
-        productA-&gt;display();
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 使用工厂创建具体产品 A</span>
+    unique_ptr&lt;Product&gt; productA = Factory::<span class="hljs-built_in">createProduct</span>(<span class="hljs-string">&#x27;A&#x27;</span>);
+    <span class="hljs-keyword">if</span> (productA) &#123;
+        productA-&gt;<span class="hljs-built_in">display</span>();
     &#125;
 
-    // 使用工厂创建具体产品 B
-    unique_ptr&lt;Product&gt; productB = Factory::createProduct(&#39;B&#39;);
-    if (productB) &#123;
-        productB-&gt;display();
+    <span class="hljs-comment">// 使用工厂创建具体产品 B</span>
+    unique_ptr&lt;Product&gt; productB = Factory::<span class="hljs-built_in">createProduct</span>(<span class="hljs-string">&#x27;B&#x27;</span>);
+    <span class="hljs-keyword">if</span> (productB) &#123;
+        productB-&gt;<span class="hljs-built_in">display</span>();
     &#125;
 
-    // 使用工厂创建不存在的产品
-    unique_ptr&lt;Product&gt; productC = Factory::createProduct(&#39;C&#39;);
-    if (!productC) &#123;
-        cout &lt;&lt; &quot;Invalid product type requested.&quot; &lt;&lt; endl;
+    <span class="hljs-comment">// 使用工厂创建不存在的产品</span>
+    unique_ptr&lt;Product&gt; productC = Factory::<span class="hljs-built_in">createProduct</span>(<span class="hljs-string">&#x27;C&#x27;</span>);
+    <span class="hljs-keyword">if</span> (!productC) &#123;
+        cout &lt;&lt; <span class="hljs-string">&quot;Invalid product type requested.&quot;</span> &lt;&lt; endl;
     &#125;
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+
+
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>

@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -786,10 +786,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><code>sigaction</code> 函数用于设置信号处理函数，以及控制信号处理的行为。它比 <code>signal</code> 函数更强大，提供了更多的控制选项。下面是对 <code>sigaction</code> 函数的详细解释，并附带一个将 <code>sa_flags</code> 设置为 0 的示例。</p>
-<h3 id="sigaction-函数原型"><a href="#sigaction-函数原型" class="headerlink" title="sigaction 函数原型"></a><code>sigaction</code> 函数原型</h3><pre><code class="language-c">#include &lt;signal.h&gt;
+<h3 id="sigaction-函数原型"><a href="#sigaction-函数原型" class="headerlink" title="sigaction 函数原型"></a><code>sigaction</code> 函数原型</h3><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span>
 
-int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
-</code></pre>
+<span class="hljs-type">int</span> <span class="hljs-title function_">sigaction</span><span class="hljs-params">(<span class="hljs-type">int</span> signum, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sigaction *act, <span class="hljs-keyword">struct</span> sigaction *oldact)</span>;</code></pre>
+
 <h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><ol>
 <li><p><strong><code>signum</code></strong>：</p>
 <ul>
@@ -813,16 +813,16 @@ int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)
 </li>
 </ol>
 <h3 id="sigaction-结构体"><a href="#sigaction-结构体" class="headerlink" title="sigaction 结构体"></a><code>sigaction</code> 结构体</h3><p><code>sigaction</code> 结构体定义了信号处理的各种选项：</p>
-<pre><code class="language-c">struct sigaction &#123;
-    union &#123;
-        void (*sa_handler)(int);
-        void (*sa_sigaction)(int, siginfo_t *, void *);
+<pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sigaction</span> &#123;</span>
+    <span class="hljs-class"><span class="hljs-keyword">union</span> &#123;</span>
+        <span class="hljs-type">void</span> (*sa_handler)(<span class="hljs-type">int</span>);
+        <span class="hljs-type">void</span> (*sa_sigaction)(<span class="hljs-type">int</span>, <span class="hljs-type">siginfo_t</span> *, <span class="hljs-type">void</span> *);
     &#125; sa_handler;
-    sigset_t sa_mask;
-    int sa_flags;
-    void (*sa_restorer)(void);
-&#125;;
-</code></pre>
+    <span class="hljs-type">sigset_t</span> sa_mask;
+    <span class="hljs-type">int</span> sa_flags;
+    <span class="hljs-type">void</span> (*sa_restorer)(<span class="hljs-type">void</span>);
+&#125;;</code></pre>
+
 <ul>
 <li><p><strong><code>sa_handler</code></strong>：</p>
 <ul>
@@ -864,31 +864,31 @@ int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)
 <li>如果失败，返回 <code>-1</code>，并设置 <code>errno</code> 表明错误原因。</li>
 </ul>
 <h3 id="示例：将-sa-flags-设置为-0"><a href="#示例：将-sa-flags-设置为-0" class="headerlink" title="示例：将 sa_flags 设置为 0"></a>示例：将 <code>sa_flags</code> 设置为 0</h3><p>下面是一个示例，该示例注册了一个信号处理函数来处理 <code>SIGINT</code> 信号，并将 <code>sa_flags</code> 设置为 0。</p>
-<pre><code class="language-c">#include &lt;stdio.h&gt;
-#include &lt;signal.h&gt;
-#include &lt;unistd.h&gt;
+<pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
 
-void signalHandler(int sig) &#123;
-    printf(&quot;Received signal %d\n&quot;, sig);
+<span class="hljs-type">void</span> <span class="hljs-title function_">signalHandler</span><span class="hljs-params">(<span class="hljs-type">int</span> sig)</span> &#123;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Received signal %d\n&quot;</span>, sig);
 &#125;
 
-int main() &#123;
-    struct sigaction sa;
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sigaction</span> <span class="hljs-title">sa</span>;</span>
     sa.sa_handler = signalHandler;
-    sa.sa_flags = 0; // 使用默认标志位
+    sa.sa_flags = <span class="hljs-number">0</span>; <span class="hljs-comment">// 使用默认标志位</span>
     sigemptyset(&amp;sa.sa_mask);
 
-    if (sigaction(SIGINT, &amp;sa, NULL) == -1) &#123;
-        perror(&quot;sigaction&quot;);
-        return 1;
+    <span class="hljs-keyword">if</span> (sigaction(SIGINT, &amp;sa, <span class="hljs-literal">NULL</span>) == <span class="hljs-number">-1</span>) &#123;
+        perror(<span class="hljs-string">&quot;sigaction&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
     &#125;
 
-    printf(&quot;Waiting for SIGINT...\n&quot;);
-    pause(); // 使进程挂起，等待信号
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Waiting for SIGINT...\n&quot;</span>);
+    pause(); <span class="hljs-comment">// 使进程挂起，等待信号</span>
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ol>
 <li><p><strong>信号处理函数</strong>：</p>
 <ul>

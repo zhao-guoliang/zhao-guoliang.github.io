@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -785,275 +785,281 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <pre><code class="language-c++">// 链表原地逆置
-ListNode* ReverseList(ListNode* head) &#123;
-        // 方法1
-        if (nullptr == head) &#123;
-            return nullptr;
+        <pre><code class="hljs c++"><span class="hljs-comment">// 链表原地逆置</span>
+<span class="hljs-function">ListNode* <span class="hljs-title">ReverseList</span><span class="hljs-params">(ListNode* head)</span> </span>&#123;
+        <span class="hljs-comment">// 方法1</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">nullptr</span> == head) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
         &#125;
-        // 链表原地逆置
-        ListNode *newHead = nullptr;
-        ListNode *tempNode = nullptr;
-        while (nullptr != head) &#123;
+        <span class="hljs-comment">// 链表原地逆置</span>
+        ListNode *newHead = <span class="hljs-literal">nullptr</span>;
+        ListNode *tempNode = <span class="hljs-literal">nullptr</span>;
+        <span class="hljs-keyword">while</span> (<span class="hljs-literal">nullptr</span> != head) &#123;
             tempNode = head-&gt;next;
             head-&gt;next = newHead;
             newHead = head;
             head = tempNode;
         &#125;
-        return newHead;
-    &#125;
-</code></pre>
-<pre><code class="language-c++">//递归合并两个有序链表
-ListNode* mergeTwoSortedLists(ListNode* L1, ListNode* L2)
-&#123;
-    if (L1 == nullptr)
-        return L2;
-    if (L2 == nullptr)
-        return L1;
-    if (L1-&gt;val &lt;= L2-&gt;val)
+        <span class="hljs-keyword">return</span> newHead;
+    &#125;</code></pre>
+
+<pre><code class="hljs c++"><span class="hljs-comment">//递归合并两个有序链表</span>
+<span class="hljs-function">ListNode* <span class="hljs-title">mergeTwoSortedLists</span><span class="hljs-params">(ListNode* L1, ListNode* L2)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">if</span> (L1 == <span class="hljs-literal">nullptr</span>)
+        <span class="hljs-keyword">return</span> L2;
+    <span class="hljs-keyword">if</span> (L2 == <span class="hljs-literal">nullptr</span>)
+        <span class="hljs-keyword">return</span> L1;
+    <span class="hljs-keyword">if</span> (L1-&gt;val &lt;= L2-&gt;val)
     &#123;
-        L1-&gt;next = mergeTwoSortedLists(L1-&gt;next, L2);
-        return L1;
+        L1-&gt;next = <span class="hljs-built_in">mergeTwoSortedLists</span>(L1-&gt;next, L2);
+        <span class="hljs-keyword">return</span> L1;
     &#125;
-    else
+    <span class="hljs-keyword">else</span>
     &#123;
-        L2-&gt;next = mergeTwoSortedLists(L1, L2-&gt;next);
-        return L2;
+        L2-&gt;next = <span class="hljs-built_in">mergeTwoSortedLists</span>(L1, L2-&gt;next);
+        <span class="hljs-keyword">return</span> L2;
     &#125;
-&#125;
-</code></pre>
-<pre><code class="language-c++">// 优先队列 priority_queue
-struct Compare &#123;
-    bool operator()(const ListNode* lhs, const ListNode* rhs) const &#123;
-        return lhs-&gt;val &gt; rhs-&gt;val;//小根堆
+&#125;</code></pre>
+
+<pre><code class="hljs c++"><span class="hljs-comment">// 优先队列 priority_queue</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Compare</span> &#123;
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">const</span> ListNode* lhs, <span class="hljs-type">const</span> ListNode* rhs)</span> <span class="hljs-type">const</span> </span>&#123;
+        <span class="hljs-keyword">return</span> lhs-&gt;val &gt; rhs-&gt;val;<span class="hljs-comment">//小根堆</span>
     &#125;
 &#125;;
-ListNode* mergeKLists(vector&lt;ListNode*&gt;&amp; lists) &#123;
+<span class="hljs-function">ListNode* <span class="hljs-title">mergeKLists</span><span class="hljs-params">(vector&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;
 
     priority_queue&lt;ListNode*, vector&lt;ListNode*&gt;,Compare&gt; q;
 
-    for(auto l : lists)&#123;
-        if(l != nullptr)&#123;
-            q.push(l);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> l : lists)&#123;
+        <span class="hljs-keyword">if</span>(l != <span class="hljs-literal">nullptr</span>)&#123;
+            q.<span class="hljs-built_in">push</span>(l);
         &#125;
     &#125;
-    ListNode* newHead = new ListNode(-1);
+    ListNode* newHead = <span class="hljs-keyword">new</span> <span class="hljs-built_in">ListNode</span>(<span class="hljs-number">-1</span>);
     ListNode* cur = newHead;
-    while (!q.empty()) &#123;
+    <span class="hljs-keyword">while</span> (!q.<span class="hljs-built_in">empty</span>()) &#123;
 
-        cur-&gt;next = q.top();
-        q.pop();
+        cur-&gt;next = q.<span class="hljs-built_in">top</span>();
+        q.<span class="hljs-built_in">pop</span>();
 
         cur = cur-&gt;next;
-        if(cur-&gt;next)&#123;
-            q.push(cur-&gt;next);
+        <span class="hljs-keyword">if</span>(cur-&gt;next)&#123;
+            q.<span class="hljs-built_in">push</span>(cur-&gt;next);
         &#125;
     &#125;
 
-    return newHead-&gt;next;
-&#125;
-</code></pre>
-<pre><code class="language-c++">// 链表有没有环
-bool hasCycle(ListNode *head) &#123;
+    <span class="hljs-keyword">return</span> newHead-&gt;next;
+&#125;</code></pre>
+
+<pre><code class="hljs c++"><span class="hljs-comment">// 链表有没有环</span>
+<span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">hasCycle</span><span class="hljs-params">(ListNode *head)</span> </span>&#123;
         ListNode* fast = head;
         ListNode* slow = head;
 
-        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) &#123;
+        <span class="hljs-keyword">while</span> (fast != <span class="hljs-literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="hljs-literal">nullptr</span>) &#123;
             fast = fast-&gt;next-&gt;next;
             slow = slow-&gt;next;
-            if(fast == slow)&#123;
-                return true;
+            <span class="hljs-keyword">if</span>(fast == slow)&#123;
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
             &#125;
         &#125;
-        return false;
-    &#125;
-</code></pre>
-<pre><code class="language-c++">// 找到有环链表的入口节点
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    &#125;</code></pre>
 
-ListNode* EntryNodeOfLoop(ListNode* pHead) &#123;
+<pre><code class="hljs c++"><span class="hljs-comment">// 找到有环链表的入口节点</span>
 
-    // 方法一
+<span class="hljs-function">ListNode* <span class="hljs-title">EntryNodeOfLoop</span><span class="hljs-params">(ListNode* pHead)</span> </span>&#123;
+
+    <span class="hljs-comment">// 方法一</span>
 
     set&lt;ListNode*&gt; s;
     ListNode* cur = pHead;
 
-    while (cur!= nullptr) &#123;
+    <span class="hljs-keyword">while</span> (cur!= <span class="hljs-literal">nullptr</span>) &#123;
 
-        if(s.count(cur))&#123;
-            return cur;
+        <span class="hljs-keyword">if</span>(s.<span class="hljs-built_in">count</span>(cur))&#123;
+            <span class="hljs-keyword">return</span> cur;
         &#125;
 
-        s.insert(cur);
+        s.<span class="hljs-built_in">insert</span>(cur);
 
         cur = cur-&gt;next;
     &#125;
 
-    return nullptr;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
 
 &#125;
 
 
-/*
-struct ListNode &#123;
-    int val;
-    struct ListNode *next;
-    ListNode(int x) :
-        val(x), next(NULL) &#123;
-    &#125;
-&#125;;
-*/
-class Solution &#123;
-public:
-    ListNode* EntryNodeOfLoop(ListNode* pHead) &#123;
-        // 方法二
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">struct ListNode &#123;</span>
+<span class="hljs-comment">    int val;</span>
+<span class="hljs-comment">    struct ListNode *next;</span>
+<span class="hljs-comment">    ListNode(int x) :</span>
+<span class="hljs-comment">        val(x), next(NULL) &#123;</span>
+<span class="hljs-comment">    &#125;</span>
+<span class="hljs-comment">&#125;;</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function">ListNode* <span class="hljs-title">EntryNodeOfLoop</span><span class="hljs-params">(ListNode* pHead)</span> </span>&#123;
+        <span class="hljs-comment">// 方法二</span>
         ListNode* fast = pHead;
         ListNode* slow = pHead;
-        bool flag = false;
-		// 判断有没有环
-        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) &#123;
+        <span class="hljs-type">bool</span> flag = <span class="hljs-literal">false</span>;
+		<span class="hljs-comment">// 判断有没有环</span>
+        <span class="hljs-keyword">while</span> (fast != <span class="hljs-literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="hljs-literal">nullptr</span>) &#123;
             fast = fast-&gt;next-&gt;next;
             slow = slow-&gt;next;
 
-            if(fast == slow)&#123;
-                flag = true;
-                break;
+            <span class="hljs-keyword">if</span>(fast == slow)&#123;
+                flag = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">break</span>;
             &#125;
         &#125;
-        if(flag)&#123;
-            // 有环  接着计算环的长度
+        <span class="hljs-keyword">if</span>(flag)&#123;
+            <span class="hljs-comment">// 有环  接着计算环的长度</span>
             fast = fast-&gt;next;
-            int n = 1;
-            while (slow != fast) &#123;
+            <span class="hljs-type">int</span> n = <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">while</span> (slow != fast) &#123;
                 fast = fast-&gt;next;
                 n++;
             &#125;
             
-            //两个指针指向头部， 先让一个指针走 一个环的距离， 等两个指针再次相遇的时候， 就是环的入口点。
+            <span class="hljs-comment">//两个指针指向头部， 先让一个指针走 一个环的距离， 等两个指针再次相遇的时候， 就是环的入口点。</span>
             slow = fast = pHead;
-            for (int i = 0; i&lt;n; i++) &#123;
+            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i&lt;n; i++) &#123;
                 fast = fast-&gt;next;
             &#125;
 
-            while (slow != fast) &#123;
+            <span class="hljs-keyword">while</span> (slow != fast) &#123;
                 slow = slow-&gt;next;
                 fast = fast-&gt;next;
             &#125;
 
-            return slow;
+            <span class="hljs-keyword">return</span> slow;
 
         &#125;
 
-        return nullptr;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
 
     &#125;
-&#125;;
-</code></pre>
-<pre><code class="language-c++">// 二分查找
-int search(vector&lt;int&gt;&amp; nums, int target) &#123;
-    // write code here
-    if(nums.size()==0)&#123;
-        return -1;
+&#125;;</code></pre>
+
+<pre><code class="hljs c++"><span class="hljs-comment">// 二分查找</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">search</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums, <span class="hljs-type">int</span> target)</span> </span>&#123;
+    <span class="hljs-comment">// write code here</span>
+    <span class="hljs-keyword">if</span>(nums.<span class="hljs-built_in">size</span>()==<span class="hljs-number">0</span>)&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
     &#125;
 
-    int l = 0;
-    int r = nums.size()-1;
-    int m = -1;
+    <span class="hljs-type">int</span> l = <span class="hljs-number">0</span>;
+    <span class="hljs-type">int</span> r = nums.<span class="hljs-built_in">size</span>()<span class="hljs-number">-1</span>;
+    <span class="hljs-type">int</span> m = <span class="hljs-number">-1</span>;
 
-    while (l&lt;=r) &#123;
-        m = (l+r)/2;
-        if(nums[m]==target)&#123;
-            return m;
-        &#125;else if(nums[m]&gt;target)&#123;
-            r = m-1;
-        &#125;else if(nums[m]&lt;target)&#123;
-            l = m+1;
+    <span class="hljs-keyword">while</span> (l&lt;=r) &#123;
+        m = (l+r)/<span class="hljs-number">2</span>;
+        <span class="hljs-keyword">if</span>(nums[m]==target)&#123;
+            <span class="hljs-keyword">return</span> m;
+        &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(nums[m]&gt;target)&#123;
+            r = m<span class="hljs-number">-1</span>;
+        &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(nums[m]&lt;target)&#123;
+            l = m<span class="hljs-number">+1</span>;
         &#125;
     &#125;
-    return -1;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
 
-&#125;
-</code></pre>
-<pre><code class="language-c++">// 两个链表的第一个公共节点
-ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) &#123;
+&#125;</code></pre>
+
+
+
+<pre><code class="hljs c++"><span class="hljs-comment">// 两个链表的第一个公共节点</span>
+<span class="hljs-function">ListNode* <span class="hljs-title">FindFirstCommonNode</span><span class="hljs-params">( ListNode* pHead1, ListNode* pHead2)</span> </span>&#123;
         
-		// 方法er
+		<span class="hljs-comment">// 方法er</span>
 		ListNode* l1 = pHead1;
 		ListNode* l2 = pHead2;
 		
-		while (l1 != l2) &#123;
-			l1 = (l1==nullptr)?pHead2:l1-&gt;next;
-			l2 = (l2==nullptr)?pHead1:l2-&gt;next;
+		<span class="hljs-keyword">while</span> (l1 != l2) &#123;
+			l1 = (l1==<span class="hljs-literal">nullptr</span>)?pHead2:l1-&gt;next;
+			l2 = (l2==<span class="hljs-literal">nullptr</span>)?pHead1:l2-&gt;next;
 		&#125;
-		return l1;
+		<span class="hljs-keyword">return</span> l1;
 
 		
-		// 方法一
-		/*
-		set&lt;ListNode*&gt; s;
-		while (pHead1 != nullptr) &#123;
-			s.insert(pHead1);
-			pHead1 = pHead1-&gt;next;
-		&#125;
-		while (pHead2 != nullptr) &#123;
-			if(s.count(pHead2))&#123;
-				return pHead2;
-			&#125;
-			pHead2 = pHead2-&gt;next;
-		&#125;
-		return nullptr;
-		*/
+		<span class="hljs-comment">// 方法一</span>
+		<span class="hljs-comment">/*</span>
+<span class="hljs-comment">		set&lt;ListNode*&gt; s;</span>
+<span class="hljs-comment">		while (pHead1 != nullptr) &#123;</span>
+<span class="hljs-comment">			s.insert(pHead1);</span>
+<span class="hljs-comment">			pHead1 = pHead1-&gt;next;</span>
+<span class="hljs-comment">		&#125;</span>
+<span class="hljs-comment">		while (pHead2 != nullptr) &#123;</span>
+<span class="hljs-comment">			if(s.count(pHead2))&#123;</span>
+<span class="hljs-comment">				return pHead2;</span>
+<span class="hljs-comment">			&#125;</span>
+<span class="hljs-comment">			pHead2 = pHead2-&gt;next;</span>
+<span class="hljs-comment">		&#125;</span>
+<span class="hljs-comment">		return nullptr;</span>
+<span class="hljs-comment">		*/</span>
 
 
-    &#125;
-</code></pre>
-<pre><code class="language-c++">// 两个stack模拟queue
+    &#125;</code></pre>
 
-class Solution
+
+
+<pre><code class="hljs c++"><span class="hljs-comment">// 两个stack模拟queue</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>
 &#123;
-public:
-    void push(int node) &#123;
-        stack1.push(node);
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">push</span><span class="hljs-params">(<span class="hljs-type">int</span> node)</span> </span>&#123;
+        stack<span class="hljs-number">1.</span><span class="hljs-built_in">push</span>(node);
     &#125;
 
-    int pop() &#123;
+    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pop</span><span class="hljs-params">()</span> </span>&#123;
 
-        if (stack2.empty()) &#123;
-            while (!stack1.empty()) &#123;
-                stack2.push(stack1.top());
-                stack1.pop();
+        <span class="hljs-keyword">if</span> (stack<span class="hljs-number">2.</span><span class="hljs-built_in">empty</span>()) &#123;
+            <span class="hljs-keyword">while</span> (!stack<span class="hljs-number">1.</span><span class="hljs-built_in">empty</span>()) &#123;
+                stack<span class="hljs-number">2.</span><span class="hljs-built_in">push</span>(stack<span class="hljs-number">1.</span><span class="hljs-built_in">top</span>());
+                stack<span class="hljs-number">1.</span><span class="hljs-built_in">pop</span>();
             &#125;
 
         &#125;
 
-        int val = stack2.top();
-        stack2.pop();
-        return val;
+        <span class="hljs-type">int</span> val = stack<span class="hljs-number">2.</span><span class="hljs-built_in">top</span>();
+        stack<span class="hljs-number">2.</span><span class="hljs-built_in">pop</span>();
+        <span class="hljs-keyword">return</span> val;
 
     &#125;
 
-private:
-    stack&lt;int&gt; stack1;
-    stack&lt;int&gt; stack2;
-&#125;;
-</code></pre>
-<pre><code class="language-cpp">// 最长公共前缀
-string longestCommonPrefix(vector&lt;string&gt;&amp; strs) &#123;
-        // write code here
+<span class="hljs-keyword">private</span>:
+    stack&lt;<span class="hljs-type">int</span>&gt; stack1;
+    stack&lt;<span class="hljs-type">int</span>&gt; stack2;
+&#125;;</code></pre>
+
+<pre><code class="hljs cpp"><span class="hljs-comment">// 最长公共前缀</span>
+<span class="hljs-function">string <span class="hljs-title">longestCommonPrefix</span><span class="hljs-params">(vector&lt;string&gt;&amp; strs)</span> </span>&#123;
+        <span class="hljs-comment">// write code here</span>
         
-        int n = strs.size();
-        if(n==0 || n==1)&#123;
-            return n==0?&quot;&quot;:strs[0];
+        <span class="hljs-type">int</span> n = strs.<span class="hljs-built_in">size</span>();
+        <span class="hljs-keyword">if</span>(n==<span class="hljs-number">0</span> || n==<span class="hljs-number">1</span>)&#123;
+            <span class="hljs-keyword">return</span> n==<span class="hljs-number">0</span>?<span class="hljs-string">&quot;&quot;</span>:strs[<span class="hljs-number">0</span>];
         &#125;
       
-        for (int i = 0; 1; i++) &#123;
-            for (int j = 0; j&lt;n-1; j++) &#123;
-                if(strs[j][i] != strs[j+1][i])&#123;
-                    return strs[j].substr(0,i);
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; <span class="hljs-number">1</span>; i++) &#123;
+            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j&lt;n<span class="hljs-number">-1</span>; j++) &#123;
+                <span class="hljs-keyword">if</span>(strs[j][i] != strs[j<span class="hljs-number">+1</span>][i])&#123;
+                    <span class="hljs-keyword">return</span> strs[j].<span class="hljs-built_in">substr</span>(<span class="hljs-number">0</span>,i);
                 &#125;
             &#125;
         &#125;
-    &#125;
-</code></pre>
+    &#125;</code></pre>
+
+
+
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>

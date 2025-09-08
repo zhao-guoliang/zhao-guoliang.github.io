@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -785,86 +785,86 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &lt;csignal&gt;
-#include &lt;sys/wait.h&gt;
-#include &lt;unistd.h&gt;
+        <pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;csignal&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
 
-void sigchld_handler(int signum) &#123;
-    // 保存和恢复 errno，防止在信号处理程序中改变 errno 导致其他代码出现意外行为
-    int saved_errno = errno;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">sigchld_handler</span><span class="hljs-params">(<span class="hljs-type">int</span> signum)</span> </span>&#123;
+    <span class="hljs-comment">// 保存和恢复 errno，防止在信号处理程序中改变 errno 导致其他代码出现意外行为</span>
+    <span class="hljs-type">int</span> saved_errno = errno;
 
-    // 使用循环等待所有已终止的子进程
-    while (true) &#123;
-        pid_t pid = waitpid(-1, nullptr, WNOHANG);
+    <span class="hljs-comment">// 使用循环等待所有已终止的子进程</span>
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;
+        <span class="hljs-type">pid_t</span> pid = <span class="hljs-built_in">waitpid</span>(<span class="hljs-number">-1</span>, <span class="hljs-literal">nullptr</span>, WNOHANG);
         
-        if (pid &gt; 0) &#123;
-            // 子进程成功终止，进行处理
-            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; pid &lt;&lt; &quot; terminated.&quot; &lt;&lt; std::endl;
-        &#125; else if (pid == 0) &#123;
-            // 没有已终止的子进程
-            break;
-        &#125; else &#123;
-            // 发生错误，检查错误类型
-            if (errno == ECHILD) &#123;
-                // 没有更多的子进程
-                break;
-            &#125; else if (errno == EINTR) &#123;
-                // 调用被中断，继续循环处理
-                continue;
-            &#125; else &#123;
-                // 其他错误，打印错误信息
-                perror(&quot;waitpid&quot;);
-                break;
+        <span class="hljs-keyword">if</span> (pid &gt; <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-comment">// 子进程成功终止，进行处理</span>
+            std::cout &lt;&lt; <span class="hljs-string">&quot;Child process &quot;</span> &lt;&lt; pid &lt;&lt; <span class="hljs-string">&quot; terminated.&quot;</span> &lt;&lt; std::endl;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-comment">// 没有已终止的子进程</span>
+            <span class="hljs-keyword">break</span>;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// 发生错误，检查错误类型</span>
+            <span class="hljs-keyword">if</span> (errno == ECHILD) &#123;
+                <span class="hljs-comment">// 没有更多的子进程</span>
+                <span class="hljs-keyword">break</span>;
+            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errno == EINTR) &#123;
+                <span class="hljs-comment">// 调用被中断，继续循环处理</span>
+                <span class="hljs-keyword">continue</span>;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-comment">// 其他错误，打印错误信息</span>
+                <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;waitpid&quot;</span>);
+                <span class="hljs-keyword">break</span>;
             &#125;
         &#125;
     &#125;
 
-    // 恢复 errno
+    <span class="hljs-comment">// 恢复 errno</span>
     errno = saved_errno;
 &#125;
 
-int main() &#123;
-    // 设置 SIGCHLD 信号处理函数
-    struct sigaction sa;
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 设置 SIGCHLD 信号处理函数</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">sigaction</span> sa;
     sa.sa_handler = sigchld_handler;
     sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
-    sigemptyset(&amp;sa.sa_mask);
+    <span class="hljs-built_in">sigemptyset</span>(&amp;sa.sa_mask);
 
-    if (sigaction(SIGCHLD, &amp;sa, nullptr) == -1) &#123;
-        perror(&quot;sigaction&quot;);
-        return 1;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">sigaction</span>(SIGCHLD, &amp;sa, <span class="hljs-literal">nullptr</span>) == <span class="hljs-number">-1</span>) &#123;
+        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;sigaction&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
     &#125;
 
-    const int NUM_CHILDREN = 5; // 要创建的子进程数量
+    <span class="hljs-type">const</span> <span class="hljs-type">int</span> NUM_CHILDREN = <span class="hljs-number">5</span>; <span class="hljs-comment">// 要创建的子进程数量</span>
 
-    for (int i = 0; i &lt; NUM_CHILDREN; ++i) &#123;
-        pid_t pid = fork();
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; NUM_CHILDREN; ++i) &#123;
+        <span class="hljs-type">pid_t</span> pid = fork();
 
-        if (pid == -1) &#123;
-            // fork 失败
-            perror(&quot;fork&quot;);
-            return 1;
-        &#125; else if (pid == 0) &#123;
-            // 子进程
-            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; getpid() &lt;&lt; &quot; started.&quot; &lt;&lt; std::endl;
-            sleep(2); // 模拟子进程执行一些工作
-            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; getpid() &lt;&lt; &quot; exiting.&quot; &lt;&lt; std::endl;
-            return 0;
-        &#125; else &#123;
-            // 父进程
-            std::cout &lt;&lt; &quot;Parent created child process &quot; &lt;&lt; pid &lt;&lt; std::endl;
+        <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">-1</span>) &#123;
+            <span class="hljs-comment">// fork 失败</span>
+            <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;fork&quot;</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-comment">// 子进程</span>
+            std::cout &lt;&lt; <span class="hljs-string">&quot;Child process &quot;</span> &lt;&lt; <span class="hljs-built_in">getpid</span>() &lt;&lt; <span class="hljs-string">&quot; started.&quot;</span> &lt;&lt; std::endl;
+            <span class="hljs-built_in">sleep</span>(<span class="hljs-number">2</span>); <span class="hljs-comment">// 模拟子进程执行一些工作</span>
+            std::cout &lt;&lt; <span class="hljs-string">&quot;Child process &quot;</span> &lt;&lt; <span class="hljs-built_in">getpid</span>() &lt;&lt; <span class="hljs-string">&quot; exiting.&quot;</span> &lt;&lt; std::endl;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// 父进程</span>
+            std::cout &lt;&lt; <span class="hljs-string">&quot;Parent created child process &quot;</span> &lt;&lt; pid &lt;&lt; std::endl;
         &#125;
     &#125;
 
-    // 父进程持续运行，等待所有子进程终止
-    while (true) &#123;
-        pause(); // 暂停父进程，等待信号到来
+    <span class="hljs-comment">// 父进程持续运行，等待所有子进程终止</span>
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;
+        <span class="hljs-built_in">pause</span>(); <span class="hljs-comment">// 暂停父进程，等待信号到来</span>
     &#125;
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="关键改进"><a href="#关键改进" class="headerlink" title="关键改进"></a>关键改进</h3><ol>
 <li><p><strong>保存和恢复 <code>errno</code></strong>:</p>
 <ul>

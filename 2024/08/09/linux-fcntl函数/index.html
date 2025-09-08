@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -786,10 +786,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><code>fcntl</code> 是一个在 Unix 和 Linux 系统中广泛使用的系统调用，用于操作文件描述符。这个函数提供了一种灵活的方式来控制和管理文件描述符的各种属性和行为。</p>
-<h3 id="fcntl-函数原型"><a href="#fcntl-函数原型" class="headerlink" title="fcntl 函数原型"></a><code>fcntl</code> 函数原型</h3><pre><code class="language-c">#include &lt;fcntl.h&gt;
+<h3 id="fcntl-函数原型"><a href="#fcntl-函数原型" class="headerlink" title="fcntl 函数原型"></a><code>fcntl</code> 函数原型</h3><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span>
 
-int fcntl(int fd, int cmd, ... /* arg */ );
-</code></pre>
+<span class="hljs-type">int</span> <span class="hljs-title function_">fcntl</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">int</span> cmd, ... <span class="hljs-comment">/* arg */</span> )</span>;</code></pre>
+
 <h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><ol>
 <li><p><strong><code>fd</code></strong>: 文件描述符，是一个正整数，表示一个打开的文件或设备。</p>
 </li>
@@ -810,16 +810,13 @@ int fcntl(int fd, int cmd, ... /* arg */ );
 <li><p><strong><code>arg</code></strong>: 可选参数，取决于 <code>cmd</code> 的值。有些命令需要传递一个整型值或指向结构的指针作为 <code>arg</code>。</p>
 </li>
 </ol>
-<h3 id="常见用法示例"><a href="#常见用法示例" class="headerlink" title="常见用法示例"></a>常见用法示例</h3><h4 id="1-复制文件描述符"><a href="#1-复制文件描述符" class="headerlink" title="1. 复制文件描述符"></a>1. 复制文件描述符</h4><pre><code class="language-c">int new_fd = fcntl(fd, F_DUPFD, 0);
-</code></pre>
+<h3 id="常见用法示例"><a href="#常见用法示例" class="headerlink" title="常见用法示例"></a>常见用法示例</h3><h4 id="1-复制文件描述符"><a href="#1-复制文件描述符" class="headerlink" title="1. 复制文件描述符"></a>1. 复制文件描述符</h4><pre><code class="hljs c"><span class="hljs-type">int</span> new_fd = fcntl(fd, F_DUPFD, <span class="hljs-number">0</span>);</code></pre>
 <p>复制 <code>fd</code> 并返回一个新的文件描述符 <code>new_fd</code>，两个描述符共享同一个打开的文件&#x2F;设备。</p>
-<h4 id="2-获取和设置文件描述符标志"><a href="#2-获取和设置文件描述符标志" class="headerlink" title="2. 获取和设置文件描述符标志"></a>2. 获取和设置文件描述符标志</h4><pre><code class="language-c">int flags = fcntl(fd, F_GETFD); // 获取标志
-fcntl(fd, F_SETFD, flags | FD_CLOEXEC); // 设置 FD_CLOEXEC 标志
-</code></pre>
+<h4 id="2-获取和设置文件描述符标志"><a href="#2-获取和设置文件描述符标志" class="headerlink" title="2. 获取和设置文件描述符标志"></a>2. 获取和设置文件描述符标志</h4><pre><code class="hljs c"><span class="hljs-type">int</span> flags = fcntl(fd, F_GETFD); <span class="hljs-comment">// 获取标志</span>
+fcntl(fd, F_SETFD, flags | FD_CLOEXEC); <span class="hljs-comment">// 设置 FD_CLOEXEC 标志</span></code></pre>
 <p>这段代码在执行 exec 系列函数时关闭文件描述符。</p>
-<h4 id="3-获取和设置文件状态标志"><a href="#3-获取和设置文件状态标志" class="headerlink" title="3. 获取和设置文件状态标志"></a>3. 获取和设置文件状态标志</h4><pre><code class="language-c">int flags = fcntl(fd, F_GETFL); // 获取当前的文件状态标志
-fcntl(fd, F_SETFL, flags | O_NONBLOCK); // 将文件设置为非阻塞模式
-</code></pre>
+<h4 id="3-获取和设置文件状态标志"><a href="#3-获取和设置文件状态标志" class="headerlink" title="3. 获取和设置文件状态标志"></a>3. 获取和设置文件状态标志</h4><pre><code class="hljs c"><span class="hljs-type">int</span> flags = fcntl(fd, F_GETFL); <span class="hljs-comment">// 获取当前的文件状态标志</span>
+fcntl(fd, F_SETFL, flags | O_NONBLOCK); <span class="hljs-comment">// 将文件设置为非阻塞模式</span></code></pre>
 <p>这段代码将文件描述符设置为非阻塞模式。</p>
 <h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p><code>fcntl</code> 调用成功时返回正数（通常是新的文件描述符或命令的结果），如果失败则返回 <code>-1</code> 并设置 <code>errno</code> 以指示错误类型。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>fcntl</code> 是一个非常强大和灵活的系统调用，它可以用来管理文件描述符的各种属性，包括文件锁、非阻塞模式、文件描述符的复制等。它在系统编程中广泛用于控制和管理文件 I&#x2F;O 操作。</p>

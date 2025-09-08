@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -792,76 +792,76 @@
 <li>适用于基本数据类型之间的转换、类层次结构中的上行转换（从派生类到基类）和下行转换（从基类到派生类，但无运行时检查）。</li>
 <li>编译器在编译时进行类型检查，确保转换是有效的。</li>
 </ul>
-<pre><code class="language-cpp">int main() &#123;
-    int a = 10;
-    double b = static_cast&lt;double&gt;(a); // 编译时转换
-    return 0;
-&#125;
-</code></pre>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;
+    <span class="hljs-type">double</span> b = <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">double</span>&gt;(a); <span class="hljs-comment">// 编译时转换</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="2-dynamic-cast"><a href="#2-dynamic-cast" class="headerlink" title="2. dynamic_cast"></a>2. <code>dynamic_cast</code></h3><p><strong>检测时刻：运行时</strong></p>
 <ul>
 <li>主要用于多态类型转换（基类指针&#x2F;引用到派生类指针&#x2F;引用）。</li>
 <li>需要基类有至少一个虚函数，以启用运行时类型信息（RTTI）。</li>
 <li>在运行时进行类型检查，如果转换失败，指针类型返回 <code>nullptr</code>，引用类型抛出 <code>std::bad_cast</code> 异常。</li>
 </ul>
-<pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &lt;typeinfo&gt;
+<pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;typeinfo&gt;</span></span>
 
-class Base &#123;
-public:
-    virtual ~Base() &#123;&#125;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base</span>() &#123;&#125;
 &#125;;
 
-class Derived : public Base &#123;
-public:
-    void derivedFunction() &#123;
-        std::cout &lt;&lt; &quot;Derived function called&quot; &lt;&lt; std::endl;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">derivedFunction</span><span class="hljs-params">()</span> </span>&#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Derived function called&quot;</span> &lt;&lt; std::endl;
     &#125;
 &#125;;
 
-int main() &#123;
-    Base* basePtr = new Derived();
-    Derived* derivedPtr = dynamic_cast&lt;Derived*&gt;(basePtr);
-    if (derivedPtr) &#123;
-        derivedPtr-&gt;derivedFunction(); // 运行时转换
-    &#125; else &#123;
-        std::cout &lt;&lt; &quot;Conversion failed&quot; &lt;&lt; std::endl;
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    Base* basePtr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Derived</span>();
+    Derived* derivedPtr = <span class="hljs-built_in">dynamic_cast</span>&lt;Derived*&gt;(basePtr);
+    <span class="hljs-keyword">if</span> (derivedPtr) &#123;
+        derivedPtr-&gt;<span class="hljs-built_in">derivedFunction</span>(); <span class="hljs-comment">// 运行时转换</span>
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Conversion failed&quot;</span> &lt;&lt; std::endl;
     &#125;
-    delete basePtr;
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">delete</span> basePtr;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="3-const-cast"><a href="#3-const-cast" class="headerlink" title="3. const_cast"></a>3. <code>const_cast</code></h3><p><strong>检测时刻：编译时</strong></p>
 <ul>
 <li>用于修改类型的 <code>const</code> 或 <code>volatile</code> 属性。</li>
 <li>主要用于将 <code>const</code> 指针或引用转换为非 <code>const</code>，反之亦然。</li>
 <li>编译器在编译时进行类型检查。</li>
 </ul>
-<pre><code class="language-cpp">int main() &#123;
-    const int a = 10;
-    int* p = const_cast&lt;int*&gt;(&amp;a); // 编译时转换
-    *p = 20; // 可能导致未定义行为
-    // 10
-    /*
-    原因：因为编译器可能会将 const 变量的值内联到代码中，因此即使修改了内存中的值，输出结果仍可能显示原始的 const 值。
-    */
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">const</span> <span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;
+    <span class="hljs-type">int</span>* p = <span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">int</span>*&gt;(&amp;a); <span class="hljs-comment">// 编译时转换</span>
+    *p = <span class="hljs-number">20</span>; <span class="hljs-comment">// 可能导致未定义行为</span>
+    <span class="hljs-comment">// 10</span>
+    <span class="hljs-comment">/*</span>
+<span class="hljs-comment">    原因：因为编译器可能会将 const 变量的值内联到代码中，因此即使修改了内存中的值，输出结果仍可能显示原始的 const 值。</span>
+<span class="hljs-comment">    */</span>
     cout&lt;&lt;a&lt;&lt;endl;
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="4-reinterpret-cast"><a href="#4-reinterpret-cast" class="headerlink" title="4. reinterpret_cast"></a>4. <code>reinterpret_cast</code></h3><p><strong>检测时刻：编译时</strong></p>
 <ul>
 <li>用于进行低级别的、无类型安全检查的转换。</li>
 <li>适用于指针类型之间的转换、将指针转换为整数类型或反之。</li>
 <li>编译器在编译时进行类型检查，但不保证转换的安全性。</li>
 </ul>
-<pre><code class="language-cpp">int main() &#123;
-    int a = 10;
-    void* p = reinterpret_cast&lt;void*&gt;(&amp;a); // 编译时转换
-    int* q = reinterpret_cast&lt;int*&gt;(p);
-    return 0;
-&#125;
-</code></pre>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;
+    <span class="hljs-type">void</span>* p = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">void</span>*&gt;(&amp;a); <span class="hljs-comment">// 编译时转换</span>
+    <span class="hljs-type">int</span>* q = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">int</span>*&gt;(p);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
 <li><code>static_cast</code>：编译时检测，适用于安全的类型转换，如基本数据类型和类层次结构。</li>
 <li><code>dynamic_cast</code>：运行时检测，适用于多态类型转换，需要运行时类型检查。</li>
@@ -870,8 +870,8 @@ int main() &#123;
 </ul>
 <p>了解这些类型转换运算符的用途和检测时刻，有助于在编写 C++ 程序时进行适当的类型转换，确保代码的安全性和正确性。</p>
 <h3 id="1-const-cast"><a href="#1-const-cast" class="headerlink" title="1.const_cast"></a>1.const_cast</h3><p><code>const_cast</code> 是 C++ 中的一个类型转换运算符，用于去除或添加指针或引用的常量性。与其他类型转换运算符不同，<code>const_cast</code> 只能用于修改类型的 <code>const</code> 或 <code>volatile</code> 属性。</p>
-<h3 id="const-cast-基本语法"><a href="#const-cast-基本语法" class="headerlink" title="const_cast 基本语法"></a><code>const_cast</code> 基本语法</h3><pre><code class="language-cpp">const_cast&lt;new_type&gt;(expression)
-</code></pre>
+<h3 id="const-cast-基本语法"><a href="#const-cast-基本语法" class="headerlink" title="const_cast 基本语法"></a><code>const_cast</code> 基本语法</h3><pre><code class="hljs cpp"><span class="hljs-built_in">const_cast</span>&lt;new_type&gt;(expression)</code></pre>
+
 <ul>
 <li><code>new_type</code>：要转换成的目标类型。</li>
 <li><code>expression</code>：要转换的表达式。</li>
@@ -880,78 +880,77 @@ int main() &#123;
 <li><strong>去除常量性</strong>：将 <code>const</code> 指针或引用转换为非 <code>const</code>，允许修改对象。</li>
 <li><strong>添加常量性</strong>：将非 <code>const</code> 指针或引用转换为 <code>const</code>。</li>
 </ol>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="去除常量性"><a href="#去除常量性" class="headerlink" title="去除常量性"></a>去除常量性</h4><pre><code class="language-cpp">int main() &#123;
-    const int n = 42;
-    // 将 const int* 转换为 int*
-    int* p = const_cast&lt;int*&gt;(&amp;n);
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="去除常量性"><a href="#去除常量性" class="headerlink" title="去除常量性"></a>去除常量性</h4><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">const</span> <span class="hljs-type">int</span> n = <span class="hljs-number">42</span>;
+    <span class="hljs-comment">// 将 const int* 转换为 int*</span>
+    <span class="hljs-type">int</span>* p = <span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">int</span>*&gt;(&amp;n);
     
-    // 修改值，尽管这种修改可能导致未定义行为
-    *p = 24;
+    <span class="hljs-comment">// 修改值，尽管这种修改可能导致未定义行为</span>
+    *p = <span class="hljs-number">24</span>;
     
-    std::cout &lt;&lt; &quot;n: &quot; &lt;&lt; n &lt;&lt; std::endl;  
+    std::cout &lt;&lt; <span class="hljs-string">&quot;n: &quot;</span> &lt;&lt; n &lt;&lt; std::endl;  
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h4 id="成员函数中去除常量性"><a href="#成员函数中去除常量性" class="headerlink" title="成员函数中去除常量性"></a>成员函数中去除常量性</h4><p>在某些情况下，成员函数被声明为 <code>const</code>，但是你需要修改成员变量。可以使用 <code>const_cast</code> 去除 <code>const</code> 属性。</p>
-<pre><code class="language-cpp">class MyClass &#123;
-public:
-    MyClass(int val) : value(val) &#123;&#125;
+<pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">MyClass</span>(<span class="hljs-type">int</span> val) : <span class="hljs-built_in">value</span>(val) &#123;&#125;
 
-    void setValue(int val) const &#123;
-        // 去除 this 指针的常量性
-        const_cast&lt;MyClass*&gt;(this)-&gt;value = val;
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setValue</span><span class="hljs-params">(<span class="hljs-type">int</span> val)</span> <span class="hljs-type">const</span> </span>&#123;
+        <span class="hljs-comment">// 去除 this 指针的常量性</span>
+        <span class="hljs-built_in">const_cast</span>&lt;MyClass*&gt;(<span class="hljs-keyword">this</span>)-&gt;value = val;
     &#125;
 
-    int getValue() const &#123;
-        return value;
+    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">getValue</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;
+        <span class="hljs-keyword">return</span> value;
     &#125;
 
-private:
-    int value;
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">int</span> value;
 &#125;;
 
-int main() &#123;
-    const MyClass obj(10);
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-type">const</span> MyClass <span class="hljs-title">obj</span><span class="hljs-params">(<span class="hljs-number">10</span>)</span></span>;
 
-    obj.setValue(20);  // 修改常量对象的成员变量
+    obj.<span class="hljs-built_in">setValue</span>(<span class="hljs-number">20</span>);  <span class="hljs-comment">// 修改常量对象的成员变量</span>
 
-    std::cout &lt;&lt; &quot;Value: &quot; &lt;&lt; obj.getValue() &lt;&lt; std::endl;  // 输出 20
+    std::cout &lt;&lt; <span class="hljs-string">&quot;Value: &quot;</span> &lt;&lt; obj.<span class="hljs-built_in">getValue</span>() &lt;&lt; std::endl;  <span class="hljs-comment">// 输出 20</span>
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h4 id="与库函数的兼容性"><a href="#与库函数的兼容性" class="headerlink" title="与库函数的兼容性"></a>与库函数的兼容性</h4><p>有时你需要调用一个不接受 <code>const</code> 参数的旧库函数。你可以使用 <code>const_cast</code> 去除 <code>const</code> 属性来与这样的函数兼容。</p>
-<pre><code class="language-cpp">void legacyFunction(char* str) &#123;
-    std::cout &lt;&lt; &quot;Legacy function: &quot; &lt;&lt; str &lt;&lt; std::endl;
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">legacyFunction</span><span class="hljs-params">(<span class="hljs-type">char</span>* str)</span> </span>&#123;
+    std::cout &lt;&lt; <span class="hljs-string">&quot;Legacy function: &quot;</span> &lt;&lt; str &lt;&lt; std::endl;
 &#125;
 
-int main() &#123;
-    const char* text = &quot;Hello, world!&quot;;
-    // 将 const char* 转换为 char*
-    legacyFunction(const_cast&lt;char*&gt;(text));
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* text = <span class="hljs-string">&quot;Hello, world!&quot;</span>;
+    <span class="hljs-comment">// 将 const char* 转换为 char*</span>
+    <span class="hljs-built_in">legacyFunction</span>(<span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">char</span>*&gt;(text));
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="添加常量性"><a href="#添加常量性" class="headerlink" title="添加常量性"></a>添加常量性</h3><p>虽然不常见，但也可以使用 <code>const_cast</code> 添加常量性。</p>
-<pre><code class="language-cpp">int main() &#123;
-    int n = 42;
-    // 将 int* 转换为 const int*
-    const int* p = const_cast&lt;const int*&gt;(&amp;n);
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">int</span> n = <span class="hljs-number">42</span>;
+    <span class="hljs-comment">// 将 int* 转换为 const int*</span>
+    <span class="hljs-type">const</span> <span class="hljs-type">int</span>* p = <span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">const</span> <span class="hljs-type">int</span>*&gt;(&amp;n);
 
-    // 现在 p 是一个 const int*，不能通过它修改 n
-    // *p = 24;  // 错误，不能修改
+    <span class="hljs-comment">// 现在 p 是一个 const int*，不能通过它修改 n</span>
+    <span class="hljs-comment">// *p = 24;  // 错误，不能修改</span>
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="使用注意事项"><a href="#使用注意事项" class="headerlink" title="使用注意事项"></a>使用注意事项</h3><ul>
 <li><p><strong>未定义行为</strong>：通过 <code>const_cast</code> 去除常量性并修改对象，如果对象本身是常量的（例如，定义为 <code>const</code>），这种修改会导致未定义行为。</p>
-<pre><code class="language-cpp">const int n = 42;
-int* p = const_cast&lt;int*&gt;(&amp;n);
-*p = 24;  
-</code></pre>
+<pre><code class="hljs cpp"><span class="hljs-type">const</span> <span class="hljs-type">int</span> n = <span class="hljs-number">42</span>;
+<span class="hljs-type">int</span>* p = <span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">int</span>*&gt;(&amp;n);
+*p = <span class="hljs-number">24</span>;</code></pre>
 </li>
 <li><p><strong>设计意图</strong>：<code>const_cast</code> 应该仅用于你确定不会破坏代码逻辑和设计意图的情况下。常量性通常用于保护数据不被意外修改，因此应谨慎使用 <code>const_cast</code>。</p>
 </li>
@@ -960,95 +959,88 @@ int* p = const_cast&lt;int*&gt;(&amp;n);
 </ul>
 <h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p><code>const_cast</code> 是一个功能强大的类型转换工具，用于在 C++ 中处理 <code>const</code> 和 <code>volatile</code> 属性。尽管它在某些场景下非常有用，但由于可能引发未定义行为，因此应谨慎使用，并尽量在设计时避免需要使用它的情况。</p>
 <h3 id="2-static-cast"><a href="#2-static-cast" class="headerlink" title="2.static_cast"></a>2.static_cast</h3><p><code>static_cast</code> 是 C++ 中的一种类型转换运算符，用于在编译时执行类型转换。与 <code>reinterpret_cast</code> 和 <code>const_cast</code> 不同，<code>static_cast</code> 更加安全，因为它只能在特定类型之间进行转换，并且在编译时进行检查。它适用于以下几种常见的类型转换场景：</p>
-<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><pre><code class="language-cpp">static_cast&lt;new_type&gt;(expression)
-</code></pre>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><pre><code class="hljs cpp"><span class="hljs-built_in">static_cast</span>&lt;new_type&gt;(expression)</code></pre>
+
 <ul>
 <li><code>new_type</code>：要转换成的目标类型。</li>
 <li><code>expression</code>：要转换的表达式。</li>
 </ul>
 <h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ol>
 <li><p><strong>基本数据类型之间的转换</strong>：</p>
-<pre><code class="language-cpp">int main() &#123;
-    float f = 3.14;
-    int i = static_cast&lt;int&gt;(f);  // 将 float 转换为 int
-    std::cout &lt;&lt; &quot;i: &quot; &lt;&lt; i &lt;&lt; std::endl;  // 输出 i: 3
-    return 0;
-&#125;
-</code></pre>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">float</span> f = <span class="hljs-number">3.14</span>;
+    <span class="hljs-type">int</span> i = <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">int</span>&gt;(f);  <span class="hljs-comment">// 将 float 转换为 int</span>
+    std::cout &lt;&lt; <span class="hljs-string">&quot;i: &quot;</span> &lt;&lt; i &lt;&lt; std::endl;  <span class="hljs-comment">// 输出 i: 3</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>指针类型之间的转换</strong>：</p>
-<pre><code class="language-cpp">class Base &#123;&#125;;
-class Derived : public Base &#123;&#125;;
+<pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> &#123;&#125;;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base &#123;&#125;;
 
-int main() &#123;
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
     Derived d;
-    Base* b = static_cast&lt;Base*&gt;(&amp;d);  // 将 Derived* 转换为 Base*
-    return 0;
-&#125;
-</code></pre>
+    Base* b = <span class="hljs-built_in">static_cast</span>&lt;Base*&gt;(&amp;d);  <span class="hljs-comment">// 将 Derived* 转换为 Base*</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>将空指针转换为其他指针类型</strong>：</p>
-<pre><code class="language-cpp">int main() &#123;
-    void* ptr = nullptr;
-    int* intPtr = static_cast&lt;int*&gt;(ptr);  // 将 void* 转换为 int*
-    return 0;
-&#125;
-</code></pre>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">void</span>* ptr = <span class="hljs-literal">nullptr</span>;
+    <span class="hljs-type">int</span>* intPtr = <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">int</span>*&gt;(ptr);  <span class="hljs-comment">// 将 void* 转换为 int*</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>转换枚举类型</strong>：</p>
-<pre><code class="language-cpp">enum Color &#123; RED, GREEN, BLUE &#125;;
+<pre><code class="hljs cpp"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span> &#123; RED, GREEN, BLUE &#125;;
 
-int main() &#123;
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
     Color c = RED;
-    int colorInt = static_cast&lt;int&gt;(c);  // 将枚举类型转换为 int
-    std::cout &lt;&lt; &quot;colorInt: &quot; &lt;&lt; colorInt &lt;&lt; std::endl;  // 输出 colorInt: 0
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-type">int</span> colorInt = <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">int</span>&gt;(c);  <span class="hljs-comment">// 将枚举类型转换为 int</span>
+    std::cout &lt;&lt; <span class="hljs-string">&quot;colorInt: &quot;</span> &lt;&lt; colorInt &lt;&lt; std::endl;  <span class="hljs-comment">// 输出 colorInt: 0</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>基础类和派生类之间的转换</strong>：</p>
-<pre><code class="language-cpp">class Base &#123;
-public:
-    virtual ~Base() &#123;&#125;
+<pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base</span>() &#123;&#125;
 &#125;;
 
-class Derived : public Base &#123;
-public:
-    void derivedFunction() &#123;&#125;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">derivedFunction</span><span class="hljs-params">()</span> </span>&#123;&#125;
 &#125;;
 
-int main() &#123;
-    Base* b = new Derived();
-    Derived* d = static_cast&lt;Derived*&gt;(b);  // 将 Base* 转换为 Derived*
-    d-&gt;derivedFunction();  // 调用派生类的方法
-    delete b;
-    return 0;
-&#125;
-</code></pre>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    Base* b = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Derived</span>();
+    Derived* d = <span class="hljs-built_in">static_cast</span>&lt;Derived*&gt;(b);  <span class="hljs-comment">// 将 Base* 转换为 Derived*</span>
+    d-&gt;<span class="hljs-built_in">derivedFunction</span>();  <span class="hljs-comment">// 调用派生类的方法</span>
+    <span class="hljs-keyword">delete</span> b;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>有意义的类型转换运算符</strong>：</p>
-<pre><code class="language-cpp">class Complex &#123;
-public:
-    Complex(double real, double imag) : real(real), imag(imag) &#123;&#125;
+<pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Complex</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Complex</span>(<span class="hljs-type">double</span> real, <span class="hljs-type">double</span> imag) : <span class="hljs-built_in">real</span>(real), <span class="hljs-built_in">imag</span>(imag) &#123;&#125;
 
-    // 定义转换运算符，将 Complex 转换为 double
-    operator double() const &#123;
-        return real;
+    <span class="hljs-comment">// 定义转换运算符，将 Complex 转换为 double</span>
+    <span class="hljs-function"><span class="hljs-keyword">operator</span> <span class="hljs-title">double</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;
+        <span class="hljs-keyword">return</span> real;
     &#125;
 
-private:
-    double real;
-    double imag;
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> real;
+    <span class="hljs-type">double</span> imag;
 &#125;;
 
-int main() &#123;
-    Complex c(3.0, 4.0);
-    double realPart = static_cast&lt;double&gt;(c);  // 使用转换运算符将 Complex 转换为 double
-    std::cout &lt;&lt; &quot;realPart: &quot; &lt;&lt; realPart &lt;&lt; std::endl;  // 输出 realPart: 3.0
-    return 0;
-&#125;
-</code></pre>
-</li>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-function">Complex <span class="hljs-title">c</span><span class="hljs-params">(<span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>)</span></span>;
+    <span class="hljs-type">double</span> realPart = <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">double</span>&gt;(c);  <span class="hljs-comment">// 使用转换运算符将 Complex 转换为 double</span>
+    std::cout &lt;&lt; <span class="hljs-string">&quot;realPart: &quot;</span> &lt;&lt; realPart &lt;&lt; std::endl;  <span class="hljs-comment">// 输出 realPart: 3.0</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre></li>
 </ol>
 <h3 id="使用注意事项-1"><a href="#使用注意事项-1" class="headerlink" title="使用注意事项"></a>使用注意事项</h3><ul>
 <li><p><strong>安全性</strong>：<code>static_cast</code> 进行的是编译时检查，因此相对于 <code>reinterpret_cast</code> 更为安全。但它不能用于去除 <code>const</code>、<code>volatile</code> 限定符，也不能进行不相关类型的转换。</p>
@@ -1060,8 +1052,8 @@ int main() &#123;
 </ul>
 <h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p><code>static_cast</code> 是 C++ 中一种安全且常用的类型转换运算符，适用于多种类型转换场景。它在编译时进行类型检查，相比 <code>reinterpret_cast</code> 和 <code>const_cast</code> 更加安全可靠。在使用时，确保理解转换的类型和语义，以避免潜在的未定义行为。</p>
 <p><code>dynamic_cast</code> 是 C++ 中的一种类型转换运算符，用于在运行时进行安全的类型转换。它主要用于处理继承层次结构中的指针或引用，特别是在多态（polymorphism）情况下。<code>dynamic_cast</code> 通过运行时类型检查（RTTI, Run-Time Type Information）来确保转换的安全性。如果转换失败，指针类型会返回 <code>nullptr</code>，引用类型会抛出 <code>std::bad_cast</code> 异常。</p>
-<h3 id="dynamic-cast"><a href="#dynamic-cast" class="headerlink" title="dynamic_cast"></a>dynamic_cast</h3><h3 id="基本语法-1"><a href="#基本语法-1" class="headerlink" title="基本语法"></a>基本语法</h3><pre><code class="language-cpp">dynamic_cast&lt;new_type&gt;(expression)
-</code></pre>
+<h3 id="dynamic-cast"><a href="#dynamic-cast" class="headerlink" title="dynamic_cast"></a>dynamic_cast</h3><h3 id="基本语法-1"><a href="#基本语法-1" class="headerlink" title="基本语法"></a>基本语法</h3><pre><code class="hljs cpp"><span class="hljs-built_in">dynamic_cast</span>&lt;new_type&gt;(expression)</code></pre>
+
 <ul>
 <li><code>new_type</code>：要转换成的目标类型，必须是一个指针或引用类型。</li>
 <li><code>expression</code>：要转换的表达式，通常是一个指向基类的指针或引用。</li>
@@ -1070,101 +1062,101 @@ int main() &#123;
 <li><strong>向下转换（Downcasting）</strong>：将基类指针或引用转换为派生类指针或引用。</li>
 <li><strong>横向转换（Sidecasting）</strong>：在有多重继承的情况下，从一个基类指针转换为另一个基类指针。</li>
 </ol>
-<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><h4 id="向下转换"><a href="#向下转换" class="headerlink" title="向下转换"></a>向下转换</h4><pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &lt;typeinfo&gt;
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><h4 id="向下转换"><a href="#向下转换" class="headerlink" title="向下转换"></a>向下转换</h4><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;typeinfo&gt;</span></span>
 
-class Base &#123;
-public:
-    virtual ~Base() &#123;&#125;  // 必须有虚函数以启用 RTTI
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base</span>() &#123;&#125;  <span class="hljs-comment">// 必须有虚函数以启用 RTTI</span>
 &#125;;
 
-class Derived : public Base &#123;
-public:
-    void derivedFunction() &#123;
-        std::cout &lt;&lt; &quot;Derived function called&quot; &lt;&lt; std::endl;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">derivedFunction</span><span class="hljs-params">()</span> </span>&#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Derived function called&quot;</span> &lt;&lt; std::endl;
     &#125;
 &#125;;
 
-int main() &#123;
-    Base* basePtr = new Derived();  // 基类指针指向派生类对象
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    Base* basePtr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Derived</span>();  <span class="hljs-comment">// 基类指针指向派生类对象</span>
 
-    Derived* derivedPtr = dynamic_cast&lt;Derived*&gt;(basePtr);
-    if (derivedPtr) &#123;
-        derivedPtr-&gt;derivedFunction();  // 安全调用派生类函数
-    &#125; else &#123;
-        std::cout &lt;&lt; &quot;Conversion failed&quot; &lt;&lt; std::endl;
+    Derived* derivedPtr = <span class="hljs-built_in">dynamic_cast</span>&lt;Derived*&gt;(basePtr);
+    <span class="hljs-keyword">if</span> (derivedPtr) &#123;
+        derivedPtr-&gt;<span class="hljs-built_in">derivedFunction</span>();  <span class="hljs-comment">// 安全调用派生类函数</span>
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Conversion failed&quot;</span> &lt;&lt; std::endl;
     &#125;
 
-    delete basePtr;
-    return 0;
+    <span class="hljs-keyword">delete</span> basePtr;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+<h4 id="横向转换"><a href="#横向转换" class="headerlink" title="横向转换"></a>横向转换</h4><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base1</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base1</span>() &#123;&#125;
+&#125;;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base2</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base2</span>() &#123;&#125;
+&#125;;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base1, <span class="hljs-keyword">public</span> Base2 &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">derivedFunction</span><span class="hljs-params">()</span> </span>&#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Derived function called&quot;</span> &lt;&lt; std::endl;
+    &#125;
+&#125;;
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    Base1* base1Ptr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Derived</span>();  <span class="hljs-comment">// Base1 指针指向 Derived 对象</span>
+
+    Base2* base2Ptr = <span class="hljs-built_in">dynamic_cast</span>&lt;Base2*&gt;(base1Ptr);
+    <span class="hljs-keyword">if</span> (base2Ptr) &#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Successfully cast Base1* to Base2*&quot;</span> &lt;&lt; std::endl;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Conversion failed&quot;</span> &lt;&lt; std::endl;
+    &#125;
+
+    <span class="hljs-keyword">delete</span> base1Ptr;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+<h4 id="引用类型的转换"><a href="#引用类型的转换" class="headerlink" title="引用类型的转换"></a>引用类型的转换</h4><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;typeinfo&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base</span>() &#123;&#125;
+&#125;;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">derivedFunction</span><span class="hljs-params">()</span> </span>&#123;
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Derived function called&quot;</span> &lt;&lt; std::endl;
+    &#125;
+&#125;;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">process</span><span class="hljs-params">(Base&amp; baseRef)</span> </span>&#123;
+    <span class="hljs-keyword">try</span> &#123;
+        Derived&amp; derivedRef = <span class="hljs-built_in">dynamic_cast</span>&lt;Derived&amp;&gt;(baseRef);
+        derivedRef.<span class="hljs-built_in">derivedFunction</span>();
+    &#125; <span class="hljs-built_in">catch</span> (<span class="hljs-type">const</span> std::bad_cast&amp; e) &#123;
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;Bad cast: &quot;</span> &lt;&lt; e.<span class="hljs-built_in">what</span>() &lt;&lt; std::endl;
+    &#125;
 &#125;
-</code></pre>
-<h4 id="横向转换"><a href="#横向转换" class="headerlink" title="横向转换"></a>横向转换</h4><pre><code class="language-cpp">#include &lt;iostream&gt;
 
-class Base1 &#123;
-public:
-    virtual ~Base1() &#123;&#125;
-&#125;;
-
-class Base2 &#123;
-public:
-    virtual ~Base2() &#123;&#125;
-&#125;;
-
-class Derived : public Base1, public Base2 &#123;
-public:
-    void derivedFunction() &#123;
-        std::cout &lt;&lt; &quot;Derived function called&quot; &lt;&lt; std::endl;
-    &#125;
-&#125;;
-
-int main() &#123;
-    Base1* base1Ptr = new Derived();  // Base1 指针指向 Derived 对象
-
-    Base2* base2Ptr = dynamic_cast&lt;Base2*&gt;(base1Ptr);
-    if (base2Ptr) &#123;
-        std::cout &lt;&lt; &quot;Successfully cast Base1* to Base2*&quot; &lt;&lt; std::endl;
-    &#125; else &#123;
-        std::cout &lt;&lt; &quot;Conversion failed&quot; &lt;&lt; std::endl;
-    &#125;
-
-    delete base1Ptr;
-    return 0;
-&#125;
-</code></pre>
-<h4 id="引用类型的转换"><a href="#引用类型的转换" class="headerlink" title="引用类型的转换"></a>引用类型的转换</h4><pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &lt;typeinfo&gt;
-
-class Base &#123;
-public:
-    virtual ~Base() &#123;&#125;
-&#125;;
-
-class Derived : public Base &#123;
-public:
-    void derivedFunction() &#123;
-        std::cout &lt;&lt; &quot;Derived function called&quot; &lt;&lt; std::endl;
-    &#125;
-&#125;;
-
-void process(Base&amp; baseRef) &#123;
-    try &#123;
-        Derived&amp; derivedRef = dynamic_cast&lt;Derived&amp;&gt;(baseRef);
-        derivedRef.derivedFunction();
-    &#125; catch (const std::bad_cast&amp; e) &#123;
-        std::cerr &lt;&lt; &quot;Bad cast: &quot; &lt;&lt; e.what() &lt;&lt; std::endl;
-    &#125;
-&#125;
-
-int main() &#123;
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
     Derived derivedObj;
     Base&amp; baseRef = derivedObj;
 
-    process(baseRef);  // 安全转换并调用派生类方法
+    <span class="hljs-built_in">process</span>(baseRef);  <span class="hljs-comment">// 安全转换并调用派生类方法</span>
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
 <h3 id="使用注意事项-2"><a href="#使用注意事项-2" class="headerlink" title="使用注意事项"></a>使用注意事项</h3><ol>
 <li><strong>必须有虚函数</strong>：基类必须有至少一个虚函数，以便启用运行时类型信息（RTTI）。</li>
 <li><strong>转换失败处理</strong>：在使用指针类型时，转换失败会返回 <code>nullptr</code>，在使用引用类型时，转换失败会抛出 <code>std::bad_cast</code> 异常。</li>
@@ -1175,68 +1167,63 @@ int main() &#123;
 <h3 id="4-reinterpret-cast-1"><a href="#4-reinterpret-cast-1" class="headerlink" title="4.reinterpret_cast"></a>4.reinterpret_cast</h3><p><code>reinterpret_cast</code> 是 C++ 中的一种类型转换运算符，用于强制转换指针、引用和其他类型之间。与其他类型转换运算符（如 <code>static_cast</code>、<code>dynamic_cast</code> 和 <code>const_cast</code>）不同，<code>reinterpret_cast</code> 可以执行非常规的类型转换，包括不安全的和未定义行为的转换，因此使用时需要特别小心。</p>
 <h3 id="使用场景和示例"><a href="#使用场景和示例" class="headerlink" title="使用场景和示例"></a>使用场景和示例</h3><ol>
 <li><p><strong>指针类型之间的转换</strong>：</p>
-<pre><code class="language-cpp">int main() &#123;
-    int n = 42;
-    // 将 int* 转换为 char*
-    char* p = reinterpret_cast&lt;char*&gt;(&amp;n);
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">int</span> n = <span class="hljs-number">42</span>;
+    <span class="hljs-comment">// 将 int* 转换为 char*</span>
+    <span class="hljs-type">char</span>* p = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">char</span>*&gt;(&amp;n);
 
-    // 输出指针 p 所指向的值
-    std::cout &lt;&lt; *p &lt;&lt; std::endl;  // 注意：输出的值依赖于系统的字节序和类型大小
+    <span class="hljs-comment">// 输出指针 p 所指向的值</span>
+    std::cout &lt;&lt; *p &lt;&lt; std::endl;  <span class="hljs-comment">// 注意：输出的值依赖于系统的字节序和类型大小</span>
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>将整数转换为指针类型</strong>：</p>
-<pre><code class="language-cpp">int main() &#123;
-    intptr_t addr = 0x12345678;  // 整数地址
-    // 将整数转换为指针
-    int* p = reinterpret_cast&lt;int*&gt;(addr);
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">intptr_t</span> addr = <span class="hljs-number">0x12345678</span>;  <span class="hljs-comment">// 整数地址</span>
+    <span class="hljs-comment">// 将整数转换为指针</span>
+    <span class="hljs-type">int</span>* p = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">int</span>*&gt;(addr);
 
-    // 打印指针地址
+    <span class="hljs-comment">// 打印指针地址</span>
     std::cout &lt;&lt; p &lt;&lt; std::endl;
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>将指针转换为整数类型</strong>：</p>
-<pre><code class="language-cpp">int main() &#123;
-    int n = 42;
-    int* p = &amp;n;
-    // 将指针转换为整数
-    intptr_t addr = reinterpret_cast&lt;intptr_t&gt;(p);
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-type">int</span> n = <span class="hljs-number">42</span>;
+    <span class="hljs-type">int</span>* p = &amp;n;
+    <span class="hljs-comment">// 将指针转换为整数</span>
+    <span class="hljs-type">intptr_t</span> addr = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">intptr_t</span>&gt;(p);
 
-    // 打印整数地址
+    <span class="hljs-comment">// 打印整数地址</span>
     std::cout &lt;&lt; std::hex &lt;&lt; addr &lt;&lt; std::endl;
 
-    return 0;
-&#125;
-</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 </li>
 <li><p><strong>指向对象的指针转换为指向不同类型对象的指针</strong>：</p>
-<pre><code class="language-cpp">struct A &#123;
-    int x;
+<pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">A</span> &#123;
+    <span class="hljs-type">int</span> x;
 &#125;;
 
-struct B &#123;
-    int y;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> &#123;
+    <span class="hljs-type">int</span> y;
 &#125;;
 
-int main() &#123;
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
     A a;
-    a.x = 10;
+    a.x = <span class="hljs-number">10</span>;
 
-    // 将 A* 转换为 B*
-    B* b = reinterpret_cast&lt;B*&gt;(&amp;a);
+    <span class="hljs-comment">// 将 A* 转换为 B*</span>
+    B* b = <span class="hljs-built_in">reinterpret_cast</span>&lt;B*&gt;(&amp;a);
 
-    // 注意：访问 b-&gt;y 是不安全的，因为它不是 B 对象
-    std::cout &lt;&lt; b-&gt;y &lt;&lt; std::endl;  // 未定义行为
+    <span class="hljs-comment">// 注意：访问 b-&gt;y 是不安全的，因为它不是 B 对象</span>
+    std::cout &lt;&lt; b-&gt;y &lt;&lt; std::endl;  <span class="hljs-comment">// 未定义行为</span>
 
-    return 0;
-&#125;
-</code></pre>
-</li>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre></li>
 </ol>
 <h3 id="使用注意事项-3"><a href="#使用注意事项-3" class="headerlink" title="使用注意事项"></a>使用注意事项</h3><ul>
 <li><strong>不安全</strong>：<code>reinterpret_cast</code> 可以执行不安全的转换，这可能导致未定义行为。</li>

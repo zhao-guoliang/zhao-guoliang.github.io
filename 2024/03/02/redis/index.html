@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -780,79 +780,79 @@
         <p><code>hiredis</code> 是一个 C 语言编写的 Redis 客户端库，用于与 Redis 数据库交互。如果你想要通过 hiredis 存储和检索结构体数组的信息，你需要编写相应的 C 代码来处理这些操作。</p>
 <p>下面我将给出一个简单的示例，展示如何使用 hiredis 在 Redis 中存储和检索结构体数组信息。我们将使用 Redis 的 <code>HMSET</code> 和 <code>HGETALL</code> 命令来处理结构体数组。</p>
 <p>首先，让我们定义一个结构体来模拟你的需求：</p>
-<pre><code class="language-c">typedef struct User &#123;
-    char *name;
-    int age;
+<pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">User</span> &#123;</span>
+    <span class="hljs-type">char</span> *name;
+    <span class="hljs-type">int</span> age;
 &#125; User;
 
-// 函数声明
-void storeUserInRedis(struct User *user, long id);
-void getUserFromRedis(long id, struct User *user);
-void printUser(const struct User *user);
+<span class="hljs-comment">// 函数声明</span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">storeUserInRedis</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> User *user, <span class="hljs-type">long</span> id)</span>;
+<span class="hljs-type">void</span> <span class="hljs-title function_">getUserFromRedis</span><span class="hljs-params">(<span class="hljs-type">long</span> id, <span class="hljs-keyword">struct</span> User *user)</span>;
+<span class="hljs-type">void</span> <span class="hljs-title function_">printUser</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> User *user)</span>;
 
-int main(void) &#123;
-    // 初始化 hiredis 和连接 Redis
-    redisContext *c = redisConnect(&quot;127.0.0.1&quot;, 6379);
-    if (c == NULL || c-&gt;err) &#123;
-        if (c) &#123;
-            printf(&quot;Error: %s\n&quot;, c-&gt;errstr);
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> &#123;
+    <span class="hljs-comment">// 初始化 hiredis 和连接 Redis</span>
+    redisContext *c = redisConnect(<span class="hljs-string">&quot;127.0.0.1&quot;</span>, <span class="hljs-number">6379</span>);
+    <span class="hljs-keyword">if</span> (c == <span class="hljs-literal">NULL</span> || c-&gt;err) &#123;
+        <span class="hljs-keyword">if</span> (c) &#123;
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Error: %s\n&quot;</span>, c-&gt;errstr);
             redisFree(c);
-        &#125; else &#123;
-            printf(&quot;Connection error: can&#39;t allocate redis context\n&quot;);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Connection error: can&#x27;t allocate redis context\n&quot;</span>);
         &#125;
-        return 1;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
     &#125;
 
-    // 创建用户结构体
-    struct User fred = &#123;&quot;Fred&quot;, 25&#125;;
-    struct User alice = &#123;&quot;Alice&quot;, 30&#125;;
+    <span class="hljs-comment">// 创建用户结构体</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">User</span> <span class="hljs-title">fred</span> =</span> &#123;<span class="hljs-string">&quot;Fred&quot;</span>, <span class="hljs-number">25</span>&#125;;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">User</span> <span class="hljs-title">alice</span> =</span> &#123;<span class="hljs-string">&quot;Alice&quot;</span>, <span class="hljs-number">30</span>&#125;;
 
-    // 生成用户 ID
-    redisReply *reply = (redisReply *)redisCommand(c, &quot;INCR id:users&quot;);
-    long fred_id = reply-&gt;integer;
+    <span class="hljs-comment">// 生成用户 ID</span>
+    redisReply *reply = (redisReply *)redisCommand(c, <span class="hljs-string">&quot;INCR id:users&quot;</span>);
+    <span class="hljs-type">long</span> fred_id = reply-&gt;integer;
     freeReplyObject(reply);
 
-    // 存储用户信息
+    <span class="hljs-comment">// 存储用户信息</span>
     storeUserInRedis(&amp;fred, fred_id);
 
-    // 再次生成用户 ID
-    reply = (redisReply *)redisCommand(c, &quot;INCR id:users&quot;);
-    long alice_id = reply-&gt;integer;
+    <span class="hljs-comment">// 再次生成用户 ID</span>
+    reply = (redisReply *)redisCommand(c, <span class="hljs-string">&quot;INCR id:users&quot;</span>);
+    <span class="hljs-type">long</span> alice_id = reply-&gt;integer;
     freeReplyObject(reply);
 
-    // 存储用户信息
+    <span class="hljs-comment">// 存储用户信息</span>
     storeUserInRedis(&amp;alice, alice_id);
 
-    // 从 Redis 中获取用户信息
-    struct User retrieved_user;
+    <span class="hljs-comment">// 从 Redis 中获取用户信息</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">User</span> <span class="hljs-title">retrieved_user</span>;</span>
     getUserFromRedis(fred_id, &amp;retrieved_user);
     printUser(&amp;retrieved_user);
 
-    // 清理资源
+    <span class="hljs-comment">// 清理资源</span>
     redisFree(c);
-    free(retrieved_user.name); // 释放内存
+    <span class="hljs-built_in">free</span>(retrieved_user.name); <span class="hljs-comment">// 释放内存</span>
 
-    return 0;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 &#125;
 
-void storeUserInRedis(struct User *user, long id) &#123;
-    redisReply *reply = (redisReply *)redisCommand(NULL, &quot;HMSET user:%ld name %s age %d&quot;, id, user-&gt;name, user-&gt;age);
+<span class="hljs-type">void</span> <span class="hljs-title function_">storeUserInRedis</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> User *user, <span class="hljs-type">long</span> id)</span> &#123;
+    redisReply *reply = (redisReply *)redisCommand(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;HMSET user:%ld name %s age %d&quot;</span>, id, user-&gt;name, user-&gt;age);
     freeReplyObject(reply);
 &#125;
 
-void getUserFromRedis(long id, struct User *user) &#123;
-    redisReply *reply = (redisReply *)redisCommand(NULL, &quot;HGETALL user:%ld&quot;, id);
-    if (reply-&gt;type == REDIS_REPLY_ARRAY &amp;&amp; reply-&gt;elements &gt;= 4) &#123;
-        user-&gt;name = strdup(reply-&gt;element[1]-&gt;str);
-        user-&gt;age = atoi(reply-&gt;element[3]-&gt;str);
+<span class="hljs-type">void</span> <span class="hljs-title function_">getUserFromRedis</span><span class="hljs-params">(<span class="hljs-type">long</span> id, <span class="hljs-keyword">struct</span> User *user)</span> &#123;
+    redisReply *reply = (redisReply *)redisCommand(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;HGETALL user:%ld&quot;</span>, id);
+    <span class="hljs-keyword">if</span> (reply-&gt;type == REDIS_REPLY_ARRAY &amp;&amp; reply-&gt;elements &gt;= <span class="hljs-number">4</span>) &#123;
+        user-&gt;name = strdup(reply-&gt;element[<span class="hljs-number">1</span>]-&gt;str);
+        user-&gt;age = atoi(reply-&gt;element[<span class="hljs-number">3</span>]-&gt;str);
     &#125;
     freeReplyObject(reply);
 &#125;
 
-void printUser(const struct User *user) &#123;
-    printf(&quot;Name: %s, Age: %d\n&quot;, user-&gt;name, user-&gt;age);
-&#125;
-</code></pre>
+<span class="hljs-type">void</span> <span class="hljs-title function_">printUser</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> User *user)</span> &#123;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Name: %s, Age: %d\n&quot;</span>, user-&gt;name, user-&gt;age);
+&#125;</code></pre>
+
 <p>这个示例程序包含了以下几个部分：</p>
 <ol>
 <li><strong>定义结构体</strong>: <code>struct User</code> 包含用户的姓名和年龄。</li>
