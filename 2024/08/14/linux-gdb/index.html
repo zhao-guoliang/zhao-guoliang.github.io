@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/darcula.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -786,138 +786,138 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1. 基本使用"></a>1. <strong>基本使用</strong></h3><h4 id="1-1-编译程序"><a href="#1-1-编译程序" class="headerlink" title="1.1 编译程序"></a>1.1 <strong>编译程序</strong></h4><p>确保编译时包含调试信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gcc -g -o myprogram myprogram.c</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">gcc -g -o myprogram myprogram.c<br></code></pre></td></tr></table></figure>
 
-<h4 id="1-2-启动-GDB"><a href="#1-2-启动-GDB" class="headerlink" title="1.2 启动 GDB"></a>1.2 <strong>启动 GDB</strong></h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gdb myprogram</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-启动-GDB"><a href="#1-2-启动-GDB" class="headerlink" title="1.2 启动 GDB"></a>1.2 <strong>启动 GDB</strong></h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">gdb myprogram<br></code></pre></td></tr></table></figure>
 
 <p>可以附带参数来启动程序：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gdb --args myprogram arg1 arg2</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">gdb --args myprogram arg1 arg2<br></code></pre></td></tr></table></figure>
 
 
 
 <h3 id="2-调试会话"><a href="#2-调试会话" class="headerlink" title="2. 调试会话"></a>2. <strong>调试会话</strong></h3><h4 id="2-1-设置断点"><a href="#2-1-设置断点" class="headerlink" title="2.1 设置断点"></a>2.1 <strong>设置断点</strong></h4><ul>
 <li><p><strong>在函数入口设置断点</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) break main</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) break main<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>在特定行设置断点</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) break myfile.c:42</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) break myfile.c:42<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>设置条件断点</strong>（只有在条件满足时断点才会触发）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) break 42 if x &gt; 10</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) break 42 if x &gt; 10<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="2-2-删除和查看断点"><a href="#2-2-删除和查看断点" class="headerlink" title="2.2 删除和查看断点"></a>2.2 <strong>删除和查看断点</strong></h4><ul>
 <li><p><strong>删除所有断点</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) delete</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) delete<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>删除指定断点</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) delete 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) delete 1<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>查看所有断点</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info breakpoints</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) info breakpoints<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="2-3-运行和停止"><a href="#2-3-运行和停止" class="headerlink" title="2.3 运行和停止"></a>2.3 <strong>运行和停止</strong></h4><ul>
 <li><p><strong>运行程序</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) run</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) run<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>停止程序</strong>（如果已经在运行）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) kill</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) kill<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>继续执行程序</strong>（直到下一个断点）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) continue</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) continue<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>单步执行代码</strong>（进入函数内部）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) step</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) step<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>单步执行代码</strong>（不进入函数内部）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) next</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) next<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>完成当前函数的执行</strong>（并返回到调用者）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) finish</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) finish<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="3-变量和内存检查"><a href="#3-变量和内存检查" class="headerlink" title="3. 变量和内存检查"></a>3. <strong>变量和内存检查</strong></h3><h4 id="3-1-查看变量值"><a href="#3-1-查看变量值" class="headerlink" title="3.1 查看变量值"></a>3.1 <strong>查看变量值</strong></h4><ul>
 <li><p><strong>查看变量的值</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) print x</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) print x<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>查看结构体成员</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) print myStruct.member</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) print myStruct.member<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>监视变量的变化</strong>（每次程序停止时自动显示变量值）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) display x</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) display x<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>取消监视变量</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) undisplay 1</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) undisplay 1<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="3-2-查看内存内容"><a href="#3-2-查看内存内容" class="headerlink" title="3.2 查看内存内容"></a>3.2 <strong>查看内存内容</strong></h4><ul>
 <li><p><strong>查看内存中的内容</strong>（以十六进制格式显示）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) x/10x &amp;x</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) x/10x &amp;x<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>查看内存中的内容</strong>（以字符格式显示）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) x/10c &amp;x</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) x/10c &amp;x<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="4-调用栈和函数"><a href="#4-调用栈和函数" class="headerlink" title="4. 调用栈和函数"></a>4. <strong>调用栈和函数</strong></h3><h4 id="4-1-查看调用栈"><a href="#4-1-查看调用栈" class="headerlink" title="4.1 查看调用栈"></a>4.1 <strong>查看调用栈</strong></h4><ul>
 <li><p><strong>显示调用栈</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) backtrace</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) backtrace<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>显示特定帧的调用栈信息</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) frame 2</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) frame 2<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="4-2-查看函数信息"><a href="#4-2-查看函数信息" class="headerlink" title="4.2 查看函数信息"></a>4.2 <strong>查看函数信息</strong></h4><ul>
 <li><p><strong>列出当前函数中的所有局部变量</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info locals</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) info locals<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>列出当前函数中的所有参数</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info args</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) info args<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="5-多线程调试"><a href="#5-多线程调试" class="headerlink" title="5. 多线程调试"></a>5. <strong>多线程调试</strong></h3><h4 id="5-1-查看线程信息"><a href="#5-1-查看线程信息" class="headerlink" title="5.1 查看线程信息"></a>5.1 <strong>查看线程信息</strong></h4><ul>
 <li><p><strong>列出所有线程</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info threads</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) info threads<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>切换到特定线程</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) thread 2</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) thread 2<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>查看当前线程的信息</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info thread</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) info thread<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="5-2-在多线程中设置断点"><a href="#5-2-在多线程中设置断点" class="headerlink" title="5.2 在多线程中设置断点"></a>5.2 <strong>在多线程中设置断点</strong></h4><ul>
-<li><strong>在特定线程中设置断点</strong>（断点只在该线程触发）：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) break myfile.c:42 if (thread_id == 2)</span><br></pre></td></tr></table></figure></li>
+<li><strong>在特定线程中设置断点</strong>（断点只在该线程触发）：<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) break myfile.c:42 if (thread_id == 2)<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="6-高级调试技术"><a href="#6-高级调试技术" class="headerlink" title="6. 高级调试技术"></a>6. <strong>高级调试技术</strong></h3><h4 id="6-1-条件断点"><a href="#6-1-条件断点" class="headerlink" title="6.1 条件断点"></a>6.1 <strong>条件断点</strong></h4><ul>
-<li><strong>设置断点，只有在条件满足时才会触发</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) break myfile.c:42 if x &gt; 10</span><br></pre></td></tr></table></figure></li>
+<li><strong>设置断点，只有在条件满足时才会触发</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) break myfile.c:42 if x &gt; 10<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="6-2-监视点"><a href="#6-2-监视点" class="headerlink" title="6.2 监视点"></a>6.2 <strong>监视点</strong></h4><ul>
 <li><p><strong>设置监视点（在变量的值发生变化时停下）</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) watch x</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) watch x<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>设置读写监视点（在变量的值被读写时停下）</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) awatch x</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) awatch x<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>设置只读监视点（在变量的值被读取时停下）</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) rwatch x</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) rwatch x<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="6-3-动态调试"><a href="#6-3-动态调试" class="headerlink" title="6.3 动态调试"></a>6.3 <strong>动态调试</strong></h4><ul>
 <li><p><strong>使用 <code>call</code> 执行 C 语言表达式</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) call myFunction(1, 2)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) call myFunction(1, 2)<br></code></pre></td></tr></table></figure>
 </li>
 <li><p><strong>改变变量的值</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) set var x = 5</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) set var x = 5<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="7-调试符号和文件"><a href="#7-调试符号和文件" class="headerlink" title="7. 调试符号和文件"></a>7. <strong>调试符号和文件</strong></h3><h4 id="7-1-加载符号文件"><a href="#7-1-加载符号文件" class="headerlink" title="7.1 加载符号文件"></a>7.1 <strong>加载符号文件</strong></h4><ul>
-<li><strong>加载调试符号文件</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) symbol-file myprogram</span><br></pre></td></tr></table></figure></li>
+<li><strong>加载调试符号文件</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) symbol-file myprogram<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="7-2-加载程序"><a href="#7-2-加载程序" class="headerlink" title="7.2 加载程序"></a>7.2 <strong>加载程序</strong></h4><ul>
-<li><strong>重新加载程序和符号信息</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) file myprogram</span><br></pre></td></tr></table></figure></li>
+<li><strong>重新加载程序和符号信息</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) file myprogram<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="8-使用-GDB-脚本"><a href="#8-使用-GDB-脚本" class="headerlink" title="8. 使用 GDB 脚本"></a>8. <strong>使用 GDB 脚本</strong></h3><h4 id="8-1-编写-GDB-脚本"><a href="#8-1-编写-GDB-脚本" class="headerlink" title="8.1 编写 GDB 脚本"></a>8.1 <strong>编写 GDB 脚本</strong></h4><ul>
-<li><strong>GDB 脚本文件</strong>（如 <code>myscript.gdb</code>）：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">break main</span><br><span class="line">run</span><br><span class="line">info locals</span><br></pre></td></tr></table></figure></li>
+<li><strong>GDB 脚本文件</strong>（如 <code>myscript.gdb</code>）：<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">break main<br>run<br>info locals<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="8-2-执行-GDB-脚本"><a href="#8-2-执行-GDB-脚本" class="headerlink" title="8.2 执行 GDB 脚本"></a>8.2 <strong>执行 GDB 脚本</strong></h4><ul>
-<li><strong>在 GDB 会话中执行脚本</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) source myscript.gdb</span><br></pre></td></tr></table></figure></li>
+<li><strong>在 GDB 会话中执行脚本</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) source myscript.gdb<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="9-调试优化代码"><a href="#9-调试优化代码" class="headerlink" title="9. 调试优化代码"></a>9. <strong>调试优化代码</strong></h3><ul>
-<li><strong>禁用优化以进行调试</strong>（编译时使用 <code>-O0</code>）：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gcc -g -O0 -o myprogram myprogram.c</span><br></pre></td></tr></table></figure></li>
+<li><strong>禁用优化以进行调试</strong>（编译时使用 <code>-O0</code>）：<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">gcc -g -O0 -o myprogram myprogram.c<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="10-调试动态库"><a href="#10-调试动态库" class="headerlink" title="10. 调试动态库"></a>10. <strong>调试动态库</strong></h3><ul>
-<li><strong>加载动态库中的调试信息</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) set solib-search-path /path/to/libs</span><br></pre></td></tr></table></figure></li>
+<li><strong>加载动态库中的调试信息</strong>：<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs gdb">(gdb) set solib-search-path /path/to/libs<br></code></pre></td></tr></table></figure></li>
 </ul>
 
       
