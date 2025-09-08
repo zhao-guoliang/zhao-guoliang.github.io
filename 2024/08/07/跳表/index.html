@@ -15,7 +15,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
 <meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="ZhaoGuoliang">
 <meta name="twitter:card" content="summary">
 
 
@@ -64,7 +64,7 @@
          src="/img/avatar.jpg"/>
 </a>
 <div class="author">
-    <span>John Doe</span>
+    <span>ZhaoGuoliang</span>
 </div>
 
 <div class="icon">
@@ -683,11 +683,11 @@
 <p>跳表（Skip List）是一种用于有序数据存储的数据结构，允许快速查询、插入和删除操作。跳表在很多方面与平衡树（如 AVL 树或红黑树）相似，但更简单且易于实现。它通过在链表的基础上增加多层索引来实现快速操作。</p>
 <h3 id="跳表的基本结构"><a href="#跳表的基本结构" class="headerlink" title="跳表的基本结构"></a>跳表的基本结构</h3><p>跳表由多层链表组成，底层是一个有序的链表，每一层都是从底层链表中抽取的一些结点组成的链表。每一层链表包含的结点数量逐层减少，顶层链表通常只有一个结点。</p>
 <h3 id="跳表的示意图"><a href="#跳表的示意图" class="headerlink" title="跳表的示意图"></a>跳表的示意图</h3><p>假设我们有一个包含整数的跳表：</p>
-<pre><code class="highlight plaintext">Level 3:       1---------------------12----------------------
+<pre><code>Level 3:       1---------------------12----------------------
 Level 2:       1-------5-------9------12---------------------
 Level 1:       1--3----5--7----9--10--12---------------------
-Level 0:       1--2--3--4--5--6--7--8--9--10--11--12--13--14</code></pre>
-
+Level 0:       1--2--3--4--5--6--7--8--9--10--11--12--13--14
+</code></pre>
 <h3 id="跳表的操作"><a href="#跳表的操作" class="headerlink" title="跳表的操作"></a>跳表的操作</h3><ol>
 <li><p><strong>查找（Search）</strong>：</p>
 <ul>
@@ -711,85 +711,80 @@ Level 0:       1--2--3--4--5--6--7--8--9--10--11--12--13--14</code></pre>
 </li>
 </ol>
 <h3 id="跳表的复杂度分析"><a href="#跳表的复杂度分析" class="headerlink" title="跳表的复杂度分析"></a>跳表的复杂度分析</h3><p>跳表的时间复杂度可以近似为 O(log n)，这是因为跳表的高度大约为 O(log n)，每层的搜索和插入操作平均需要 O(1) 的时间。</p>
-<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code class="highlight cpp"><span class="keyword">class</span> <span class="title class_">Skiplist</span> &#123;
-<span class="keyword">public</span>:
-    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> level = <span class="number">8</span>; <span class="comment">// 层数，经验值 8，太大浪费空间，因为每一个节点都要存在每一层的 next，层数越多节点数越多</span>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code class="language-cpp">class Skiplist &#123;
+public:
+    static const int level = 8; // 层数，经验值 8，太大浪费空间，因为每一个节点都要存在每一层的 next，层数越多节点数越多
 
-    <span class="comment">// 定义跳表节点</span>
-    <span class="keyword">struct</span> <span class="title class_">Node</span> &#123;
-        <span class="type">int</span> val; <span class="comment">// 节点值</span>
-        vector&lt;Node*&gt; next; <span class="comment">// 记录节点在每一层的 next，next[i] 表示当前节点第 i 层的 next</span>
+    // 定义跳表节点
+    struct Node &#123;
+        int val; // 节点值
+        vector&lt;Node*&gt; next; // 记录节点在每一层的 next，next[i] 表示当前节点第 i 层的 next
 
-        <span class="built_in">Node</span>(<span class="type">int</span> _val) : <span class="built_in">val</span>(_val) &#123; <span class="comment">// 构造函数</span>
-            next.<span class="built_in">resize</span>(level, <span class="literal">NULL</span>); <span class="comment">// 初始化 next 数组的大小和层数 level 相同，初始值都指向 NULL</span>
+        Node(int _val) : val(_val) &#123; // 构造函数
+            next.resize(level, NULL); // 初始化 next 数组的大小和层数 level 相同，初始值都指向 NULL
         &#125;
-    &#125;*head; <span class="comment">// 定义头节点 head</span>
+    &#125;*head; // 定义头节点 head
 
-    <span class="built_in">Skiplist</span>() &#123;
-        head = <span class="keyword">new</span> <span class="built_in">Node</span>(<span class="number">-1</span>); <span class="comment">// 初始化一个不存在的节点值 -1</span>
+    Skiplist() &#123;
+        head = new Node(-1); // 初始化一个不存在的节点值 -1
     &#125;
 
-    ~<span class="built_in">Skiplist</span>() &#123;
-        <span class="keyword">delete</span> head; <span class="comment">// 析构函数删除 head</span>
+    ~Skiplist() &#123;
+        delete head; // 析构函数删除 head
     &#125;
 
-    <span class="comment">// 辅助函数：找到每一层 i 小于目标值 target 的最大节点 pre[i]，最后 pre 中存的就是每一层小于 target 的最大节点</span>
-    <span class="function"><span class="type">void</span> <span class="title">find</span><span class="params">(<span class="type">int</span> target, vector&lt;Node*&gt;&amp; pre)</span> </span>&#123;
-        <span class="keyword">auto</span> p = head; <span class="comment">// 从头节点开始遍历每一层</span>
-        <span class="keyword">for</span> (<span class="type">int</span> i = level - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i -- ) &#123; <span class="comment">// 从上层往下层找</span>
-            <span class="keyword">while</span> (p-&gt;next[i] &amp;&amp; p-&gt;next[i]-&gt;val &lt; target) p = p-&gt;next[i]; <span class="comment">// 如果当前层 i 的 next 不为空，且它的值小于 target，则 p 往后走指向这一层 p 的 next</span>
-            pre[i] = p; <span class="comment">// 退出 while 时说明找到了第 i 层小于 target 的最大节点就是 p</span>
+    // 辅助函数：找到每一层 i 小于目标值 target 的最大节点 pre[i]，最后 pre 中存的就是每一层小于 target 的最大节点
+    void find(int target, vector&lt;Node*&gt;&amp; pre) &#123;
+        auto p = head; // 从头节点开始遍历每一层
+        for (int i = level - 1; i &gt;= 0; i -- ) &#123; // 从上层往下层找
+            while (p-&gt;next[i] &amp;&amp; p-&gt;next[i]-&gt;val &lt; target) p = p-&gt;next[i]; // 如果当前层 i 的 next 不为空，且它的值小于 target，则 p 往后走指向这一层 p 的 next
+            pre[i] = p; // 退出 while 时说明找到了第 i 层小于 target 的最大节点就是 p
         &#125;
     &#125;
     
-    <span class="comment">// 从跳表中查找 target</span>
-    <span class="function"><span class="type">bool</span> <span class="title">search</span><span class="params">(<span class="type">int</span> target)</span> </span>&#123;
-        <span class="function">vector&lt;Node*&gt; <span class="title">pre</span><span class="params">(level)</span></span>;
-        <span class="built_in">find</span>(target, pre); <span class="comment">// 先找到每一层 i 小于目标值 target 的最大节点 pre[i]</span>
+    // 从跳表中查找 target
+    bool search(int target) &#123;
+        vector&lt;Node*&gt; pre(level);
+        find(target, pre); // 先找到每一层 i 小于目标值 target 的最大节点 pre[i]
         
-        <span class="keyword">auto</span> p = pre[<span class="number">0</span>]-&gt;next[<span class="number">0</span>]; <span class="comment">// 因为最下层【0】的节点是全的，所以只需要判断 target 是否在第 0 层即可，而 pre[0] 正好就是小于 target 的最大节点，如果 pre[0]-&gt;next[0] 的值不是 target 说明没有这个元素</span>
-        <span class="keyword">return</span> p &amp;&amp; p-&gt;val == target;
+        auto p = pre[0]-&gt;next[0]; // 因为最下层【0】的节点是全的，所以只需要判断 target 是否在第 0 层即可，而 pre[0] 正好就是小于 target 的最大节点，如果 pre[0]-&gt;next[0] 的值不是 target 说明没有这个元素
+        return p &amp;&amp; p-&gt;val == target;
     &#125;
     
-    <span class="comment">// 向跳表中插入元素 num</span>
-    <span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;
-        <span class="function">vector&lt;Node*&gt; <span class="title">pre</span><span class="params">(level)</span></span>;
-        <span class="built_in">find</span>(num, pre); <span class="comment">// 先找到每一层 i 小于目标值 target 的最大节点 pre[i]</span>
+    // 向跳表中插入元素 num
+    void add(int num) &#123;
+        vector&lt;Node*&gt; pre(level);
+        find(num, pre); // 先找到每一层 i 小于目标值 target 的最大节点 pre[i]
 
-        <span class="keyword">auto</span> p = <span class="keyword">new</span> <span class="built_in">Node</span>(num); <span class="comment">// 创建要插入的新节点</span>
-        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; level; i ++ ) &#123; <span class="comment">// 遍历每一层，从下往上插入新节点</span>
-            p-&gt;next[i] = pre[i]-&gt;next[i]; <span class="comment">// 这两步就是单链表的插入</span>
+        auto p = new Node(num); // 创建要插入的新节点
+        for (int i = 0; i &lt; level; i ++ ) &#123; // 遍历每一层，从下往上插入新节点
+            p-&gt;next[i] = pre[i]-&gt;next[i]; // 这两步就是单链表的插入
             pre[i]-&gt;next[i] = p;
-            <span class="keyword">if</span> (<span class="built_in">rand</span>() % <span class="number">2</span>) <span class="keyword">break</span>; <span class="comment">// 每一层有 50% 的概率不插入新节点</span>
+            if (rand() % 2) break; // 每一层有 50% 的概率不插入新节点
         &#125;
     &#125;
     
-    <span class="comment">// 从跳表中删除 num</span>
-    <span class="function"><span class="type">bool</span> <span class="title">erase</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;
-        <span class="function">vector&lt;Node*&gt; <span class="title">pre</span><span class="params">(level)</span></span>;
-        <span class="built_in">find</span>(num, pre); <span class="comment">// 先找到每一层 i 小于目标值 target 的最大节点 pre[i]</span>
+    // 从跳表中删除 num
+    bool erase(int num) &#123;
+        vector&lt;Node*&gt; pre(level);
+        find(num, pre); // 先找到每一层 i 小于目标值 target 的最大节点 pre[i]
 
-        <span class="comment">// 先判断 num 是否存在，不存在直接返回 false</span>
-        <span class="comment">// 第 0 层存储的是全部节点，所以只需要判断 pre[0]-&gt;next[0]（第 0 层小于 num 的最大节点的在第 0 层的 next） 是不是 num 即可</span>
-        <span class="keyword">auto</span> p = pre[<span class="number">0</span>]-&gt;next[<span class="number">0</span>];
-        <span class="keyword">if</span> (!p || p-&gt;val != num) <span class="keyword">return</span> <span class="literal">false</span>;
+        // 先判断 num 是否存在，不存在直接返回 false
+        // 第 0 层存储的是全部节点，所以只需要判断 pre[0]-&gt;next[0]（第 0 层小于 num 的最大节点的在第 0 层的 next） 是不是 num 即可
+        auto p = pre[0]-&gt;next[0];
+        if (!p || p-&gt;val != num) return false;
 
-        <span class="comment">// 否则删除每一层的 num，如果 pre[i]-&gt;next[i] == p 说明第 i 层存在 p</span>
-        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; level &amp;&amp; pre[i]-&gt;next[i] == p; i ++ ) &#123;
-            pre[i]-&gt;next[i] = p-&gt;next[i]; <span class="comment">// 单链表删除</span>
+        // 否则删除每一层的 num，如果 pre[i]-&gt;next[i] == p 说明第 i 层存在 p
+        for (int i = 0; i &lt; level &amp;&amp; pre[i]-&gt;next[i] == p; i ++ ) &#123;
+            pre[i]-&gt;next[i] = p-&gt;next[i]; // 单链表删除
         &#125;
 
-        <span class="keyword">delete</span> p; <span class="comment">// 删除节点 p，防止内存泄漏</span>
+        delete p; // 删除节点 p，防止内存泄漏
 
-        <span class="keyword">return</span> <span class="literal">true</span>;
+        return true;
     &#125;
 &#125;;
 </code></pre>
-
-
-
-
-
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>

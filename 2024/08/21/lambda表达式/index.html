@@ -15,7 +15,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
 <meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="ZhaoGuoliang">
 <meta name="twitter:card" content="summary">
 
 
@@ -64,7 +64,7 @@
          src="/img/avatar.jpg"/>
 </a>
 <div class="author">
-    <span>John Doe</span>
+    <span>ZhaoGuoliang</span>
 </div>
 
 <div class="icon">
@@ -694,119 +694,108 @@
 </ul>
 <h3 id="捕获列表"><a href="#捕获列表" class="headerlink" title="捕获列表"></a>捕获列表</h3><p>lambda表达式的捕获列表可以捕获一定范围内的变量，具体使用方式如下：</p>
 <p>[] - 不捕捉任何变量<br>[&amp;] - 捕获外部作用域中所有变量, 并作为引用在函数体内使用 (按引用捕获)<br>[&#x3D;] - 捕获外部作用域中所有变量, 并作为副本在函数体内使用 (按值捕获)<br>拷贝的副本在匿名函数体内部是只读的<br>[&#x3D;, &amp;foo] - 按值捕获外部作用域中所有变量, 并按照引用捕获外部变量 foo<br>[bar] - 按值捕获 bar 变量, 同时不捕获其他变量<br>[&amp;bar] - 按引用捕获 bar 变量, 同时不捕获其他变量<br>[this] - 捕获当前类中的this指针<br>让lambda表达式拥有和当前类成员函数同样的访问权限<br>如果已经使用了 &amp; 或者 &#x3D;, 默认添加此选项<br>下面通过一个例子，看一下初始化列表的具体用法：</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span>
-<span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;functional&gt;
+using namespace std;
 
-<span class="keyword">class</span> <span class="title class_">Test</span>
+class Test
 &#123;
-<span class="keyword">public</span>:
-    <span class="function"><span class="type">void</span> <span class="title">output</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span>
-<span class="function">    </span>&#123;
-        <span class="keyword">auto</span> x1 = [] &#123;<span class="keyword">return</span> m_number; &#125;;                      <span class="comment">// error</span>
-        <span class="keyword">auto</span> x2 = [=] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;             <span class="comment">// ok</span>
-        <span class="keyword">auto</span> x3 = [&amp;] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;             <span class="comment">// ok</span>
-        <span class="keyword">auto</span> x4 = [<span class="keyword">this</span>] &#123;<span class="keyword">return</span> m_number; &#125;;                  <span class="comment">// ok</span>
-        <span class="keyword">auto</span> x5 = [<span class="keyword">this</span>] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;          <span class="comment">// error</span>
-        <span class="keyword">auto</span> x6 = [<span class="keyword">this</span>, x, y] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;    <span class="comment">// ok</span>
-        <span class="keyword">auto</span> x7 = [<span class="keyword">this</span>] &#123;<span class="keyword">return</span> m_number++; &#125;;                <span class="comment">// ok</span>
+public:
+    void output(int x, int y)
+    &#123;
+        auto x1 = [] &#123;return m_number; &#125;;                      // error
+        auto x2 = [=] &#123;return m_number + x + y; &#125;;             // ok
+        auto x3 = [&amp;] &#123;return m_number + x + y; &#125;;             // ok
+        auto x4 = [this] &#123;return m_number; &#125;;                  // ok
+        auto x5 = [this] &#123;return m_number + x + y; &#125;;          // error
+        auto x6 = [this, x, y] &#123;return m_number + x + y; &#125;;    // ok
+        auto x7 = [this] &#123;return m_number++; &#125;;                // ok
     &#125;
-    <span class="type">int</span> m_number = <span class="number">100</span>;
-&#125;;</code></pre>
-
+    int m_number = 100;
+&#125;;
+</code></pre>
 <p>x1：错误，没有捕获外部变量，不能使用类成员 m_number<br>x2：正确，以值拷贝的方式捕获所有外部变量<br>x3：正确，以引用的方式捕获所有外部变量<br>x4：正确，捕获this指针，可访问对象内部成员<br>x5：错误，捕获this指针，可访问类内部成员，没有捕获到变量x，y，因此不能访问。<br>x6：正确，捕获this指针，x，y<br>x7：正确，捕获this指针，并且可以修改对象内部变量的值</p>
-<pre><code class="highlight cpp"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span>
-<span class="function"></span>&#123;
-    <span class="type">int</span> a = <span class="number">10</span>, b = <span class="number">20</span>;
-    <span class="keyword">auto</span> f1 = [] &#123;<span class="keyword">return</span> a; &#125;;                        <span class="comment">// error</span>
-    <span class="keyword">auto</span> f2 = [&amp;] &#123;<span class="keyword">return</span> a++; &#125;;                     <span class="comment">// ok</span>
-    <span class="keyword">auto</span> f3 = [=] &#123;<span class="keyword">return</span> a; &#125;;                       <span class="comment">// ok</span>
-    <span class="keyword">auto</span> f4 = [=] &#123;<span class="keyword">return</span> a++; &#125;;                     <span class="comment">// error</span>
-    <span class="keyword">auto</span> f5 = [a] &#123;<span class="keyword">return</span> a + b; &#125;;                   <span class="comment">// error</span>
-    <span class="keyword">auto</span> f6 = [a, &amp;b] &#123;<span class="keyword">return</span> a + (b++); &#125;;           <span class="comment">// ok</span>
-    <span class="keyword">auto</span> f7 = [=, &amp;b] &#123;<span class="keyword">return</span> a + (b++); &#125;;           <span class="comment">// ok</span>
+<pre><code class="language-cpp">int main(void)
+&#123;
+    int a = 10, b = 20;
+    auto f1 = [] &#123;return a; &#125;;                        // error
+    auto f2 = [&amp;] &#123;return a++; &#125;;                     // ok
+    auto f3 = [=] &#123;return a; &#125;;                       // ok
+    auto f4 = [=] &#123;return a++; &#125;;                     // error
+    auto f5 = [a] &#123;return a + b; &#125;;                   // error
+    auto f6 = [a, &amp;b] &#123;return a + (b++); &#125;;           // ok
+    auto f7 = [=, &amp;b] &#123;return a + (b++); &#125;;           // ok
 
-    <span class="keyword">return</span> <span class="number">0</span>;
+    return 0;
 
-&#125;</code></pre>
-
-
+&#125;
+</code></pre>
 <p>f1：错误，没有捕获外部变量，因此无法访问变量 a<br>f2：正确，使用引用的方式捕获外部变量，可读写<br>f3：正确，使用值拷贝的方式捕获外部变量，可读<br>f4：错误，使用值拷贝的方式捕获外部变量，可读不能写<br>f5：错误，使用拷贝的方式捕获了外部变量a，没有捕获外部变量b，因此无法访问变量b<br>f6：正确，使用拷贝的方式捕获了外部变量a，只读，使用引用的方式捕获外部变量b，可读写<br>f7：正确，使用值拷贝的方式捕获所有外部变量以及b的引用，b可读写，其他只读<br>在匿名函数内部，需要通过lambda表达式的捕获列表控制如何捕获外部变量，以及访问哪些变量。默认状态下lambda表达式无法修改通过复制方式捕获外部变量，如果希望修改这些外部变量，需要通过引用的方式进行捕获。</p>
 <h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>很多时候，lambda表达式的返回值是非常明显的，因此在C++11中允许省略lambda表达式的返回值。</p>
-<pre><code class="highlight cpp"><span class="comment">// 完整的lambda表达式定义</span>
-<span class="keyword">auto</span> f = [](<span class="type">int</span> a) -&gt; <span class="type">int</span>
+<pre><code class="language-cpp">// 完整的lambda表达式定义
+auto f = [](int a) -&gt; int
 &#123;
-    <span class="keyword">return</span> a<span class="number">+10</span>;  
+    return a+10;  
 &#125;;
 
-<span class="comment">// 忽略返回值的lambda表达式定义</span>
-<span class="keyword">auto</span> f = [](<span class="type">int</span> a)
+// 忽略返回值的lambda表达式定义
+auto f = [](int a)
 &#123;
-    <span class="keyword">return</span> a<span class="number">+10</span>;  
+    return a+10;  
 &#125;;
-<span class="comment">/*</span>
-<span class="comment">一般情况下，不指定lambda表达式的返回值，编译器会根据return语句自动推导返回值的类型，但需要注意的是labmda表达式不能通过列表初始化自动推导出返回值类型。</span>
-<span class="comment">*/</span>
+/*
+一般情况下，不指定lambda表达式的返回值，编译器会根据return语句自动推导返回值的类型，但需要注意的是labmda表达式不能通过列表初始化自动推导出返回值类型。
+*/
 
 
-<span class="comment">// ok，可以自动推导出返回值类型</span>
-<span class="keyword">auto</span> f = [](<span class="type">int</span> i)
+// ok，可以自动推导出返回值类型
+auto f = [](int i)
 &#123;
-    <span class="keyword">return</span> i;
+    return i;
 &#125;
 
-<span class="comment">// error，不能推导出返回值类型</span>
-<span class="keyword">auto</span> f1 = []()
+// error，不能推导出返回值类型
+auto f1 = []()
 &#123;
-    <span class="keyword">return</span> &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;	<span class="comment">// 基于列表初始化推导返回值，错误</span>
-&#125;</code></pre>
-
-
-
-
+    return &#123;1, 2&#125;;	// 基于列表初始化推导返回值，错误
+&#125;
+</code></pre>
 <h3 id="函数本质"><a href="#函数本质" class="headerlink" title="函数本质"></a>函数本质</h3><p>使用lambda表达式捕获列表捕获外部变量，如果希望去修改按值捕获的外部变量，那么应该如何处理呢？这就需要使用mutable选项，被mutable修改是lambda表达式就算没有参数也要写明参数列表，并且可以去掉按值捕获的外部变量的只读（const）属性。</p>
-<pre><code class="highlight cpp"><span class="type">int</span> a = <span class="number">0</span>;
-<span class="keyword">auto</span> f1 = [=] &#123;<span class="keyword">return</span> a++; &#125;;              <span class="comment">// error, 按值捕获外部变量, a是只读的</span>
-<span class="keyword">auto</span> f2 = [=]()<span class="keyword">mutable</span> &#123;<span class="keyword">return</span> a++; &#125;;     <span class="comment">// ok</span></code></pre>
-
-
+<pre><code class="language-cpp">int a = 0;
+auto f1 = [=] &#123;return a++; &#125;;              // error, 按值捕获外部变量, a是只读的
+auto f2 = [=]()mutable &#123;return a++; &#125;;     // ok
+</code></pre>
 <p>最后再剖析一下为什么通过值拷贝的方式捕获的外部变量是只读的:</p>
 <p>lambda表达式的类型在C++11中会被看做是一个带operator()的类，即仿函数。<br>按照C++标准，lambda表达式的operator()默认是const的，一个const成员函数是无法修改成员变量值的。<br>mutable选项的作用就在于取消operator()的const属性。</p>
 <p>因为lambda表达式在C++中会被看做是一个仿函数，因此可以使用std::function和std::bind来存储和操作lambda表达式：</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span>
-<span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;functional&gt;
+using namespace std;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span>
-<span class="function"></span>&#123;
-    <span class="comment">// 包装可调用函数</span>
-    std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; f1 = [](<span class="type">int</span> a) &#123;<span class="keyword">return</span> a; &#125;;
-    <span class="comment">// 绑定可调用函数</span>
-    std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; f2 = <span class="built_in">bind</span>([](<span class="type">int</span> a) &#123;<span class="keyword">return</span> a; &#125;, placeholders::_1);
-
-    <span class="comment">// 函数调用</span>
-    cout &lt;&lt; <span class="built_in">f1</span>(<span class="number">100</span>) &lt;&lt; endl;
-    cout &lt;&lt; <span class="built_in">f2</span>(<span class="number">200</span>) &lt;&lt; endl;
-    <span class="keyword">return</span> <span class="number">0</span>;
-
-&#125;</code></pre>
-
-
-
-
-<p>对于没有捕获任何变量的lambda表达式，还可以转换成一个普通的函数指针：</p>
-<pre><code class="highlight cpp"><span class="keyword">using</span> func_ptr = <span class="built_in">int</span>(*)(<span class="type">int</span>);
-<span class="comment">// 没有捕获任何外部变量的匿名函数</span>
-func_ptr f = [](<span class="type">int</span> a)
+int main(void)
 &#123;
-    <span class="keyword">return</span> a;  
+    // 包装可调用函数
+    std::function&lt;int(int)&gt; f1 = [](int a) &#123;return a; &#125;;
+    // 绑定可调用函数
+    std::function&lt;int(int)&gt; f2 = bind([](int a) &#123;return a; &#125;, placeholders::_1);
+
+    // 函数调用
+    cout &lt;&lt; f1(100) &lt;&lt; endl;
+    cout &lt;&lt; f2(200) &lt;&lt; endl;
+    return 0;
+
+&#125;
+</code></pre>
+<p>对于没有捕获任何变量的lambda表达式，还可以转换成一个普通的函数指针：</p>
+<pre><code class="language-cpp">using func_ptr = int(*)(int);
+// 没有捕获任何外部变量的匿名函数
+func_ptr f = [](int a)
+&#123;
+    return a;  
 &#125;;
-<span class="comment">// 函数调用</span>
-<span class="built_in">f</span>(<span class="number">1314</span>);</code></pre>
-
-
-
-
+// 函数调用
+f(1314);
+</code></pre>
 <p>链接: <a target="_blank" rel="noopener" href="https://subingwen.cn/cpp/lambda/#4-%E5%87%BD%E6%95%B0%E6%9C%AC%E8%B4%A8">https://subingwen.cn/cpp/lambda/#4-%E5%87%BD%E6%95%B0%E6%9C%AC%E8%B4%A8</a><br>来源: 爱编程的大丙</p>
 
       

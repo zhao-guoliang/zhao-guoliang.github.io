@@ -15,7 +15,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
 <meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="ZhaoGuoliang">
 <meta name="twitter:card" content="summary">
 
 
@@ -64,7 +64,7 @@
          src="/img/avatar.jpg"/>
 </a>
 <div class="author">
-    <span>John Doe</span>
+    <span>ZhaoGuoliang</span>
 </div>
 
 <div class="icon">
@@ -679,281 +679,275 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <pre><code class="highlight c++"><span class="comment">// 链表原地逆置</span>
-<span class="function">ListNode* <span class="title">ReverseList</span><span class="params">(ListNode* head)</span> </span>&#123;
-        <span class="comment">// 方法1</span>
-        <span class="keyword">if</span> (<span class="literal">nullptr</span> == head) &#123;
-            <span class="keyword">return</span> <span class="literal">nullptr</span>;
+        <pre><code class="language-c++">// 链表原地逆置
+ListNode* ReverseList(ListNode* head) &#123;
+        // 方法1
+        if (nullptr == head) &#123;
+            return nullptr;
         &#125;
-        <span class="comment">// 链表原地逆置</span>
-        ListNode *newHead = <span class="literal">nullptr</span>;
-        ListNode *tempNode = <span class="literal">nullptr</span>;
-        <span class="keyword">while</span> (<span class="literal">nullptr</span> != head) &#123;
+        // 链表原地逆置
+        ListNode *newHead = nullptr;
+        ListNode *tempNode = nullptr;
+        while (nullptr != head) &#123;
             tempNode = head-&gt;next;
             head-&gt;next = newHead;
             newHead = head;
             head = tempNode;
         &#125;
-        <span class="keyword">return</span> newHead;
-    &#125;</code></pre>
-
-<pre><code class="highlight c++"><span class="comment">//递归合并两个有序链表</span>
-<span class="function">ListNode* <span class="title">mergeTwoSortedLists</span><span class="params">(ListNode* L1, ListNode* L2)</span></span>
-<span class="function"></span>&#123;
-    <span class="keyword">if</span> (L1 == <span class="literal">nullptr</span>)
-        <span class="keyword">return</span> L2;
-    <span class="keyword">if</span> (L2 == <span class="literal">nullptr</span>)
-        <span class="keyword">return</span> L1;
-    <span class="keyword">if</span> (L1-&gt;val &lt;= L2-&gt;val)
-    &#123;
-        L1-&gt;next = <span class="built_in">mergeTwoSortedLists</span>(L1-&gt;next, L2);
-        <span class="keyword">return</span> L1;
+        return newHead;
     &#125;
-    <span class="keyword">else</span>
+</code></pre>
+<pre><code class="language-c++">//递归合并两个有序链表
+ListNode* mergeTwoSortedLists(ListNode* L1, ListNode* L2)
+&#123;
+    if (L1 == nullptr)
+        return L2;
+    if (L2 == nullptr)
+        return L1;
+    if (L1-&gt;val &lt;= L2-&gt;val)
     &#123;
-        L2-&gt;next = <span class="built_in">mergeTwoSortedLists</span>(L1, L2-&gt;next);
-        <span class="keyword">return</span> L2;
+        L1-&gt;next = mergeTwoSortedLists(L1-&gt;next, L2);
+        return L1;
     &#125;
-&#125;</code></pre>
-
-<pre><code class="highlight c++"><span class="comment">// 优先队列 priority_queue</span>
-<span class="keyword">struct</span> <span class="title class_">Compare</span> &#123;
-    <span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> ListNode* lhs, <span class="type">const</span> ListNode* rhs)</span> <span class="type">const</span> </span>&#123;
-        <span class="keyword">return</span> lhs-&gt;val &gt; rhs-&gt;val;<span class="comment">//小根堆</span>
+    else
+    &#123;
+        L2-&gt;next = mergeTwoSortedLists(L1, L2-&gt;next);
+        return L2;
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="language-c++">// 优先队列 priority_queue
+struct Compare &#123;
+    bool operator()(const ListNode* lhs, const ListNode* rhs) const &#123;
+        return lhs-&gt;val &gt; rhs-&gt;val;//小根堆
     &#125;
 &#125;;
-<span class="function">ListNode* <span class="title">mergeKLists</span><span class="params">(vector&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;
+ListNode* mergeKLists(vector&lt;ListNode*&gt;&amp; lists) &#123;
 
     priority_queue&lt;ListNode*, vector&lt;ListNode*&gt;,Compare&gt; q;
 
-    <span class="keyword">for</span>(<span class="keyword">auto</span> l : lists)&#123;
-        <span class="keyword">if</span>(l != <span class="literal">nullptr</span>)&#123;
-            q.<span class="built_in">push</span>(l);
+    for(auto l : lists)&#123;
+        if(l != nullptr)&#123;
+            q.push(l);
         &#125;
     &#125;
-    ListNode* newHead = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">-1</span>);
+    ListNode* newHead = new ListNode(-1);
     ListNode* cur = newHead;
-    <span class="keyword">while</span> (!q.<span class="built_in">empty</span>()) &#123;
+    while (!q.empty()) &#123;
 
-        cur-&gt;next = q.<span class="built_in">top</span>();
-        q.<span class="built_in">pop</span>();
+        cur-&gt;next = q.top();
+        q.pop();
 
         cur = cur-&gt;next;
-        <span class="keyword">if</span>(cur-&gt;next)&#123;
-            q.<span class="built_in">push</span>(cur-&gt;next);
+        if(cur-&gt;next)&#123;
+            q.push(cur-&gt;next);
         &#125;
     &#125;
 
-    <span class="keyword">return</span> newHead-&gt;next;
-&#125;</code></pre>
-
-<pre><code class="highlight c++"><span class="comment">// 链表有没有环</span>
-<span class="function"><span class="type">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;
+    return newHead-&gt;next;
+&#125;
+</code></pre>
+<pre><code class="language-c++">// 链表有没有环
+bool hasCycle(ListNode *head) &#123;
         ListNode* fast = head;
         ListNode* slow = head;
 
-        <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="literal">nullptr</span>) &#123;
+        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) &#123;
             fast = fast-&gt;next-&gt;next;
             slow = slow-&gt;next;
-            <span class="keyword">if</span>(fast == slow)&#123;
-                <span class="keyword">return</span> <span class="literal">true</span>;
+            if(fast == slow)&#123;
+                return true;
             &#125;
         &#125;
-        <span class="keyword">return</span> <span class="literal">false</span>;
-    &#125;</code></pre>
+        return false;
+    &#125;
+</code></pre>
+<pre><code class="language-c++">// 找到有环链表的入口节点
 
-<pre><code class="highlight c++"><span class="comment">// 找到有环链表的入口节点</span>
+ListNode* EntryNodeOfLoop(ListNode* pHead) &#123;
 
-<span class="function">ListNode* <span class="title">EntryNodeOfLoop</span><span class="params">(ListNode* pHead)</span> </span>&#123;
-
-    <span class="comment">// 方法一</span>
+    // 方法一
 
     set&lt;ListNode*&gt; s;
     ListNode* cur = pHead;
 
-    <span class="keyword">while</span> (cur!= <span class="literal">nullptr</span>) &#123;
+    while (cur!= nullptr) &#123;
 
-        <span class="keyword">if</span>(s.<span class="built_in">count</span>(cur))&#123;
-            <span class="keyword">return</span> cur;
+        if(s.count(cur))&#123;
+            return cur;
         &#125;
 
-        s.<span class="built_in">insert</span>(cur);
+        s.insert(cur);
 
         cur = cur-&gt;next;
     &#125;
 
-    <span class="keyword">return</span> <span class="literal">nullptr</span>;
+    return nullptr;
 
 &#125;
 
 
-<span class="comment">/*</span>
-<span class="comment">struct ListNode &#123;</span>
-<span class="comment">    int val;</span>
-<span class="comment">    struct ListNode *next;</span>
-<span class="comment">    ListNode(int x) :</span>
-<span class="comment">        val(x), next(NULL) &#123;</span>
-<span class="comment">    &#125;</span>
-<span class="comment">&#125;;</span>
-<span class="comment">*/</span>
-<span class="keyword">class</span> <span class="title class_">Solution</span> &#123;
-<span class="keyword">public</span>:
-    <span class="function">ListNode* <span class="title">EntryNodeOfLoop</span><span class="params">(ListNode* pHead)</span> </span>&#123;
-        <span class="comment">// 方法二</span>
+/*
+struct ListNode &#123;
+    int val;
+    struct ListNode *next;
+    ListNode(int x) :
+        val(x), next(NULL) &#123;
+    &#125;
+&#125;;
+*/
+class Solution &#123;
+public:
+    ListNode* EntryNodeOfLoop(ListNode* pHead) &#123;
+        // 方法二
         ListNode* fast = pHead;
         ListNode* slow = pHead;
-        <span class="type">bool</span> flag = <span class="literal">false</span>;
-		<span class="comment">// 判断有没有环</span>
-        <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="literal">nullptr</span>) &#123;
+        bool flag = false;
+		// 判断有没有环
+        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) &#123;
             fast = fast-&gt;next-&gt;next;
             slow = slow-&gt;next;
 
-            <span class="keyword">if</span>(fast == slow)&#123;
-                flag = <span class="literal">true</span>;
-                <span class="keyword">break</span>;
+            if(fast == slow)&#123;
+                flag = true;
+                break;
             &#125;
         &#125;
-        <span class="keyword">if</span>(flag)&#123;
-            <span class="comment">// 有环  接着计算环的长度</span>
+        if(flag)&#123;
+            // 有环  接着计算环的长度
             fast = fast-&gt;next;
-            <span class="type">int</span> n = <span class="number">1</span>;
-            <span class="keyword">while</span> (slow != fast) &#123;
+            int n = 1;
+            while (slow != fast) &#123;
                 fast = fast-&gt;next;
                 n++;
             &#125;
             
-            <span class="comment">//两个指针指向头部， 先让一个指针走 一个环的距离， 等两个指针再次相遇的时候， 就是环的入口点。</span>
+            //两个指针指向头部， 先让一个指针走 一个环的距离， 等两个指针再次相遇的时候， 就是环的入口点。
             slow = fast = pHead;
-            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i&lt;n; i++) &#123;
+            for (int i = 0; i&lt;n; i++) &#123;
                 fast = fast-&gt;next;
             &#125;
 
-            <span class="keyword">while</span> (slow != fast) &#123;
+            while (slow != fast) &#123;
                 slow = slow-&gt;next;
                 fast = fast-&gt;next;
             &#125;
 
-            <span class="keyword">return</span> slow;
+            return slow;
 
         &#125;
 
-        <span class="keyword">return</span> <span class="literal">nullptr</span>;
+        return nullptr;
 
     &#125;
-&#125;;</code></pre>
-
-<pre><code class="highlight c++"><span class="comment">// 二分查找</span>
-<span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;
-    <span class="comment">// write code here</span>
-    <span class="keyword">if</span>(nums.<span class="built_in">size</span>()==<span class="number">0</span>)&#123;
-        <span class="keyword">return</span> <span class="number">-1</span>;
+&#125;;
+</code></pre>
+<pre><code class="language-c++">// 二分查找
+int search(vector&lt;int&gt;&amp; nums, int target) &#123;
+    // write code here
+    if(nums.size()==0)&#123;
+        return -1;
     &#125;
 
-    <span class="type">int</span> l = <span class="number">0</span>;
-    <span class="type">int</span> r = nums.<span class="built_in">size</span>()<span class="number">-1</span>;
-    <span class="type">int</span> m = <span class="number">-1</span>;
+    int l = 0;
+    int r = nums.size()-1;
+    int m = -1;
 
-    <span class="keyword">while</span> (l&lt;=r) &#123;
-        m = (l+r)/<span class="number">2</span>;
-        <span class="keyword">if</span>(nums[m]==target)&#123;
-            <span class="keyword">return</span> m;
-        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[m]&gt;target)&#123;
-            r = m<span class="number">-1</span>;
-        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[m]&lt;target)&#123;
-            l = m<span class="number">+1</span>;
+    while (l&lt;=r) &#123;
+        m = (l+r)/2;
+        if(nums[m]==target)&#123;
+            return m;
+        &#125;else if(nums[m]&gt;target)&#123;
+            r = m-1;
+        &#125;else if(nums[m]&lt;target)&#123;
+            l = m+1;
         &#125;
     &#125;
-    <span class="keyword">return</span> <span class="number">-1</span>;
+    return -1;
 
-&#125;</code></pre>
-
-
-
-<pre><code class="highlight c++"><span class="comment">// 两个链表的第一个公共节点</span>
-<span class="function">ListNode* <span class="title">FindFirstCommonNode</span><span class="params">( ListNode* pHead1, ListNode* pHead2)</span> </span>&#123;
+&#125;
+</code></pre>
+<pre><code class="language-c++">// 两个链表的第一个公共节点
+ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) &#123;
         
-		<span class="comment">// 方法er</span>
+		// 方法er
 		ListNode* l1 = pHead1;
 		ListNode* l2 = pHead2;
 		
-		<span class="keyword">while</span> (l1 != l2) &#123;
-			l1 = (l1==<span class="literal">nullptr</span>)?pHead2:l1-&gt;next;
-			l2 = (l2==<span class="literal">nullptr</span>)?pHead1:l2-&gt;next;
+		while (l1 != l2) &#123;
+			l1 = (l1==nullptr)?pHead2:l1-&gt;next;
+			l2 = (l2==nullptr)?pHead1:l2-&gt;next;
 		&#125;
-		<span class="keyword">return</span> l1;
+		return l1;
 
 		
-		<span class="comment">// 方法一</span>
-		<span class="comment">/*</span>
-<span class="comment">		set&lt;ListNode*&gt; s;</span>
-<span class="comment">		while (pHead1 != nullptr) &#123;</span>
-<span class="comment">			s.insert(pHead1);</span>
-<span class="comment">			pHead1 = pHead1-&gt;next;</span>
-<span class="comment">		&#125;</span>
-<span class="comment">		while (pHead2 != nullptr) &#123;</span>
-<span class="comment">			if(s.count(pHead2))&#123;</span>
-<span class="comment">				return pHead2;</span>
-<span class="comment">			&#125;</span>
-<span class="comment">			pHead2 = pHead2-&gt;next;</span>
-<span class="comment">		&#125;</span>
-<span class="comment">		return nullptr;</span>
-<span class="comment">		*/</span>
+		// 方法一
+		/*
+		set&lt;ListNode*&gt; s;
+		while (pHead1 != nullptr) &#123;
+			s.insert(pHead1);
+			pHead1 = pHead1-&gt;next;
+		&#125;
+		while (pHead2 != nullptr) &#123;
+			if(s.count(pHead2))&#123;
+				return pHead2;
+			&#125;
+			pHead2 = pHead2-&gt;next;
+		&#125;
+		return nullptr;
+		*/
 
 
-    &#125;</code></pre>
+    &#125;
+</code></pre>
+<pre><code class="language-c++">// 两个stack模拟queue
 
-
-
-<pre><code class="highlight c++"><span class="comment">// 两个stack模拟queue</span>
-
-<span class="keyword">class</span> <span class="title class_">Solution</span>
+class Solution
 &#123;
-<span class="keyword">public</span>:
-    <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">int</span> node)</span> </span>&#123;
-        stack<span class="number">1.</span><span class="built_in">push</span>(node);
+public:
+    void push(int node) &#123;
+        stack1.push(node);
     &#125;
 
-    <span class="function"><span class="type">int</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;
+    int pop() &#123;
 
-        <span class="keyword">if</span> (stack<span class="number">2.</span><span class="built_in">empty</span>()) &#123;
-            <span class="keyword">while</span> (!stack<span class="number">1.</span><span class="built_in">empty</span>()) &#123;
-                stack<span class="number">2.</span><span class="built_in">push</span>(stack<span class="number">1.</span><span class="built_in">top</span>());
-                stack<span class="number">1.</span><span class="built_in">pop</span>();
+        if (stack2.empty()) &#123;
+            while (!stack1.empty()) &#123;
+                stack2.push(stack1.top());
+                stack1.pop();
             &#125;
 
         &#125;
 
-        <span class="type">int</span> val = stack<span class="number">2.</span><span class="built_in">top</span>();
-        stack<span class="number">2.</span><span class="built_in">pop</span>();
-        <span class="keyword">return</span> val;
+        int val = stack2.top();
+        stack2.pop();
+        return val;
 
     &#125;
 
-<span class="keyword">private</span>:
-    stack&lt;<span class="type">int</span>&gt; stack1;
-    stack&lt;<span class="type">int</span>&gt; stack2;
-&#125;;</code></pre>
-
-<pre><code class="highlight cpp"><span class="comment">// 最长公共前缀</span>
-<span class="function">string <span class="title">longestCommonPrefix</span><span class="params">(vector&lt;string&gt;&amp; strs)</span> </span>&#123;
-        <span class="comment">// write code here</span>
+private:
+    stack&lt;int&gt; stack1;
+    stack&lt;int&gt; stack2;
+&#125;;
+</code></pre>
+<pre><code class="language-cpp">// 最长公共前缀
+string longestCommonPrefix(vector&lt;string&gt;&amp; strs) &#123;
+        // write code here
         
-        <span class="type">int</span> n = strs.<span class="built_in">size</span>();
-        <span class="keyword">if</span>(n==<span class="number">0</span> || n==<span class="number">1</span>)&#123;
-            <span class="keyword">return</span> n==<span class="number">0</span>?<span class="string">&quot;&quot;</span>:strs[<span class="number">0</span>];
+        int n = strs.size();
+        if(n==0 || n==1)&#123;
+            return n==0?&quot;&quot;:strs[0];
         &#125;
       
-        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; <span class="number">1</span>; i++) &#123;
-            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j&lt;n<span class="number">-1</span>; j++) &#123;
-                <span class="keyword">if</span>(strs[j][i] != strs[j<span class="number">+1</span>][i])&#123;
-                    <span class="keyword">return</span> strs[j].<span class="built_in">substr</span>(<span class="number">0</span>,i);
+        for (int i = 0; 1; i++) &#123;
+            for (int j = 0; j&lt;n-1; j++) &#123;
+                if(strs[j][i] != strs[j+1][i])&#123;
+                    return strs[j].substr(0,i);
                 &#125;
             &#125;
         &#125;
-    &#125;</code></pre>
-
-
-
+    &#125;
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>

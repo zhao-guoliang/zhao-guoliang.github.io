@@ -15,7 +15,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
 <meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="ZhaoGuoliang">
 <meta name="twitter:card" content="summary">
 
 
@@ -64,7 +64,7 @@
          src="/img/avatar.jpg"/>
 </a>
 <div class="author">
-    <span>John Doe</span>
+    <span>ZhaoGuoliang</span>
 </div>
 
 <div class="icon">
@@ -680,140 +680,194 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1. 基本使用"></a>1. <strong>基本使用</strong></h3><h4 id="1-1-编译程序"><a href="#1-1-编译程序" class="headerlink" title="1.1 编译程序"></a>1.1 <strong>编译程序</strong></h4><p>确保编译时包含调试信息：</p>
-<pre><code class="highlight bash">gcc -g -o myprogram myprogram.c</code></pre>
-
-<h4 id="1-2-启动-GDB"><a href="#1-2-启动-GDB" class="headerlink" title="1.2 启动 GDB"></a>1.2 <strong>启动 GDB</strong></h4><pre><code class="highlight bash">gdb myprogram</code></pre>
-
+<pre><code class="language-bash">gcc -g -o myprogram myprogram.c
+</code></pre>
+<h4 id="1-2-启动-GDB"><a href="#1-2-启动-GDB" class="headerlink" title="1.2 启动 GDB"></a>1.2 <strong>启动 GDB</strong></h4><pre><code class="language-bash">gdb myprogram
+</code></pre>
 <p>可以附带参数来启动程序：</p>
-<pre><code class="highlight bash">gdb --args myprogram arg1 arg2</code></pre>
-
-
-
+<pre><code class="language-bash">gdb --args myprogram arg1 arg2
+</code></pre>
 <h3 id="2-调试会话"><a href="#2-调试会话" class="headerlink" title="2. 调试会话"></a>2. <strong>调试会话</strong></h3><h4 id="2-1-设置断点"><a href="#2-1-设置断点" class="headerlink" title="2.1 设置断点"></a>2.1 <strong>设置断点</strong></h4><ul>
 <li><p><strong>在函数入口设置断点</strong>：</p>
-<pre><code class="highlight gdb">(gdb) break main</code></pre>
+<pre><code class="language-gdb">(gdb) break main
+</code></pre>
 </li>
 <li><p><strong>在特定行设置断点</strong>：</p>
-<pre><code class="highlight gdb">(gdb) break myfile.c:42</code></pre>
+<pre><code class="language-gdb">(gdb) break myfile.c:42
+</code></pre>
 </li>
 <li><p><strong>设置条件断点</strong>（只有在条件满足时断点才会触发）：</p>
-<pre><code class="highlight gdb">(gdb) break 42 if x &gt; 10</code></pre></li>
+<pre><code class="language-gdb">(gdb) break 42 if x &gt; 10
+</code></pre>
+</li>
 </ul>
 <h4 id="2-2-删除和查看断点"><a href="#2-2-删除和查看断点" class="headerlink" title="2.2 删除和查看断点"></a>2.2 <strong>删除和查看断点</strong></h4><ul>
 <li><p><strong>删除所有断点</strong>：</p>
-<pre><code class="highlight gdb">(gdb) delete</code></pre>
+<pre><code class="language-gdb">(gdb) delete
+</code></pre>
 </li>
 <li><p><strong>删除指定断点</strong>：</p>
-<pre><code class="highlight gdb">(gdb) delete 1</code></pre>
+<pre><code class="language-gdb">(gdb) delete 1
+</code></pre>
 </li>
 <li><p><strong>查看所有断点</strong>：</p>
-<pre><code class="highlight gdb">(gdb) info breakpoints</code></pre></li>
+<pre><code class="language-gdb">(gdb) info breakpoints
+</code></pre>
+</li>
 </ul>
 <h4 id="2-3-运行和停止"><a href="#2-3-运行和停止" class="headerlink" title="2.3 运行和停止"></a>2.3 <strong>运行和停止</strong></h4><ul>
 <li><p><strong>运行程序</strong>：</p>
-<pre><code class="highlight gdb">(gdb) run</code></pre>
+<pre><code class="language-gdb">(gdb) run
+</code></pre>
 </li>
 <li><p><strong>停止程序</strong>（如果已经在运行）：</p>
-<pre><code class="highlight gdb">(gdb) kill</code></pre>
+<pre><code class="language-gdb">(gdb) kill
+</code></pre>
 </li>
 <li><p><strong>继续执行程序</strong>（直到下一个断点）：</p>
-<pre><code class="highlight gdb">(gdb) continue</code></pre>
+<pre><code class="language-gdb">(gdb) continue
+</code></pre>
 </li>
 <li><p><strong>单步执行代码</strong>（进入函数内部）：</p>
-<pre><code class="highlight gdb">(gdb) step</code></pre>
+<pre><code class="language-gdb">(gdb) step
+</code></pre>
 </li>
 <li><p><strong>单步执行代码</strong>（不进入函数内部）：</p>
-<pre><code class="highlight gdb">(gdb) next</code></pre>
+<pre><code class="language-gdb">(gdb) next
+</code></pre>
 </li>
 <li><p><strong>完成当前函数的执行</strong>（并返回到调用者）：</p>
-<pre><code class="highlight gdb">(gdb) finish</code></pre></li>
+<pre><code class="language-gdb">(gdb) finish
+</code></pre>
+</li>
 </ul>
 <h3 id="3-变量和内存检查"><a href="#3-变量和内存检查" class="headerlink" title="3. 变量和内存检查"></a>3. <strong>变量和内存检查</strong></h3><h4 id="3-1-查看变量值"><a href="#3-1-查看变量值" class="headerlink" title="3.1 查看变量值"></a>3.1 <strong>查看变量值</strong></h4><ul>
 <li><p><strong>查看变量的值</strong>：</p>
-<pre><code class="highlight gdb">(gdb) print x</code></pre>
+<pre><code class="language-gdb">(gdb) print x
+</code></pre>
 </li>
 <li><p><strong>查看结构体成员</strong>：</p>
-<pre><code class="highlight gdb">(gdb) print myStruct.member</code></pre>
+<pre><code class="language-gdb">(gdb) print myStruct.member
+</code></pre>
 </li>
 <li><p><strong>监视变量的变化</strong>（每次程序停止时自动显示变量值）：</p>
-<pre><code class="highlight gdb">(gdb) display x</code></pre>
+<pre><code class="language-gdb">(gdb) display x
+</code></pre>
 </li>
 <li><p><strong>取消监视变量</strong>：</p>
-<pre><code class="highlight gdb">(gdb) undisplay 1</code></pre></li>
+<pre><code class="language-gdb">(gdb) undisplay 1
+</code></pre>
+</li>
 </ul>
 <h4 id="3-2-查看内存内容"><a href="#3-2-查看内存内容" class="headerlink" title="3.2 查看内存内容"></a>3.2 <strong>查看内存内容</strong></h4><ul>
 <li><p><strong>查看内存中的内容</strong>（以十六进制格式显示）：</p>
-<pre><code class="highlight gdb">(gdb) x/10x &amp;x</code></pre>
+<pre><code class="language-gdb">(gdb) x/10x &amp;x
+</code></pre>
 </li>
 <li><p><strong>查看内存中的内容</strong>（以字符格式显示）：</p>
-<pre><code class="highlight gdb">(gdb) x/10c &amp;x</code></pre></li>
+<pre><code class="language-gdb">(gdb) x/10c &amp;x
+</code></pre>
+</li>
 </ul>
 <h3 id="4-调用栈和函数"><a href="#4-调用栈和函数" class="headerlink" title="4. 调用栈和函数"></a>4. <strong>调用栈和函数</strong></h3><h4 id="4-1-查看调用栈"><a href="#4-1-查看调用栈" class="headerlink" title="4.1 查看调用栈"></a>4.1 <strong>查看调用栈</strong></h4><ul>
 <li><p><strong>显示调用栈</strong>：</p>
-<pre><code class="highlight gdb">(gdb) backtrace</code></pre>
+<pre><code class="language-gdb">(gdb) backtrace
+</code></pre>
 </li>
 <li><p><strong>显示特定帧的调用栈信息</strong>：</p>
-<pre><code class="highlight gdb">(gdb) frame 2</code></pre></li>
+<pre><code class="language-gdb">(gdb) frame 2
+</code></pre>
+</li>
 </ul>
 <h4 id="4-2-查看函数信息"><a href="#4-2-查看函数信息" class="headerlink" title="4.2 查看函数信息"></a>4.2 <strong>查看函数信息</strong></h4><ul>
 <li><p><strong>列出当前函数中的所有局部变量</strong>：</p>
-<pre><code class="highlight gdb">(gdb) info locals</code></pre>
+<pre><code class="language-gdb">(gdb) info locals
+</code></pre>
 </li>
 <li><p><strong>列出当前函数中的所有参数</strong>：</p>
-<pre><code class="highlight gdb">(gdb) info args</code></pre></li>
+<pre><code class="language-gdb">(gdb) info args
+</code></pre>
+</li>
 </ul>
 <h3 id="5-多线程调试"><a href="#5-多线程调试" class="headerlink" title="5. 多线程调试"></a>5. <strong>多线程调试</strong></h3><h4 id="5-1-查看线程信息"><a href="#5-1-查看线程信息" class="headerlink" title="5.1 查看线程信息"></a>5.1 <strong>查看线程信息</strong></h4><ul>
 <li><p><strong>列出所有线程</strong>：</p>
-<pre><code class="highlight gdb">(gdb) info threads</code></pre>
+<pre><code class="language-gdb">(gdb) info threads
+</code></pre>
 </li>
 <li><p><strong>切换到特定线程</strong>：</p>
-<pre><code class="highlight gdb">(gdb) thread 2</code></pre>
+<pre><code class="language-gdb">(gdb) thread 2
+</code></pre>
 </li>
 <li><p><strong>查看当前线程的信息</strong>：</p>
-<pre><code class="highlight gdb">(gdb) info thread</code></pre></li>
+<pre><code class="language-gdb">(gdb) info thread
+</code></pre>
+</li>
 </ul>
 <h4 id="5-2-在多线程中设置断点"><a href="#5-2-在多线程中设置断点" class="headerlink" title="5.2 在多线程中设置断点"></a>5.2 <strong>在多线程中设置断点</strong></h4><ul>
-<li><strong>在特定线程中设置断点</strong>（断点只在该线程触发）：<pre><code class="highlight gdb">(gdb) break myfile.c:42 if (thread_id == 2)</code></pre></li>
+<li><strong>在特定线程中设置断点</strong>（断点只在该线程触发）：<pre><code class="language-gdb">(gdb) break myfile.c:42 if (thread_id == 2)
+</code></pre>
+</li>
 </ul>
 <h3 id="6-高级调试技术"><a href="#6-高级调试技术" class="headerlink" title="6. 高级调试技术"></a>6. <strong>高级调试技术</strong></h3><h4 id="6-1-条件断点"><a href="#6-1-条件断点" class="headerlink" title="6.1 条件断点"></a>6.1 <strong>条件断点</strong></h4><ul>
-<li><strong>设置断点，只有在条件满足时才会触发</strong>：<pre><code class="highlight gdb">(gdb) break myfile.c:42 if x &gt; 10</code></pre></li>
+<li><strong>设置断点，只有在条件满足时才会触发</strong>：<pre><code class="language-gdb">(gdb) break myfile.c:42 if x &gt; 10
+</code></pre>
+</li>
 </ul>
 <h4 id="6-2-监视点"><a href="#6-2-监视点" class="headerlink" title="6.2 监视点"></a>6.2 <strong>监视点</strong></h4><ul>
 <li><p><strong>设置监视点（在变量的值发生变化时停下）</strong>：</p>
-<pre><code class="highlight gdb">(gdb) watch x</code></pre>
+<pre><code class="language-gdb">(gdb) watch x
+</code></pre>
 </li>
 <li><p><strong>设置读写监视点（在变量的值被读写时停下）</strong>：</p>
-<pre><code class="highlight gdb">(gdb) awatch x</code></pre>
+<pre><code class="language-gdb">(gdb) awatch x
+</code></pre>
 </li>
 <li><p><strong>设置只读监视点（在变量的值被读取时停下）</strong>：</p>
-<pre><code class="highlight gdb">(gdb) rwatch x</code></pre></li>
+<pre><code class="language-gdb">(gdb) rwatch x
+</code></pre>
+</li>
 </ul>
 <h4 id="6-3-动态调试"><a href="#6-3-动态调试" class="headerlink" title="6.3 动态调试"></a>6.3 <strong>动态调试</strong></h4><ul>
 <li><p><strong>使用 <code>call</code> 执行 C 语言表达式</strong>：</p>
-<pre><code class="highlight gdb">(gdb) call myFunction(1, 2)</code></pre>
+<pre><code class="language-gdb">(gdb) call myFunction(1, 2)
+</code></pre>
 </li>
 <li><p><strong>改变变量的值</strong>：</p>
-<pre><code class="highlight gdb">(gdb) set var x = 5</code></pre></li>
+<pre><code class="language-gdb">(gdb) set var x = 5
+</code></pre>
+</li>
 </ul>
 <h3 id="7-调试符号和文件"><a href="#7-调试符号和文件" class="headerlink" title="7. 调试符号和文件"></a>7. <strong>调试符号和文件</strong></h3><h4 id="7-1-加载符号文件"><a href="#7-1-加载符号文件" class="headerlink" title="7.1 加载符号文件"></a>7.1 <strong>加载符号文件</strong></h4><ul>
-<li><strong>加载调试符号文件</strong>：<pre><code class="highlight gdb">(gdb) symbol-file myprogram</code></pre></li>
+<li><strong>加载调试符号文件</strong>：<pre><code class="language-gdb">(gdb) symbol-file myprogram
+</code></pre>
+</li>
 </ul>
 <h4 id="7-2-加载程序"><a href="#7-2-加载程序" class="headerlink" title="7.2 加载程序"></a>7.2 <strong>加载程序</strong></h4><ul>
-<li><strong>重新加载程序和符号信息</strong>：<pre><code class="highlight gdb">(gdb) file myprogram</code></pre></li>
+<li><strong>重新加载程序和符号信息</strong>：<pre><code class="language-gdb">(gdb) file myprogram
+</code></pre>
+</li>
 </ul>
 <h3 id="8-使用-GDB-脚本"><a href="#8-使用-GDB-脚本" class="headerlink" title="8. 使用 GDB 脚本"></a>8. <strong>使用 GDB 脚本</strong></h3><h4 id="8-1-编写-GDB-脚本"><a href="#8-1-编写-GDB-脚本" class="headerlink" title="8.1 编写 GDB 脚本"></a>8.1 <strong>编写 GDB 脚本</strong></h4><ul>
-<li><strong>GDB 脚本文件</strong>（如 <code>myscript.gdb</code>）：<pre><code class="highlight gdb">break main
+<li><strong>GDB 脚本文件</strong>（如 <code>myscript.gdb</code>）：<pre><code class="language-gdb">break main
 run
-info locals</code></pre></li>
+info locals
+</code></pre>
+</li>
 </ul>
 <h4 id="8-2-执行-GDB-脚本"><a href="#8-2-执行-GDB-脚本" class="headerlink" title="8.2 执行 GDB 脚本"></a>8.2 <strong>执行 GDB 脚本</strong></h4><ul>
-<li><strong>在 GDB 会话中执行脚本</strong>：<pre><code class="highlight gdb">(gdb) source myscript.gdb</code></pre></li>
+<li><strong>在 GDB 会话中执行脚本</strong>：<pre><code class="language-gdb">(gdb) source myscript.gdb
+</code></pre>
+</li>
 </ul>
 <h3 id="9-调试优化代码"><a href="#9-调试优化代码" class="headerlink" title="9. 调试优化代码"></a>9. <strong>调试优化代码</strong></h3><ul>
-<li><strong>禁用优化以进行调试</strong>（编译时使用 <code>-O0</code>）：<pre><code class="highlight bash">gcc -g -O0 -o myprogram myprogram.c</code></pre></li>
+<li><strong>禁用优化以进行调试</strong>（编译时使用 <code>-O0</code>）：<pre><code class="language-bash">gcc -g -O0 -o myprogram myprogram.c
+</code></pre>
+</li>
 </ul>
 <h3 id="10-调试动态库"><a href="#10-调试动态库" class="headerlink" title="10. 调试动态库"></a>10. <strong>调试动态库</strong></h3><ul>
-<li><strong>加载动态库中的调试信息</strong>：<pre><code class="highlight gdb">(gdb) set solib-search-path /path/to/libs</code></pre></li>
+<li><strong>加载动态库中的调试信息</strong>：<pre><code class="language-gdb">(gdb) set solib-search-path /path/to/libs
+</code></pre>
+</li>
 </ul>
 
       

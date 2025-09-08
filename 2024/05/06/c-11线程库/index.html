@@ -15,7 +15,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
 <meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="ZhaoGuoliang">
 <meta name="twitter:card" content="summary">
 
 
@@ -64,7 +64,7 @@
          src="/img/avatar.jpg"/>
 </a>
 <div class="author">
-    <span>John Doe</span>
+    <span>ZhaoGuoliang</span>
 </div>
 
 <div class="icon">
@@ -682,63 +682,70 @@
         <h2 id="1-std-thread"><a href="#1-std-thread" class="headerlink" title="1. std::thread"></a>1. <code>std::thread</code></h2><p><code>std::thread</code> 类用于创建和管理线程。每个 <code>std::thread</code> 对象表示一个线程，能够执行任何可调用的对象。</p>
 <h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><ul>
 <li><p><strong>构造函数</strong>：创建线程并执行指定的函数或可调用对象。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
 
-<span class="function"><span class="type">void</span> <span class="title">print_message</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>&#123;
+void print_message(const std::string&amp; message) &#123;
     std::cout &lt;&lt; message &lt;&lt; std::endl;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    <span class="function">std::thread <span class="title">t</span><span class="params">(print_message, <span class="string">&quot;Hello from thread!&quot;</span>)</span></span>; <span class="comment">// 创建线程并传递参数</span>
-    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程完成</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre>
+int main() &#123;
+    std::thread t(print_message, &quot;Hello from thread!&quot;); // 创建线程并传递参数
+    t.join(); // 等待线程完成
+    return 0;
+&#125;
+</code></pre>
 </li>
 <li><p><strong><code>join()</code> 和 <code>detach()</code></strong>：</p>
 <ul>
 <li><strong><code>join()</code></strong>：等待线程执行完成。主线程会阻塞，直到 <code>join()</code> 的线程完成。</li>
 <li><strong><code>detach()</code></strong>：将线程分离，让它在后台继续运行，不会阻塞主线程。如果线程对象超出作用域，分离线程的资源会被自动释放，但主线程不会等待它完成。</li>
 </ul>
-<pre><code class="highlight cpp"><span class="function">std::thread <span class="title">t</span><span class="params">(print_message, <span class="string">&quot;Hello from detached thread!&quot;</span>)</span></span>;
-t.<span class="built_in">detach</span>(); <span class="comment">// 让线程在后台运行</span></code></pre></li>
+<pre><code class="language-cpp">std::thread t(print_message, &quot;Hello from detached thread!&quot;);
+t.detach(); // 让线程在后台运行
+</code></pre>
+</li>
 </ul>
 <h2 id="2-std-this-thread"><a href="#2-std-this-thread" class="headerlink" title="2. std::this_thread"></a>2. <code>std::this_thread</code></h2><p><code>std::this_thread</code> 提供了与当前线程相关的功能。</p>
 <h3 id="常用功能"><a href="#常用功能" class="headerlink" title="常用功能"></a>常用功能</h3><ul>
 <li><p><strong><code>std::this_thread::sleep_for()</code></strong>：让当前线程休眠指定的时间段。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;thread&gt;
+#include &lt;chrono&gt;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>)); <span class="comment">// 休眠 2 秒</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre>
+int main() &#123;
+    std::this_thread::sleep_for(std::chrono::seconds(2)); // 休眠 2 秒
+    return 0;
+&#125;
+</code></pre>
 </li>
 <li><p><strong><code>std::this_thread::sleep_until()</code></strong>：让当前线程休眠直到指定的时间点。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;thread&gt;
+#include &lt;chrono&gt;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    <span class="keyword">auto</span> wake_up_time = std::chrono::steady_clock::<span class="built_in">now</span>() + std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>);
-    std::this_thread::<span class="built_in">sleep_until</span>(wake_up_time); <span class="comment">// 休眠直到指定时间点</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre>
+int main() &#123;
+    auto wake_up_time = std::chrono::steady_clock::now() + std::chrono::seconds(2);
+    std::this_thread::sleep_until(wake_up_time); // 休眠直到指定时间点
+    return 0;
+&#125;
+</code></pre>
 </li>
 <li><p><strong><code>std::this_thread::get_id()</code></strong>：获取当前线程的 ID。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    std::cout &lt;&lt; <span class="string">&quot;Current thread ID: &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; std::endl;
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre></li>
+int main() &#123;
+    std::cout &lt;&lt; &quot;Current thread ID: &quot; &lt;&lt; std::this_thread::get_id() &lt;&lt; std::endl;
+    return 0;
+&#125;
+</code></pre>
+</li>
 </ul>
 <ul>
 <li><p><code>std::this_thread::yield()</code> 是 C++11 引入的一种函数，用于在多线程程序中使当前线程自愿让出 CPU 时间，以便其他线程可以执行。这是一个简洁而有效的方法，用于实现线程的协作和调度，尤其是在涉及线程优先级和负载均衡时。</p>
-<h4 id="1-函数原型"><a href="#1-函数原型" class="headerlink" title="1. 函数原型"></a>1. 函数原型</h4><pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<h4 id="1-函数原型"><a href="#1-函数原型" class="headerlink" title="1. 函数原型"></a>1. 函数原型</h4><pre><code class="language-cpp">#include &lt;thread&gt;
 
-<span class="function"><span class="type">void</span> <span class="title">yield</span><span class="params">()</span></span>;</code></pre>
-
+void yield();
+</code></pre>
 <ul>
 <li><strong><code>std::this_thread::yield()</code></strong>：使当前线程让出 CPU 时间，将其从运行状态转变为就绪状态，让调度器有机会安排其他线程运行。</li>
 </ul>
@@ -757,36 +764,36 @@ t.<span class="built_in">detach</span>(); <span class="comment">// 让线程在�
 </li>
 </ul>
 <h4 id="4-示例代码"><a href="#4-示例代码" class="headerlink" title="4. 示例代码"></a>4. 示例代码</h4><p>下面的示例展示了如何使用 <code>std::this_thread::yield</code> 来实现简单的线程协作：</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;chrono&gt;
+#include &lt;atomic&gt;
 
-std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal">false</span>&#125;;
+std::atomic&lt;bool&gt; flag&#123;false&#125;;
 
-<span class="function"><span class="type">void</span> <span class="title">thread1</span><span class="params">()</span> </span>&#123;
-    <span class="keyword">while</span> (!flag.<span class="built_in">load</span>()) &#123;
-        std::this_thread::<span class="built_in">yield</span>(); <span class="comment">// 让出 CPU 时间</span>
+void thread1() &#123;
+    while (!flag.load()) &#123;
+        std::this_thread::yield(); // 让出 CPU 时间
     &#125;
-    std::cout &lt;&lt; <span class="string">&quot;Thread 1 finished&quot;</span> &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Thread 1 finished&quot; &lt;&lt; std::endl;
 &#125;
 
-<span class="function"><span class="type">void</span> <span class="title">thread2</span><span class="params">()</span> </span>&#123;
-    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>)); <span class="comment">// 模拟工作</span>
-    flag.<span class="built_in">store</span>(<span class="literal">true</span>);
-    std::cout &lt;&lt; <span class="string">&quot;Thread 2 finished&quot;</span> &lt;&lt; std::endl;
+void thread2() &#123;
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // 模拟工作
+    flag.store(true);
+    std::cout &lt;&lt; &quot;Thread 2 finished&quot; &lt;&lt; std::endl;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    <span class="function">std::thread <span class="title">t1</span><span class="params">(thread1)</span></span>;
-    <span class="function">std::thread <span class="title">t2</span><span class="params">(thread2)</span></span>;
+int main() &#123;
+    std::thread t1(thread1);
+    std::thread t2(thread2);
 
-    t<span class="number">1.</span><span class="built_in">join</span>();
-    t<span class="number">2.</span><span class="built_in">join</span>();
+    t1.join();
+    t2.join();
 
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre>
-
+    return 0;
+&#125;
+</code></pre>
 <p>在这个示例中：</p>
 <ul>
 <li><code>thread1</code> 线程会在 <code>flag</code> 为 <code>false</code> 时不断调用 <code>std::this_thread::yield()</code>，让出 CPU 时间。</li>
@@ -804,58 +811,60 @@ std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal
 <h2 id="3-std-future-和-std-promise"><a href="#3-std-future-和-std-promise" class="headerlink" title="3. std::future 和 std::promise"></a>3. <code>std::future</code> 和 <code>std::promise</code></h2><p><code>std::future</code> 和 <code>std::promise</code> 用于异步操作的结果传递和同步。</p>
 <h3 id="std-promise-和-std-future"><a href="#std-promise-和-std-future" class="headerlink" title="std::promise 和 std::future"></a><code>std::promise</code> 和 <code>std::future</code></h3><ul>
 <li><p><strong><code>std::promise</code></strong>：用于设置一个值或异常，供其他线程通过 <code>std::future</code> 获取。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;future&gt;
 
-<span class="function"><span class="type">void</span> <span class="title">produce</span><span class="params">(std::promise&lt;<span class="type">int</span>&gt;&amp;&amp; prom)</span> </span>&#123;
-    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));
-    prom.<span class="built_in">set_value</span>(<span class="number">42</span>); <span class="comment">// 设置结果值</span>
+void produce(std::promise&lt;int&gt;&amp;&amp; prom) &#123;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    prom.set_value(42); // 设置结果值
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    std::promise&lt;<span class="type">int</span>&gt; prom;
-    std::future&lt;<span class="type">int</span>&gt; fut = prom.<span class="built_in">get_future</span>(); <span class="comment">// 获取 future 对象</span>
-    <span class="function">std::thread <span class="title">t</span><span class="params">(produce, std::move(prom))</span></span>; <span class="comment">// 将 promise 移动到线程</span>
-    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span>
-    t.<span class="built_in">join</span>();
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre></li>
+int main() &#123;
+    std::promise&lt;int&gt; prom;
+    std::future&lt;int&gt; fut = prom.get_future(); // 获取 future 对象
+    std::thread t(produce, std::move(prom)); // 将 promise 移动到线程
+    std::cout &lt;&lt; &quot;Waiting for result...&quot; &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; fut.get() &lt;&lt; std::endl; // 获取结果
+    t.join();
+    return 0;
+&#125;
+</code></pre>
+</li>
 </ul>
 <p>这段代码演示了如何使用 <code>std::promise</code> 和 <code>std::future</code> 在多线程程序中传递结果。以下是对这段代码的详细解释：</p>
 <h3 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h3><ol>
 <li><p><strong>创建 <code>std::promise</code> 对象</strong></p>
-<pre><code class="highlight cpp">std::promise&lt;<span class="type">int</span>&gt; prom;</code></pre>
-
+<pre><code class="language-cpp">std::promise&lt;int&gt; prom;
+</code></pre>
 <p><code>std::promise&lt;int&gt;</code> 用于在线程之间传递结果。它允许一个线程设置一个值，另一个线程获取这个值。</p>
 </li>
 <li><p><strong>获取 <code>std::future</code> 对象</strong></p>
-<pre><code class="highlight cpp">std::future&lt;<span class="type">int</span>&gt; fut = prom.<span class="built_in">get_future</span>();</code></pre>
-
+<pre><code class="language-cpp">std::future&lt;int&gt; fut = prom.get_future();
+</code></pre>
 <p>从 <code>std::promise</code> 对象中获取 <code>std::future</code> 对象。<code>std::future</code> 用于异步获取 <code>std::promise</code> 设置的值。</p>
 </li>
 <li><p><strong>将 <code>std::promise</code> 移动到线程中</strong></p>
-<pre><code class="highlight cpp"><span class="function">std::thread <span class="title">t</span><span class="params">(produce, std::move(prom))</span></span>;</code></pre>
-
+<pre><code class="language-cpp">std::thread t(produce, std::move(prom));
+</code></pre>
 <p><code>std::promise</code> 对象通过 <code>std::move</code> 被移动到新线程中执行。移动是必须的，因为 <code>std::promise</code> 对象在线程间传递时不支持拷贝。</p>
 </li>
 <li><p><strong>在新线程中设置值</strong></p>
-<pre><code class="highlight cpp"><span class="function"><span class="type">void</span> <span class="title">produce</span><span class="params">(std::promise&lt;<span class="type">int</span>&gt;&amp;&amp; prom)</span> </span>&#123;
-    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));
-    prom.<span class="built_in">set_value</span>(<span class="number">42</span>);
-&#125;</code></pre>
-
+<pre><code class="language-cpp">void produce(std::promise&lt;int&gt;&amp;&amp; prom) &#123;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    prom.set_value(42);
+&#125;
+</code></pre>
 <p><code>produce</code> 函数模拟一个耗时操作（通过 <code>std::this_thread::sleep_for</code>），然后使用 <code>prom.set_value(42)</code> 设置 <code>std::promise</code> 的值。这个值将被传递到 <code>std::future</code> 中。</p>
 </li>
 <li><p><strong>获取结果并输出</strong></p>
-<pre><code class="highlight cpp">std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl;</code></pre>
-
+<pre><code class="language-cpp">std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; fut.get() &lt;&lt; std::endl;
+</code></pre>
 <p><code>fut.get()</code> 阻塞当前线程，直到 <code>std::promise</code> 设置的值可用。<code>fut.get()</code> 返回这个值，并输出到控制台。</p>
 </li>
 <li><p><strong>等待线程完成</strong></p>
-<pre><code class="highlight cpp">t.<span class="built_in">join</span>();</code></pre>
-
+<pre><code class="language-cpp">t.join();
+</code></pre>
 <p><code>t.join()</code> 等待 <code>produce</code> 线程完成执行，确保程序在退出前 <code>produce</code> 线程已经执行完毕。</p>
 </li>
 </ol>
@@ -869,79 +878,81 @@ std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal
 <p>这种方式在处理异步操作和线程间的结果传递时非常有用。</p>
 <ul>
 <li><p><strong><code>std::future</code></strong>：用于获取异步操作的结果。可以通过 <code>get()</code> 方法获取结果，或者使用 <code>wait()</code> 和 <code>wait_for()</code> 等方法等待结果的到来。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;future&gt;
 
-<span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;
-    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));
-    <span class="keyword">return</span> <span class="number">42</span>;
+int compute_value() &#123;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    return 42;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value); <span class="comment">// 异步计算</span>
-    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre></li>
+int main() &#123;
+    std::future&lt;int&gt; fut = std::async(std::launch::async, compute_value); // 异步计算
+    std::cout &lt;&lt; &quot;Waiting for result...&quot; &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; fut.get() &lt;&lt; std::endl; // 获取结果
+    return 0;
+&#125;
+</code></pre>
+</li>
 </ul>
 <h2 id="4-std-async"><a href="#4-std-async" class="headerlink" title="4. std::async"></a>4. <code>std::async</code></h2><p><code>std::async</code> 用于启动一个异步任务并返回 <code>std::future</code> 对象，可以用于获取异步操作的结果。</p>
 <h3 id="使用-std-async"><a href="#使用-std-async" class="headerlink" title="使用 std::async"></a>使用 <code>std::async</code></h3><ul>
 <li><p><strong><code>std::launch::async</code></strong>：强制异步执行。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;future&gt;
 
-<span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;
-    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));
-    <span class="keyword">return</span> <span class="number">42</span>;
+int compute_value() &#123;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    return 42;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value); <span class="comment">// 异步计算</span>
-    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre>
-
+int main() &#123;
+    std::future&lt;int&gt; fut = std::async(std::launch::async, compute_value); // 异步计算
+    std::cout &lt;&lt; &quot;Waiting for result...&quot; &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; fut.get() &lt;&lt; std::endl; // 获取结果
+    return 0;
+&#125;
+</code></pre>
 <p>这段代码演示了如何在 C++ 中让程序在后台异步地执行任务，并在稍后的时间获取任务的结果。我们将任务分配给一个后台线程去处理，而主线程则可以继续执行其他操作。</p>
 <h3 id="代码解释"><a href="#代码解释" class="headerlink" title="代码解释"></a>代码解释</h3><ol>
 <li><p><strong>定义任务</strong></p>
-<pre><code class="highlight cpp"><span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;
-    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));
-    <span class="keyword">return</span> <span class="number">42</span>;
-&#125;</code></pre>
-
+<pre><code class="language-cpp">int compute_value() &#123;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    return 42;
+&#125;
+</code></pre>
 <ul>
 <li>这里定义了一个函数 <code>compute_value</code>，它模拟一个耗时的计算过程。函数内部使用 <code>std::this_thread::sleep_for</code> 暂停 1 秒钟，然后返回一个固定的结果 <code>42</code>。</li>
 </ul>
 </li>
 <li><p><strong>启动异步任务</strong></p>
-<pre><code class="highlight cpp">std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value);</code></pre>
-
+<pre><code class="language-cpp">std::future&lt;int&gt; fut = std::async(std::launch::async, compute_value);
+</code></pre>
 <ul>
 <li>这一行代码的作用是启动一个异步任务。<code>std::async</code> 函数会创建一个后台线程来执行 <code>compute_value</code> 函数。这意味着 <code>compute_value</code> 函数会在后台运行，而不会阻塞主线程。</li>
 <li><code>std::future&lt;int&gt; fut</code> 是用来接收这个任务的结果的。它提供了一个机制来检查任务是否完成，并获取计算结果。</li>
 </ul>
 </li>
 <li><p><strong>继续执行其他操作</strong></p>
-<pre><code class="highlight cpp">std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;</code></pre>
-
+<pre><code class="language-cpp">std::cout &lt;&lt; &quot;Waiting for result...&quot; &lt;&lt; std::endl;
+</code></pre>
 <ul>
 <li>在任务运行时，主线程会继续执行其他操作。在这个例子中，它输出一条消息，表明程序正在等待计算结果。</li>
 </ul>
 </li>
 <li><p><strong>获取并显示结果</strong></p>
-<pre><code class="highlight cpp">std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl;</code></pre>
-
+<pre><code class="language-cpp">std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; fut.get() &lt;&lt; std::endl;
+</code></pre>
 <ul>
 <li><code>fut.get()</code> 会阻塞主线程，直到后台任务完成并返回结果。它从后台线程获取计算结果并输出。</li>
 <li>由于 <code>compute_value</code> 函数总是返回 <code>42</code>，所以这里输出的结果是 <code>42</code>。</li>
 </ul>
 </li>
 <li><p><strong>结束程序</strong></p>
-<pre><code class="highlight cpp"><span class="keyword">return</span> <span class="number">0</span>;</code></pre>
-
+<pre><code class="language-cpp">return 0;
+</code></pre>
 <ul>
 <li>程序的主函数结束，返回 <code>0</code> 表示程序成功执行。</li>
 </ul>
@@ -955,21 +966,23 @@ std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal
 <p>这样，你的程序可以同时进行计算和执行其他操作，提高了效率和响应性。</p>
 </li>
 <li><p><strong><code>std::launch::deferred</code></strong>：推迟执行，直到 <code>get()</code> 或 <code>wait()</code> 被调用。</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;future&gt;
 
-<span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;
-    std::cout &lt;&lt; <span class="string">&quot;Computing...&quot;</span> &lt;&lt; std::endl;
-    <span class="keyword">return</span> <span class="number">42</span>;
+int compute_value() &#123;
+    std::cout &lt;&lt; &quot;Computing...&quot; &lt;&lt; std::endl;
+    return 42;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::deferred, compute_value); <span class="comment">// 推迟执行</span>
-    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 执行并获取结果</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre></li>
+int main() &#123;
+    std::future&lt;int&gt; fut = std::async(std::launch::deferred, compute_value); // 推迟执行
+    std::cout &lt;&lt; &quot;Waiting for result...&quot; &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; fut.get() &lt;&lt; std::endl; // 执行并获取结果
+    return 0;
+&#125;
+</code></pre>
+</li>
 </ul>
 <h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><ol>
 <li><p><strong>执行时机</strong></p>
@@ -1035,18 +1048,20 @@ std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal
 <li><p><strong>线程间通信</strong>: 通常需要使用其他同步机制（如互斥量、条件变量）来处理线程间的通信和数据共享。</p>
 </li>
 <li><p><strong>示例</strong>:</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
 
-<span class="function"><span class="type">void</span> <span class="title">print_message</span><span class="params">()</span> </span>&#123;
-    std::cout &lt;&lt; <span class="string">&quot;Hello from thread!&quot;</span> &lt;&lt; std::endl;
+void print_message() &#123;
+    std::cout &lt;&lt; &quot;Hello from thread!&quot; &lt;&lt; std::endl;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    <span class="function">std::thread <span class="title">t</span><span class="params">(print_message)</span></span>; <span class="comment">// 创建并启动线程</span>
-    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程完成</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre></li>
+int main() &#123;
+    std::thread t(print_message); // 创建并启动线程
+    t.join(); // 等待线程完成
+    return 0;
+&#125;
+</code></pre>
+</li>
 </ul>
 <h3 id="std-async"><a href="#std-async" class="headerlink" title="std::async"></a><code>std::async</code></h3><ul>
 <li><p><strong>用法</strong>: 用于启动异步任务，自动管理线程的生命周期。</p>
@@ -1058,18 +1073,20 @@ std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal
 <li><p><strong>线程间通信</strong>: <code>std::future</code> 提供了一种简单的方式来等待任务结果，并进行线程间的同步，避免了手动管理线程。</p>
 </li>
 <li><p><strong>示例</strong>:</p>
-<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;future&gt;
 
-<span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;
-    <span class="keyword">return</span> <span class="number">42</span>;
+int compute_value() &#123;
+    return 42;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value); <span class="comment">// 异步计算</span>
-    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre></li>
+int main() &#123;
+    std::future&lt;int&gt; fut = std::async(std::launch::async, compute_value); // 异步计算
+    std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; fut.get() &lt;&lt; std::endl; // 获取结果
+    return 0;
+&#125;
+</code></pre>
+</li>
 </ul>
 <h3 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h3><ol>
 <li><p><strong>线程管理</strong></p>
@@ -1102,27 +1119,27 @@ std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal
 <li><strong><code>std::async</code></strong> 提供了一个更高级的接口来简化异步任务的执行和结果获取，适合需要异步计算但不希望直接管理线程的场景。</li>
 </ul>
 <h2 id="5-std-atomic"><a href="#5-std-atomic" class="headerlink" title="5. std::atomic"></a>5. <code>std::atomic</code></h2><p><code>std::atomic</code> 提供原子操作，用于处理共享数据时避免数据竞争。适用于基本数据类型，如 <code>int</code>、<code>bool</code> 等。</p>
-<h3 id="使用-std-atomic"><a href="#使用-std-atomic" class="headerlink" title="使用 std::atomic"></a>使用 <code>std::atomic</code></h3><pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
-<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span>
+<h3 id="使用-std-atomic"><a href="#使用-std-atomic" class="headerlink" title="使用 std::atomic"></a>使用 <code>std::atomic</code></h3><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;atomic&gt;
 
-<span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">counter</span><span class="params">(<span class="number">0</span>)</span></span>;
+std::atomic&lt;int&gt; counter(0);
 
-<span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;
-    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;
-        ++counter; <span class="comment">// 原子操作，避免数据竞争</span>
+void increment() &#123;
+    for (int i = 0; i &lt; 1000; ++i) &#123;
+        ++counter; // 原子操作，避免数据竞争
     &#125;
 &#125;
 
-<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
-    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;
-    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;
-    t<span class="number">1.</span><span class="built_in">join</span>();
-    t<span class="number">2.</span><span class="built_in">join</span>();
-    std::cout &lt;&lt; <span class="string">&quot;Counter: &quot;</span> &lt;&lt; counter &lt;&lt; std::endl;
-    <span class="keyword">return</span> <span class="number">0</span>;
-&#125;</code></pre>
-
+int main() &#123;
+    std::thread t1(increment);
+    std::thread t2(increment);
+    t1.join();
+    t2.join();
+    std::cout &lt;&lt; &quot;Counter: &quot; &lt;&lt; counter &lt;&lt; std::endl;
+    return 0;
+&#125;
+</code></pre>
 <h3 id="原子操作的常用方法"><a href="#原子操作的常用方法" class="headerlink" title="原子操作的常用方法"></a>原子操作的常用方法</h3><ul>
 <li><strong><code>store()</code></strong>：设置值。</li>
 <li><strong><code>load()</code></strong>：获取值。</li>
