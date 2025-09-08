@@ -788,19 +788,12 @@
         <ol>
 <li>请填写bool , float,  指针变量 与“零值”比较的if语句。</li>
 </ol>
-<pre><code class="hljs c"><span class="hljs-keyword">if</span>(flag); <span class="hljs-keyword">if</span>(!flag);
-
-<span class="hljs-type">const</span> <span class="hljs-type">float</span> EPSINON = <span class="hljs-number">0.00001</span>;
-<span class="hljs-keyword">if</span> ((x &gt;= - EPSINON) &amp;&amp; (x &lt;= EPSINON))
-<span class="hljs-comment">// 详解：不可将浮点变量用“ == ” 或“！=” 与数字比较，应该设法转化成“&gt;=” 或“&lt;=” 此类形式。</span>
-    
-<span class="hljs-keyword">if</span>(p= =<span class="hljs-literal">NULL</span>) ; <span class="hljs-keyword">if</span>(p!=<span class="hljs-literal">NULL</span>)</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(flag); <span class="keyword">if</span>(!flag);</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">float</span> EPSINON = <span class="number">0.00001</span>;</span><br><span class="line"><span class="keyword">if</span> ((x &gt;= - EPSINON) &amp;&amp; (x &lt;= EPSINON))</span><br><span class="line"><span class="comment">// 详解：不可将浮点变量用“ == ” 或“！=” 与数字比较，应该设法转化成“&gt;=” 或“&lt;=” 此类形式。</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span>(p= =<span class="literal">NULL</span>) ; <span class="keyword">if</span>(p!=<span class="literal">NULL</span>)</span><br></pre></td></tr></table></figure>
 
 <p>解释：</p>
 <p>直接判断浮点数是否等于零的问题在于，浮点数的计算存在舍入误差。在计算机中，浮点数的运算并不是完全精确的，特别是在涉及除法、乘法等复杂运算时，可能会产生很小的误差。这些误差可能导致原本应该相等的数字变得不完全相等，尽管它们看起来很接近。</p>
 <p>例如，考虑以下代码：</p>
-<pre><code class="hljs c"><span class="hljs-type">float</span> x = <span class="hljs-number">0.1</span> + <span class="hljs-number">0.2</span>;
-<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%f\n&quot;</span>, x);  <span class="hljs-comment">// 输出 &quot;0.300000&quot;，但实际上 x 可能不是精确的 0.3</span></code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> x = <span class="number">0.1</span> + <span class="number">0.2</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, x);  <span class="comment">// 输出 &quot;0.300000&quot;，但实际上 x 可能不是精确的 0.3</span></span><br></pre></td></tr></table></figure>
 
 <p>虽然看起来 <code>x</code> 应该等于 <code>0.3</code>，但在某些系统上，由于浮点数的舍入误差，<code>x</code> 可能并不严格等于 <code>0.3</code>。如果我们直接比较 <code>x == 0.3</code>，可能会得到 false，即使 <code>x</code> 很接近 <code>0.3</code>。</p>
 <p>为了避免这种情况，我们需要引入一个较小的阈值（如 <code>EPSILON</code>）来判断浮点数是否足够接近于零或其他特定值。这种方法称为“模糊比较”或“容限比较”。通过这种方式，我们可以接受一定范围内的误差，而不是要求绝对精确匹配。</p>
@@ -808,37 +801,15 @@
 <ol start="2">
 <li>以下为Linux下的32 位C 程序，请计算sizeof 的值。</li>
 </ol>
-<pre><code class="hljs c"><span class="hljs-type">char</span>  str[] = “Hello” ;  
-<span class="hljs-type">char</span>  *p = str ;                                      
-<span class="hljs-type">int</span>   n = <span class="hljs-number">10</span>;                                               
-<span class="hljs-comment">//请计算</span>
-（<span class="hljs-number">1</span>）<span class="hljs-keyword">sizeof</span> ( str ) =  <span class="hljs-number">6</span>                
-（<span class="hljs-number">2</span>）<span class="hljs-keyword">sizeof</span> ( p ) =  <span class="hljs-number">4</span>               
-（<span class="hljs-number">3</span>）<span class="hljs-keyword">sizeof</span> ( n ) = <span class="hljs-number">4</span>
-（<span class="hljs-number">4</span>）<span class="hljs-type">void</span> Func ( <span class="hljs-type">char</span> str[<span class="hljs-number">100</span>])                           
-&#123;                                          
-	…… ;       
-    请计算<span class="hljs-keyword">sizeof</span>( str ) = <span class="hljs-number">4</span>
-&#125;                                          
- 
-（<span class="hljs-number">5</span>）<span class="hljs-type">void</span> *p=<span class="hljs-built_in">malloc</span>(<span class="hljs-number">100</span>);
-<span class="hljs-keyword">sizeof</span>( p )= <span class="hljs-number">4</span></code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span>  str[] = “Hello” ;  </span><br><span class="line"><span class="type">char</span>  *p = str ;                                      </span><br><span class="line"><span class="type">int</span>   n = <span class="number">10</span>;                                               </span><br><span class="line"><span class="comment">//请计算</span></span><br><span class="line">（<span class="number">1</span>）<span class="keyword">sizeof</span> ( str ) =  <span class="number">6</span>                </span><br><span class="line">（<span class="number">2</span>）<span class="keyword">sizeof</span> ( p ) =  <span class="number">4</span>               </span><br><span class="line">（<span class="number">3</span>）<span class="keyword">sizeof</span> ( n ) = <span class="number">4</span></span><br><span class="line">（<span class="number">4</span>）<span class="type">void</span> Func ( <span class="type">char</span> str[<span class="number">100</span>])                           </span><br><span class="line">&#123;                                          </span><br><span class="line">	…… ;       </span><br><span class="line">    请计算<span class="keyword">sizeof</span>( str ) = <span class="number">4</span></span><br><span class="line">&#125;                                          </span><br><span class="line"> </span><br><span class="line">（<span class="number">5</span>）<span class="type">void</span> *p=<span class="built_in">malloc</span>(<span class="number">100</span>);</span><br><span class="line"><span class="keyword">sizeof</span>( p )= <span class="number">4</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>解释</strong>：</p>
 <p><code>sizeof</code> 是 C++ 中的一个运算符，用于计算对象或类型所占的内存大小，单位为字节（<code>byte</code>）。当 <code>sizeof</code> 运算符用于字符串时，不同场景下的结果会有所不同。以下是对 <code>sizeof</code> 在不同情况下计算字符串大小的详解。</p>
 <h3 id="sizeof-对字符串字面量的计算"><a href="#sizeof-对字符串字面量的计算" class="headerlink" title="sizeof 对字符串字面量的计算"></a><strong><code>sizeof</code> 对字符串字面量的计算</strong></h3><p>字符串字面量在 C++ 中是以 <code>const char[]</code> 数组的形式存在的，并且以 <code>&#39;\0&#39;</code>（空字符）作为结束符。因此，<code>sizeof</code> 对字符串字面量的计算结果包含字符串中的所有字符以及结尾的 <code>&#39;\0&#39;</code> 字符。</p>
-<h4 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h4><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
-
-<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
-    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* str = <span class="hljs-string">&quot;Hello, world!&quot;</span>;
-    std::cout &lt;&lt; <span class="hljs-string">&quot;sizeof(str) = &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(str) &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="hljs-string">&quot;sizeof(\&quot;Hello, world!\&quot;) = &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(<span class="hljs-string">&quot;Hello, world!&quot;</span>) &lt;&lt; std::endl;
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<h4 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* str = <span class="string">&quot;Hello, world!&quot;</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(str) = &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(str) &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(\&quot;Hello, world!\&quot;) = &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(<span class="string">&quot;Hello, world!&quot;</span>) &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>输出结果：</strong></p>
-<pre><code class="hljs plaintext">sizeof(str) = 8        // 在 64 位系统中，指针的大小为 8 字节
-sizeof(&quot;Hello, world!&quot;) = 14 // 字符串字面量的大小，包括 &#x27;\0&#x27; 字符</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sizeof(str) = 8        // 在 64 位系统中，指针的大小为 8 字节</span><br><span class="line">sizeof(&quot;Hello, world!&quot;) = 14 // 字符串字面量的大小，包括 &#x27;\0&#x27; 字符</span><br></pre></td></tr></table></figure>
 
 <p><strong>分析：</strong></p>
 <ul>
@@ -846,21 +817,10 @@ sizeof(&quot;Hello, world!&quot;) = 14 // 字符串字面量的大小，包括 &
 <li><code>sizeof(&quot;Hello, world!&quot;)</code>：<code>&quot;Hello, world!&quot;</code> 是一个字符串字面量，它占用的大小包括所有字符和结尾的 <code>&#39;\0&#39;</code>，所以是 14 字节。</li>
 </ul>
 <h3 id="sizeof-对-char-数组的计算"><a href="#sizeof-对-char-数组的计算" class="headerlink" title="sizeof 对 char 数组的计算"></a><strong><code>sizeof</code> 对 <code>char</code> 数组的计算</strong></h3><p>当 <code>sizeof</code> 用于 <code>char</code> 数组时，它返回整个数组的大小。注意，这与字符串的实际长度（不包括 <code>&#39;\0&#39;</code>）不同，<code>sizeof</code> 返回的是数组占用的总字节数。</p>
-<h4 id="示例：-1"><a href="#示例：-1" class="headerlink" title="示例："></a>示例：</h4><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
-
-<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
-    <span class="hljs-type">char</span> str1[] = <span class="hljs-string">&quot;Hello&quot;</span>;
-    <span class="hljs-type">char</span> str2[<span class="hljs-number">10</span>] = <span class="hljs-string">&quot;Hi&quot;</span>;
-
-    std::cout &lt;&lt; <span class="hljs-string">&quot;sizeof(str1) = &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(str1) &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="hljs-string">&quot;sizeof(str2) = &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(str2) &lt;&lt; std::endl;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<h4 id="示例：-1"><a href="#示例：-1" class="headerlink" title="示例："></a>示例：</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> str1[] = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line">    <span class="type">char</span> str2[<span class="number">10</span>] = <span class="string">&quot;Hi&quot;</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(str1) = &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(str1) &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(str2) = &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(str2) &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>输出结果：</strong></p>
-<pre><code class="hljs plaintext">sizeof(str1) = 6 // &quot;Hello&quot; + &#x27;\0&#x27; = 6 字节
-sizeof(str2) = 10 // str2 数组的大小是 10 字节，不管实际存储的内容是什么</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sizeof(str1) = 6 // &quot;Hello&quot; + &#x27;\0&#x27; = 6 字节</span><br><span class="line">sizeof(str2) = 10 // str2 数组的大小是 10 字节，不管实际存储的内容是什么</span><br></pre></td></tr></table></figure>
 
 <p><strong>分析：</strong></p>
 <ul>
@@ -868,17 +828,10 @@ sizeof(str2) = 10 // str2 数组的大小是 10 字节，不管实际存储的�
 <li><code>sizeof(str2)</code>：<code>str2</code> 是一个大小为 10 的 <code>char</code> 数组，尽管它只存储了 <code>&quot;Hi&quot;</code> 和 <code>&#39;\0&#39;</code>，但是 <code>sizeof(str2)</code> 返回数组的总大小，即 10。</li>
 </ul>
 <h3 id="sizeof-对-std-string-的计算"><a href="#sizeof-对-std-string-的计算" class="headerlink" title="sizeof 对 std::string 的计算"></a><strong><code>sizeof</code> 对 <code>std::string</code> 的计算</strong></h3><p><code>std::string</code> 是 C++ 标准库中的字符串类，<code>sizeof</code> 返回的是 <code>std::string</code> 对象的大小，而不是字符串数据本身的大小。<code>std::string</code> 通常包含一个指向动态分配内存的指针（用来存储字符串内容）、字符串长度、容量等信息。</p>
-<h4 id="示例：-2"><a href="#示例：-2" class="headerlink" title="示例："></a>示例：</h4><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
-
-<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
-    std::string str = <span class="hljs-string">&quot;Hello, world!&quot;</span>;
-    std::cout &lt;&lt; <span class="hljs-string">&quot;sizeof(str) = &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(str) &lt;&lt; std::endl;
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<h4 id="示例：-2"><a href="#示例：-2" class="headerlink" title="示例："></a>示例：</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::string str = <span class="string">&quot;Hello, world!&quot;</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(str) = &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(str) &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>输出结果：</strong></p>
-<pre><code class="hljs plaintext">sizeof(str) = 32 // 具体大小可能依赖于实现和系统架构</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sizeof(str) = 32 // 具体大小可能依赖于实现和系统架构</span><br></pre></td></tr></table></figure>
 
 <p><strong>分析：</strong></p>
 <ul>
@@ -892,21 +845,10 @@ sizeof(str2) = 10 // str2 数组的大小是 10 字节，不管实际存储的�
 </li>
 </ul>
 <p><strong>示例：</strong></p>
-<pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstring&gt;</span></span>
-
-<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
-    <span class="hljs-type">char</span> str[] = <span class="hljs-string">&quot;Hello, world!&quot;</span>;
-
-    std::cout &lt;&lt; <span class="hljs-string">&quot;sizeof(str) = &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(str) &lt;&lt; std::endl;
-    std::cout &lt;&lt; <span class="hljs-string">&quot;strlen(str) = &quot;</span> &lt;&lt; <span class="hljs-built_in">strlen</span>(str) &lt;&lt; std::endl;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> str[] = <span class="string">&quot;Hello, world!&quot;</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(str) = &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(str) &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;strlen(str) = &quot;</span> &lt;&lt; <span class="built_in">strlen</span>(str) &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>输出结果：</strong></p>
-<pre><code class="hljs plaintext">sizeof(str) = 14 // &quot;Hello, world!&quot; + &#x27;\0&#x27;
-strlen(str) = 13 // &quot;Hello, world!&quot; 不包括 &#x27;\0&#x27;</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sizeof(str) = 14 // &quot;Hello, world!&quot; + &#x27;\0&#x27;</span><br><span class="line">strlen(str) = 13 // &quot;Hello, world!&quot; 不包括 &#x27;\0&#x27;</span><br></pre></td></tr></table></figure>
 
 <p><strong>分析：</strong></p>
 <ul>
@@ -920,56 +862,16 @@ strlen(str) = 13 // &quot;Hello, world!&quot; 不包括 &#x27;\0&#x27;</code></p
 <li><p><code>strlen</code> 则用于在运行时计算字符串的长度，不包括 <code>&#39;\0&#39;</code>。</p>
 </li>
 <li><p>理解 <code>sizeof</code> 和 <code>strlen</code> 的区别对编写高效、正确的 C++ 程序非常重要。</p>
-<pre><code class="hljs c">
-
- <span class="hljs-number">1.</span> 数组名和指针的区别
-
-数组名：在表达式中，数组名代表的是数组的首地址（即数组第一个元素的地址）。但它不仅仅是一个指针，它还包含数组的类型和大小信息。`<span class="hljs-keyword">sizeof</span>` 运算符能够获取数组的实际大小，因为编译器知道数组的确切类型和长度。
-
-指针：指针只是一个变量，用于存储地址。指针的大小通常是固定的（在 <span class="hljs-number">64</span> 位系统中为 <span class="hljs-number">8</span> 字节，在 <span class="hljs-number">32</span> 位系统中为 <span class="hljs-number">4</span> 字节），它并不包含任何关于所指向的内存块大小的信息。
-
-<span class="hljs-number">2.</span> 为什么 <span class="hljs-keyword">sizeof</span>(数组名) 返回的是数组的大小**
-
-当我们对数组名使用 <span class="hljs-keyword">sizeof</span> 时，编译器会返回整个数组所占的内存大小，而不是数组名（首地址）的大小。这是因为：
-
-- 数组名本质上并不是一个指针，而是一个表示整个数组的符号。
-- 编译器在编译时知道数组的确切大小，因此 `<span class="hljs-keyword">sizeof</span>` 可以返回整个数组的大小，而不仅仅是一个指针的大小。
-
-
-
-<span class="hljs-number">3.</span> 数组名作为指针使用的情况
-
-虽然数组名不是一个普通的指针，但在某些情况下（例如传递给函数时），它会退化为指针。这是因为在 C/C++ 中，当数组名被用作函数参数时，它会自动退化为指向数组首元素的指针。
-
-</code></pre></li>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="number">1.</span> 数组名和指针的区别</span><br><span class="line"></span><br><span class="line">数组名：在表达式中，数组名代表的是数组的首地址（即数组第一个元素的地址）。但它不仅仅是一个指针，它还包含数组的类型和大小信息。`<span class="keyword">sizeof</span>` 运算符能够获取数组的实际大小，因为编译器知道数组的确切类型和长度。</span><br><span class="line"></span><br><span class="line">指针：指针只是一个变量，用于存储地址。指针的大小通常是固定的（在 <span class="number">64</span> 位系统中为 <span class="number">8</span> 字节，在 <span class="number">32</span> 位系统中为 <span class="number">4</span> 字节），它并不包含任何关于所指向的内存块大小的信息。</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> 为什么 <span class="keyword">sizeof</span>(数组名) 返回的是数组的大小**</span><br><span class="line"></span><br><span class="line">当我们对数组名使用 <span class="keyword">sizeof</span> 时，编译器会返回整个数组所占的内存大小，而不是数组名（首地址）的大小。这是因为：</span><br><span class="line"></span><br><span class="line">- 数组名本质上并不是一个指针，而是一个表示整个数组的符号。</span><br><span class="line">- 编译器在编译时知道数组的确切大小，因此 `<span class="keyword">sizeof</span>` 可以返回整个数组的大小，而不仅仅是一个指针的大小。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> 数组名作为指针使用的情况</span><br><span class="line"></span><br><span class="line">虽然数组名不是一个普通的指针，但在某些情况下（例如传递给函数时），它会退化为指针。这是因为在 C/C++ 中，当数组名被用作函数参数时，它会自动退化为指向数组首元素的指针。</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 <ol start="3">
 <li><p>用变量a 给出下面的定义<br>e) 一个有10个指针的数组，该指针是指向一个整型数的;<br>f)  一个指向有10个整型数数组的指针;<br>g) 一个指向函数的指针，该函数有一个整型参数并返回一个整型数;<br>h) 一个有10个指针的数组，每个指针指向一个函数，该函数有一个整型参数并返回一个整型数;</p>
-<pre><code class="hljs c">e) <span class="hljs-type">int</span> * a[<span class="hljs-number">10</span>];
-f) <span class="hljs-type">int</span> (*a)[<span class="hljs-number">10</span>]
-g) <span class="hljs-type">int</span> (*a)(<span class="hljs-type">int</span>);
-h) <span class="hljs-type">int</span> (*a[<span class="hljs-number">10</span>])(<span class="hljs-type">int</span>)</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">e) <span class="type">int</span> * a[<span class="number">10</span>];</span><br><span class="line">f) <span class="type">int</span> (*a)[<span class="number">10</span>]</span><br><span class="line">g) <span class="type">int</span> (*a)(<span class="type">int</span>);</span><br><span class="line">h) <span class="type">int</span> (*a[<span class="number">10</span>])(<span class="type">int</span>)</span><br></pre></td></tr></table></figure>
 
 
 </li>
 <li><p>设有以下说明和定义：</p>
-<pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">union</span> </span>
-<span class="hljs-class">&#123;</span>
-	<span class="hljs-type">long</span> i; 
-	<span class="hljs-type">int</span> k[<span class="hljs-number">5</span>]; 
-	<span class="hljs-type">char</span> c;
-&#125; DATA;
-
-<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">data</span> </span>
-<span class="hljs-class">&#123;</span> 
-	<span class="hljs-type">int</span> cat; 
-	DATA cow; 
-	<span class="hljs-type">double</span> dog;
-&#125; too;
-
-DATA max;
-
-则语句<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, <span class="hljs-keyword">sizeof</span>(max) + <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> data) ); 的执行结果是：</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">union</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="type">long</span> i; </span><br><span class="line">	<span class="type">int</span> k[<span class="number">5</span>]; </span><br><span class="line">	<span class="type">char</span> c;</span><br><span class="line">&#125; DATA;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">data</span> </span></span><br><span class="line"><span class="class">&#123;</span> </span><br><span class="line">	<span class="type">int</span> cat; </span><br><span class="line">	DATA cow; </span><br><span class="line">	<span class="type">double</span> dog;</span><br><span class="line">&#125; too;</span><br><span class="line"></span><br><span class="line">DATA max;</span><br><span class="line"></span><br><span class="line">则语句<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, <span class="keyword">sizeof</span>(max) + <span class="keyword">sizeof</span>(<span class="keyword">struct</span> data) ); 的执行结果是：</span><br></pre></td></tr></table></figure>
 
 <p> <strong>32位下：</strong><br>sizeof(DATA) &#x3D; 20<br>sizeof(struct data) &#x3D; 32<br>执行结果：52<br>解析：<br>DATA中最大内存变量为数组k，占用20个字节，超出了32位下操作系统基本字节单位（4），所以4字节对齐，但是对齐后还是20。struct data中int占用4个字节，DATA占用20个字节，double占用8个字节，一共32个字节，刚好也可以4字节对齐，所以最终为32。它们相加为52。<br><strong>64位下：</strong><br>sizeof(DATA) &#x3D; 24<br>sizeof(struct data) &#x3D; 40<br>执行结果：64<br>DATA中最大内存变量为数组k，占用20个字节，超过了64位下操作系统基本字节单位（8），所以8字节对齐，最后为24。truct data中int占用8个字节，DATA占用20个字节，double占用8个字节，一共36个字节，8字节对齐后为40，其中补齐的4个字节在DATA后面。最终它们相加等于64。<br>另外，以上是在ubuntu18.04下使用系统自带GCC编译器实验的。实际我在windows10下使用x86_64-w64-mingw32指定 -m64 编译64位程序仍旧和 -m32 下一样，可能还是和编译器有关。 </p>
 <p><strong>结构体对齐规则：</strong></p>
@@ -977,15 +879,7 @@ DATA max;
 <p>4、如果嵌套了结构体的情况，嵌套的结构体对齐到该结构体自己的最大对齐数的整数倍处，结构体的整体大小就是所有最大对齐数（含嵌套结构的对齐数）的整数倍。</p>
 </li>
 <li><p>请问以下代码有什么问题：</p>
-<pre><code class="hljs c"><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>
-&#123;
-	<span class="hljs-type">char</span> a;
-	<span class="hljs-type">char</span> *str=&amp; a;
-    <span class="hljs-built_in">strcpy</span>(str,<span class="hljs-string">&quot;hello&quot;</span>);
-    <span class="hljs-comment">// 越界</span>
-    <span class="hljs-built_in">printf</span>(str);
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> a;</span><br><span class="line">	<span class="type">char</span> *str=&amp; a;</span><br><span class="line">    <span class="built_in">strcpy</span>(str,<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="comment">// 越界</span></span><br><span class="line">    <span class="built_in">printf</span>(str);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 </li>
@@ -1001,13 +895,7 @@ char* s = &quot;AAA&quot;;：这一行代码将字符串字面量 &quot;AAA&quot
 不要修改字符串字面量：在 C/C++ 中，字符串字面量通常存储在只读内存区域，试图修改它们会导致未定义行为，可能会导致程序崩溃。
 使用字符数组：如果需要可修改的字符串，应该使用字符数组而不是指向字符串字面量的指针。这不仅安全，而且是正确的做法。
 */
-<pre><code class="hljs plaintext">
-   
-
-7. 
-
-   ```c
-   int (*s[10])(int)  //表示的是什么</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">7. </span><br><span class="line"></span><br><span class="line">   ```c</span><br><span class="line">   int (*s[10])(int)  //表示的是什么</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
 
  答案：int (*s[10])(int) 函数指针数组，每个指针指向一个int func ( int param) 的函数。（或一个有10个指针的数组，每个指针指向一个函数，该函数有一个整型参数并返回一个整型数） 
 </code></pre>
@@ -1031,36 +919,7 @@ int main( )
 &#125; //会出现什么问题？
     
 //
-<pre><code class="hljs plaintext">
-**分析：**
-
-这段代码中存在一个问题：在 `getmemory` 函数中，`p` 是一个局部变量，它指向动态分配的内存。当你调用 `free(str)` 时，`str` 已经不再是有效的指针，因为它没有保存动态分配的内存的地址。
-
-下面是改进后的代码：
-
-```c
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-
-void getmemory(char **p)
-&#123;
-    *p = (char *)malloc(11);  // 注意：需要分配足够的空间容纳字符串和结束符&#x27;\0&#x27;
-    if (*p != NULL)
-        strcpy(*p, &quot;hello world&quot;);
-&#125;
-
-int main(void)
-&#123;
-    char *str = NULL;
-    getmemory(&amp;str);
-    if (str != NULL)
-    &#123;
-        printf(&quot;%s\n&quot;, str);
-        free(str);
-    &#125;
-    return 0;
-&#125;</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">**分析：**</span><br><span class="line"></span><br><span class="line">这段代码中存在一个问题：在 `getmemory` 函数中，`p` 是一个局部变量，它指向动态分配的内存。当你调用 `free(str)` 时，`str` 已经不再是有效的指针，因为它没有保存动态分配的内存的地址。</span><br><span class="line"></span><br><span class="line">下面是改进后的代码：</span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">void getmemory(char **p)</span><br><span class="line">&#123;</span><br><span class="line">    *p = (char *)malloc(11);  // 注意：需要分配足够的空间容纳字符串和结束符&#x27;\0&#x27;</span><br><span class="line">    if (*p != NULL)</span><br><span class="line">        strcpy(*p, &quot;hello world&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">    char *str = NULL;</span><br><span class="line">    getmemory(&amp;str);</span><br><span class="line">    if (str != NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;%s\n&quot;, str);</span><br><span class="line">        free(str);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 在这段改进后的代码中，`getmemory` 函数接受一个指向指针的指针 `char **p`，这样就可以更新外部的 `str` 指针。此外，确保分配足够的空间来存放字符串和结束符 `\0`。最后，在 `main` 函数中检查 `str` 是否为 `NULL`，防止在释放之前打印无效的字符串。
 
@@ -1071,17 +930,7 @@ int main(void)
 strcpy(szstr,&quot;0123456789&quot;);
 // 产生什么结果？为什么？
 // 越界。 字符串多一个’\0’结束符
-<pre><code class="hljs plaintext">
-11. 
-
-    ```c
-    void main()
-    &#123;
-    	char aa[10];
-    	printf(“%d”,strlen(aa));
-    &#125;                                          
-    // 会出现什么问题？打印结果是是多少？
-    // 打印结果未知</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">11. </span><br><span class="line"></span><br><span class="line">    ```c</span><br><span class="line">    void main()</span><br><span class="line">    &#123;</span><br><span class="line">    	char aa[10];</span><br><span class="line">    	printf(“%d”,strlen(aa));</span><br><span class="line">    &#125;                                          </span><br><span class="line">    // 会出现什么问题？打印结果是是多少？</span><br><span class="line">    // 打印结果未知</span><br></pre></td></tr></table></figure>
 
 </code></pre>
 </li>
@@ -1094,15 +943,7 @@ struct A
     unsigned long m;
 &#125;; 问sizeof(A) = ?
 8
-<pre><code class="hljs plaintext">
-13. ```c
-    struct name1
-    &#123;
-    	char str;
-    	short x;
-    	int num;
-    &#125; ;求sizeof(name1)?
-    8</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">13. ```c</span><br><span class="line">    struct name1</span><br><span class="line">    &#123;</span><br><span class="line">    	char str;</span><br><span class="line">    	short x;</span><br><span class="line">    	int num;</span><br><span class="line">    &#125; ;求sizeof(name1)?</span><br><span class="line">    8</span><br></pre></td></tr></table></figure>
 </code></pre>
 </li>
 <li><pre><code class="language-c">struct name2
@@ -1113,32 +954,13 @@ struct A
 &#125;; 求sizeof(name2)？
 32:12
 64:12
-<pre><code class="hljs plaintext">
-15. ```c
-    // 程序哪里有错误
-    wap( int *p1,int *p2 )
-    &#123;
-    	int  *p;
-    	*p = *p1;
-    	*p1 = *p2;
-    	*p2 = *p;
-    &#125;
-    // 答案：申请p的时候没有初始化，所以p为野指针。</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">15. ```c</span><br><span class="line">    // 程序哪里有错误</span><br><span class="line">    wap( int *p1,int *p2 )</span><br><span class="line">    &#123;</span><br><span class="line">    	int  *p;</span><br><span class="line">    	*p = *p1;</span><br><span class="line">    	*p1 = *p2;</span><br><span class="line">    	*p2 = *p;</span><br><span class="line">    &#125;</span><br><span class="line">    // 答案：申请p的时候没有初始化，所以p为野指针。</span><br></pre></td></tr></table></figure>
 </code></pre>
 </li>
 <li><pre><code class="language-c">(void *)ptr 和(*(void**))ptr 的结果是否相同？其中ptr为同一个指针。
 答案：(void )ptr 和((void**))ptr 值是相同的
 详解：个人理解，void前面的*是取该地址内容的，所以本质一样
-<pre><code class="hljs plaintext">
-17. ```c
-    要对绝对地址0x100000赋值，我们可以用
-    (unsigned int*)0x100000 = 1234;
-    那么要是想让程序跳转到绝对地址是0x100000去执行，应该怎么做？
-    答案：((void ()( ))0x100000 ) ( );
-    首先要将0x100000强制转换成函数指针,即:
-    (void (*)(void))0x100000
-    然后再调用它:
-    ((void (*)(void))0x100000)();</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">17. ```c</span><br><span class="line">    要对绝对地址0x100000赋值，我们可以用</span><br><span class="line">    (unsigned int*)0x100000 = 1234;</span><br><span class="line">    那么要是想让程序跳转到绝对地址是0x100000去执行，应该怎么做？</span><br><span class="line">    答案：((void ()( ))0x100000 ) ( );</span><br><span class="line">    首先要将0x100000强制转换成函数指针,即:</span><br><span class="line">    (void (*)(void))0x100000</span><br><span class="line">    然后再调用它:</span><br><span class="line">    ((void (*)(void))0x100000)();</span><br></pre></td></tr></table></figure>
 </code></pre>
 </li>
 <li><pre><code class="language-c">关键字volatile有什么含意? 并给出三个不同的例子。
@@ -1152,61 +974,17 @@ struct A
 简单地说，`volatile` 关键字就是告诉编译器：“别管我，让我自己来处理这个变量！”
     
 总结来说，volatile 关键字告诉编译器不要对变量进行优化，而是每次都从内存中读取或写入。这对于多线程编程、中断服务例程以及与 I/O 设备交互的情况特别有用。
-<pre><code class="hljs plaintext">
-19. ```c
-    头文件中的ifndef/define/endif 干什么用？
-    防止头文件被重复引用</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">19. ```c</span><br><span class="line">    头文件中的ifndef/define/endif 干什么用？</span><br><span class="line">    防止头文件被重复引用</span><br></pre></td></tr></table></figure>
 </code></pre>
 </li>
 <li><pre><code class="language-c">#include  &lt;filename.h&gt;    和    #include  “filename.h” 有什么区别？
 //引用系统文件  自定义文件 
 答案：对于#include &lt;filename.h&gt; ，编译器从标准库路径开始搜索filename.h ; 对于#include “filename.h” ，编译器从用户的工作路径开始搜索filename.h 。
-<pre><code class="hljs plaintext">
-21. ```c
-    const   有什么用途？（请至少说明两种）
-    (1)可以定义const 常量（2）const 可以修饰函数的参数、返回值，甚至函数的定义体。被const 修饰的东西都受到强制保护，可以预防意外的变动，能提高程序的健壮性。</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">21. ```c</span><br><span class="line">    const   有什么用途？（请至少说明两种）</span><br><span class="line">    (1)可以定义const 常量（2）const 可以修饰函数的参数、返回值，甚至函数的定义体。被const 修饰的东西都受到强制保护，可以预防意外的变动，能提高程序的健壮性。</span><br></pre></td></tr></table></figure>
 </code></pre>
 </li>
 <li><pre><code class="language-c">32.static有什么用途？（请至少说明两种）
-<pre><code class="hljs plaintext">
-    在 C/C++ 中，`static` 关键字有多种用途，取决于它的上下文。以下是 `static` 在不同上下文中的一些主要作用：
-
-    1. **全局变量和局部变量**：`static` 可以用来修饰全局变量和局部变量。
-
-       - 当 `static` 修饰全局变量时，它限制了变量的作用域，使其只能在当前源文件中可见。这有助于避免命名冲突和其他潜在的问题。
-       
-       - 当 `static` 修饰局部变量时，它改变了变量的生命周期。静态局部变量会在程序运行期间一直存在，而不是在离开作用域后被销毁。每次进入函数时，静态局部变量都会保留之前的状态。
-
-    2. **函数参数**：`static` 不适用于函数参数，因为参数总是具有自动存储类别。
-
-    3. **类成员变量**：在 C++ 中，`static` 可以修饰类成员变量。静态成员变量属于整个类，而非单个对象。这意味着所有对象共享同一份静态成员变量的副本。
-
-    4. **类成员函数**：在 C++ 中，`static` 可以修饰类成员函数。静态成员函数不依赖于特定的对象实例，可以直接通过类名调用。它们不能访问非静态成员变量或调用非静态成员函数。
-
-    5. **模块内部链接性**：在 C/C++ 中，`extern static` 可以用来声明一个具有内部链接性的变量或函数。这意味着该实体只能在当前编译单元中访问，而不能从其他编译单元访问。
-
-    6. **C++ 中的名称空间范围**：在 C++ 中，`static` 可以用来限制名称空间中的名字的作用域，使其只在当前名称空间中有效。
-
-    7. **C++ 中的多态性**：在 C++ 中，`virtual` 和 `static` 成员函数都可以实现多态性。`virtual` 成员函数基于对象的实际类型动态绑定，而 `static` 成员函数则始终基于函数调用的方式（即类名或对象引用）绑定。
-
-    总之，`static` 关键字在 C/C++ 中扮演着重要的角色，用于控制变量的作用域、生命周期和链接性，以及类成员的行为。在编程时，理解 `static` 的含义和用法非常重要，因为它会影响程序的行为和性能。
-
-23. 堆栈溢出一般是由什么原因导致的？
-
-    没有及时回收垃圾资源
-
-24. 如何引用一个已经定义过的全局变量？
-
-     答案：可以用引用头文件的方式，也可以用extern 关键字，如果用引用头文件方式来引用某个在头文件中声明的全局变理，假定你将那个变量写错了，那么在编译期间会报错，如果你用extern 方式引用时，假定你犯了同样的错误，那么在编译期间不会报错，而在连接期间报错。 
-
-    ‌**在‌[C语言](https://www.baidu.com/s?word=C语言&amp;sa=re_dqa_zy)中，引用已经定义过的全局变量可以通过两种主要方式实现：使用`extern`关键字或通过包含定义该变量的头文件。**‌
-
-    -  
-
-      ‌**使用`extern`关键字**‌：当全局变量定义在另一个文件中时，可以在当前文件中使用`extern`关键字来声明该变量，表明该变量已经在其他地方定义过了。例如，如果全局变量在`global_vars.c`中定义，那么在`main.c`中可以通过以下方式引用该变量：
-
-      ```c
-      extern int globalVariable;</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">    在 C/C++ 中，`static` 关键字有多种用途，取决于它的上下文。以下是 `static` 在不同上下文中的一些主要作用：</span><br><span class="line"></span><br><span class="line">    1. **全局变量和局部变量**：`static` 可以用来修饰全局变量和局部变量。</span><br><span class="line"></span><br><span class="line">       - 当 `static` 修饰全局变量时，它限制了变量的作用域，使其只能在当前源文件中可见。这有助于避免命名冲突和其他潜在的问题。</span><br><span class="line">       </span><br><span class="line">       - 当 `static` 修饰局部变量时，它改变了变量的生命周期。静态局部变量会在程序运行期间一直存在，而不是在离开作用域后被销毁。每次进入函数时，静态局部变量都会保留之前的状态。</span><br><span class="line"></span><br><span class="line">    2. **函数参数**：`static` 不适用于函数参数，因为参数总是具有自动存储类别。</span><br><span class="line"></span><br><span class="line">    3. **类成员变量**：在 C++ 中，`static` 可以修饰类成员变量。静态成员变量属于整个类，而非单个对象。这意味着所有对象共享同一份静态成员变量的副本。</span><br><span class="line"></span><br><span class="line">    4. **类成员函数**：在 C++ 中，`static` 可以修饰类成员函数。静态成员函数不依赖于特定的对象实例，可以直接通过类名调用。它们不能访问非静态成员变量或调用非静态成员函数。</span><br><span class="line"></span><br><span class="line">    5. **模块内部链接性**：在 C/C++ 中，`extern static` 可以用来声明一个具有内部链接性的变量或函数。这意味着该实体只能在当前编译单元中访问，而不能从其他编译单元访问。</span><br><span class="line"></span><br><span class="line">    6. **C++ 中的名称空间范围**：在 C++ 中，`static` 可以用来限制名称空间中的名字的作用域，使其只在当前名称空间中有效。</span><br><span class="line"></span><br><span class="line">    7. **C++ 中的多态性**：在 C++ 中，`virtual` 和 `static` 成员函数都可以实现多态性。`virtual` 成员函数基于对象的实际类型动态绑定，而 `static` 成员函数则始终基于函数调用的方式（即类名或对象引用）绑定。</span><br><span class="line"></span><br><span class="line">    总之，`static` 关键字在 C/C++ 中扮演着重要的角色，用于控制变量的作用域、生命周期和链接性，以及类成员的行为。在编程时，理解 `static` 的含义和用法非常重要，因为它会影响程序的行为和性能。</span><br><span class="line"></span><br><span class="line">23. 堆栈溢出一般是由什么原因导致的？</span><br><span class="line"></span><br><span class="line">    没有及时回收垃圾资源</span><br><span class="line"></span><br><span class="line">24. 如何引用一个已经定义过的全局变量？</span><br><span class="line"></span><br><span class="line">     答案：可以用引用头文件的方式，也可以用extern 关键字，如果用引用头文件方式来引用某个在头文件中声明的全局变理，假定你将那个变量写错了，那么在编译期间会报错，如果你用extern 方式引用时，假定你犯了同样的错误，那么在编译期间不会报错，而在连接期间报错。 </span><br><span class="line"></span><br><span class="line">    ‌**在‌[C语言](https://www.baidu.com/s?word=C语言&amp;sa=re_dqa_zy)中，引用已经定义过的全局变量可以通过两种主要方式实现：使用`extern`关键字或通过包含定义该变量的头文件。**‌</span><br><span class="line"></span><br><span class="line">    -  </span><br><span class="line"></span><br><span class="line">      ‌**使用`extern`关键字**‌：当全局变量定义在另一个文件中时，可以在当前文件中使用`extern`关键字来声明该变量，表明该变量已经在其他地方定义过了。例如，如果全局变量在`global_vars.c`中定义，那么在`main.c`中可以通过以下方式引用该变量：</span><br><span class="line"></span><br><span class="line">      ```c</span><br><span class="line">      extern int globalVariable;</span><br></pre></td></tr></table></figure>
 
   这样声明后，就可以在当前文件中使用`globalVariable`变量了。
 
@@ -1214,7 +992,7 @@ struct A
 
   ‌**通过包含定义变量的头文件**‌：如果全局变量定义在一个头文件中，那么只需要在需要使用该变量的文件中包含这个头文件即可。例如，如果全局变量在`global_vars.h`中定义，那么在`main.c`中可以通过以下方式引用该变量：
 
-  <pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;global_vars.h&quot;</span> <span class="hljs-comment">// 假设全局变量在这个头文件中定义</span></span></code></pre>
+  <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;global_vars.h&quot;</span> <span class="comment">// 假设全局变量在这个头文件中定义</span></span></span><br></pre></td></tr></table></figure>
 
   包含头文件后，编译器会处理头文件中的全局变量声明，从而允许在当前文件中直接使用这些全局变量。
 
@@ -1232,61 +1010,24 @@ struct A
 <p>下面是一些使用 <code>extern</code> 关键字的例子：</p>
 <p><strong>全局变量</strong></p>
 <p>首先，在一个文件中定义全局变量：</p>
-<pre><code class="hljs c"><span class="hljs-comment">// global_variable.cpp</span>
-<span class="hljs-type">int</span> g_global_var = <span class="hljs-number">42</span>;</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// global_variable.cpp</span></span><br><span class="line"><span class="type">int</span> g_global_var = <span class="number">42</span>;</span><br></pre></td></tr></table></figure>
 
 <p>然后，在另一个文件中使用 <code>extern</code> 关键字声明全局变量：</p>
-<pre><code class="hljs c"><span class="hljs-comment">// main.cpp</span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
-
-<span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> g_global_var; <span class="hljs-comment">// 声明全局变量</span>
-
-<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;
-    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Global variable value: &quot;</span> &lt;&lt; g_global_var &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> g_global_var; <span class="comment">// 声明全局变量</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Global variable value: &quot;</span> &lt;&lt; g_global_var &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>函数</strong></p>
 <p>首先，在一个文件中定义函数：</p>
-<pre><code class="hljs c"><span class="hljs-comment">// function.cpp</span>
-<span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> &#123;
-    <span class="hljs-keyword">return</span> a + b;
-&#125;</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// function.cpp</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>然后，在另一个文件中使用 <code>extern</code> 关键字声明函数：</p>
-<pre><code class="hljs c"><span class="hljs-comment">// main.cpp</span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
-
-<span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span>, <span class="hljs-type">int</span>)</span>; <span class="hljs-comment">// 声明函数</span>
-
-<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;
-    <span class="hljs-type">int</span> result = add(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>);
-    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Result of addition: &quot;</span> &lt;&lt; result &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span>, <span class="type">int</span>)</span>; <span class="comment">// 声明函数</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> result = add(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Result of addition: &quot;</span> &lt;&lt; result &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><code>extern</code> 关键字还可以用于延迟变量的初始化。例如，你可以在头文件中声明一个全局变量，然后在某个源文件中初始化它：</p>
-<pre><code class="hljs c"><span class="hljs-comment">// global_variable.h</span>
-<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> GLOBAL_VARIABLE_H</span>
-<span class="hljs-meta">#<span class="hljs-keyword">define</span> GLOBAL_VARIABLE_H</span>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// global_variable.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> GLOBAL_VARIABLE_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GLOBAL_VARIABLE_H</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> g_global_var;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// GLOBAL_VARIABLE_H</span></span></span><br></pre></td></tr></table></figure>
 
-<span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> g_global_var;
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// global_variable.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;global_variable.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> g_global_var = <span class="number">42</span>;</span><br></pre></td></tr></table></figure>
 
-<span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">// GLOBAL_VARIABLE_H</span></span></code></pre>
-
-<pre><code class="hljs c"><span class="hljs-comment">// global_variable.cpp</span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;global_variable.h&quot;</span></span>
-
-<span class="hljs-type">int</span> g_global_var = <span class="hljs-number">42</span>;</code></pre>
-
-<pre><code class="hljs c"><span class="hljs-comment">// main.cpp</span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;global_variable.h&quot;</span></span>
-
-<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;
-    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Global variable value: &quot;</span> &lt;&lt; g_global_var &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;global_variable.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Global variable value: &quot;</span> &lt;&lt; g_global_var &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在这个例子中，<code>main.cpp</code> 引用了 <code>g_global_var</code>，但并没有定义它。<code>global_variable.cpp</code> 提供了实际的定义。<code>extern</code> 关键字告诉编译器 <code>g_global_var</code> 已经在其他地方定义了，这样就不会产生多个定义的错误。</p>
 <ol start="25">
@@ -1299,17 +1040,11 @@ struct A
 <li><p>用宏定义写出swap（x，y），即交换两数。</p>
 </li>
 </ol>
-<pre><code><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">define</span> swap(x, y) (x)=(x)+(y);(y)=(x)–(y);(x)=(x)–(y);</span></code></pre>
+<pre><code><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> swap(x, y) (x)=(x)+(y);(y)=(x)–(y);(x)=(x)–(y);</span></span><br></pre></td></tr></table></figure>
 </code></pre>
 <ol start="28">
 <li><p>39.写一个“标准”宏，这个宏输入两个参数并返回较小的一个。</p>
-<pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">define</span> min(x, y) ((x)&lt;(y)?(x):(y))</span>
-<span class="hljs-comment">// 结尾没有 ;</span>
-<span class="hljs-comment">/*</span>
-<span class="hljs-comment">在 C/C++ 宏定义中，末尾不需要加分号（;）。宏定义是一种文本替换机制，当预处理器遇到宏定义时，它会将宏名及其参数替换为宏体内的文本。因此，分号不是必需的，除非宏体本身需要分号作为语句的一部分。</span>
-<span class="hljs-comment"></span>
-<span class="hljs-comment">例如，min(x, y) 这个宏定义会在调用时展开成 (x) &lt; (y) ? (x) : (y)，这是一个表达式，不需要分号结束。当你在代码中使用这个宏时，它会被插入到现有代码中，成为更大的表达式的一部分，或者作为一个独立的语句。在这种情况下，分号由调用方添加，而不是宏定义本身。</span>
-<span class="hljs-comment">*/</span></code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> min(x, y) ((x)&lt;(y)?(x):(y))</span></span><br><span class="line"><span class="comment">// 结尾没有 ;</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">在 C/C++ 宏定义中，末尾不需要加分号（;）。宏定义是一种文本替换机制，当预处理器遇到宏定义时，它会将宏名及其参数替换为宏体内的文本。因此，分号不是必需的，除非宏体本身需要分号作为语句的一部分。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">例如，min(x, y) 这个宏定义会在调用时展开成 (x) &lt; (y) ? (x) : (y)，这是一个表达式，不需要分号结束。当你在代码中使用这个宏时，它会被插入到现有代码中，成为更大的表达式的一部分，或者作为一个独立的语句。在这种情况下，分号由调用方添加，而不是宏定义本身。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
 </li>
 <li></li>
 </ol>

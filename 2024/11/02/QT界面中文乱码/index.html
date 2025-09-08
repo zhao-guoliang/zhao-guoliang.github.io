@@ -789,18 +789,7 @@
 <p>QT程序界面显示中文乱码。</p>
 <p>解决方法：</p>
 <p>在文件开始位置，包含头文件位置，增加：<code>#pragma execution_character_set(&quot;utf-8&quot;)</code></p>
-<pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;widget.h&quot;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;QApplication&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> execution_character_set(<span class="hljs-string">&quot;utf-8&quot;</span>)</span>
-
-<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-function">QApplication <span class="hljs-title">a</span><span class="hljs-params">(argc, argv)</span></span>;
-    Widget w;
-    w.<span class="hljs-built_in">setWindowTitle</span>(<span class="hljs-string">&quot;一个窗口&quot;</span>);
-    w.<span class="hljs-built_in">show</span>();
-    <span class="hljs-keyword">return</span> a.<span class="hljs-built_in">exec</span>();
-&#125;</code></pre>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;widget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> execution_character_set(<span class="string">&quot;utf-8&quot;</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    Widget w;</span><br><span class="line">    w.<span class="built_in">setWindowTitle</span>(<span class="string">&quot;一个窗口&quot;</span>);</span><br><span class="line">    w.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
       
