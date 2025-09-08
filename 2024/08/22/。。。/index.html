@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -785,30 +785,275 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 链表原地逆置</span></span><br><span class="line"><span class="function">ListNode* <span class="title">ReverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 方法1</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">nullptr</span> == head) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 链表原地逆置</span></span><br><span class="line">        ListNode *newHead = <span class="literal">nullptr</span>;</span><br><span class="line">        ListNode *tempNode = <span class="literal">nullptr</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">nullptr</span> != head) &#123;</span><br><span class="line">            tempNode = head-&gt;next;</span><br><span class="line">            head-&gt;next = newHead;</span><br><span class="line">            newHead = head;</span><br><span class="line">            head = tempNode;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newHead;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+        <pre><code class="language-c++">// 链表原地逆置
+ListNode* ReverseList(ListNode* head) &#123;
+        // 方法1
+        if (nullptr == head) &#123;
+            return nullptr;
+        &#125;
+        // 链表原地逆置
+        ListNode *newHead = nullptr;
+        ListNode *tempNode = nullptr;
+        while (nullptr != head) &#123;
+            tempNode = head-&gt;next;
+            head-&gt;next = newHead;
+            newHead = head;
+            head = tempNode;
+        &#125;
+        return newHead;
+    &#125;
+</code></pre>
+<pre><code class="language-c++">//递归合并两个有序链表
+ListNode* mergeTwoSortedLists(ListNode* L1, ListNode* L2)
+&#123;
+    if (L1 == nullptr)
+        return L2;
+    if (L2 == nullptr)
+        return L1;
+    if (L1-&gt;val &lt;= L2-&gt;val)
+    &#123;
+        L1-&gt;next = mergeTwoSortedLists(L1-&gt;next, L2);
+        return L1;
+    &#125;
+    else
+    &#123;
+        L2-&gt;next = mergeTwoSortedLists(L1, L2-&gt;next);
+        return L2;
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="language-c++">// 优先队列 priority_queue
+struct Compare &#123;
+    bool operator()(const ListNode* lhs, const ListNode* rhs) const &#123;
+        return lhs-&gt;val &gt; rhs-&gt;val;//小根堆
+    &#125;
+&#125;;
+ListNode* mergeKLists(vector&lt;ListNode*&gt;&amp; lists) &#123;
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归合并两个有序链表</span></span><br><span class="line"><span class="function">ListNode* <span class="title">mergeTwoSortedLists</span><span class="params">(ListNode* L1, ListNode* L2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (L1 == <span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> L2;</span><br><span class="line">    <span class="keyword">if</span> (L2 == <span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> L1;</span><br><span class="line">    <span class="keyword">if</span> (L1-&gt;val &lt;= L2-&gt;val)</span><br><span class="line">    &#123;</span><br><span class="line">        L1-&gt;next = <span class="built_in">mergeTwoSortedLists</span>(L1-&gt;next, L2);</span><br><span class="line">        <span class="keyword">return</span> L1;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        L2-&gt;next = <span class="built_in">mergeTwoSortedLists</span>(L1, L2-&gt;next);</span><br><span class="line">        <span class="keyword">return</span> L2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    priority_queue&lt;ListNode*, vector&lt;ListNode*&gt;,Compare&gt; q;
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 优先队列 priority_queue</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Compare</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> ListNode* lhs, <span class="type">const</span> ListNode* rhs)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> lhs-&gt;val &gt; rhs-&gt;val;<span class="comment">//小根堆</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">ListNode* <span class="title">mergeKLists</span><span class="params">(vector&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    priority_queue&lt;ListNode*, vector&lt;ListNode*&gt;,Compare&gt; q;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> l : lists)&#123;</span><br><span class="line">        <span class="keyword">if</span>(l != <span class="literal">nullptr</span>)&#123;</span><br><span class="line">            q.<span class="built_in">push</span>(l);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ListNode* newHead = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">-1</span>);</span><br><span class="line">    ListNode* cur = newHead;</span><br><span class="line">    <span class="keyword">while</span> (!q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line"></span><br><span class="line">        cur-&gt;next = q.<span class="built_in">top</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line"></span><br><span class="line">        cur = cur-&gt;next;</span><br><span class="line">        <span class="keyword">if</span>(cur-&gt;next)&#123;</span><br><span class="line">            q.<span class="built_in">push</span>(cur-&gt;next);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> newHead-&gt;next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    for(auto l : lists)&#123;
+        if(l != nullptr)&#123;
+            q.push(l);
+        &#125;
+    &#125;
+    ListNode* newHead = new ListNode(-1);
+    ListNode* cur = newHead;
+    while (!q.empty()) &#123;
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 链表有没有环</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">        ListNode* fast = head;</span><br><span class="line">        ListNode* slow = head;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            fast = fast-&gt;next-&gt;next;</span><br><span class="line">            slow = slow-&gt;next;</span><br><span class="line">            <span class="keyword">if</span>(fast == slow)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+        cur-&gt;next = q.top();
+        q.pop();
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 找到有环链表的入口节点</span></span><br><span class="line"></span><br><span class="line"><span class="function">ListNode* <span class="title">EntryNodeOfLoop</span><span class="params">(ListNode* pHead)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 方法一</span></span><br><span class="line"></span><br><span class="line">    set&lt;ListNode*&gt; s;</span><br><span class="line">    ListNode* cur = pHead;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cur!= <span class="literal">nullptr</span>) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(s.<span class="built_in">count</span>(cur))&#123;</span><br><span class="line">            <span class="keyword">return</span> cur;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        s.<span class="built_in">insert</span>(cur);</span><br><span class="line"></span><br><span class="line">        cur = cur-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">struct ListNode &#123;</span></span><br><span class="line"><span class="comment">    int val;</span></span><br><span class="line"><span class="comment">    struct ListNode *next;</span></span><br><span class="line"><span class="comment">    ListNode(int x) :</span></span><br><span class="line"><span class="comment">        val(x), next(NULL) &#123;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">&#125;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">EntryNodeOfLoop</span><span class="params">(ListNode* pHead)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 方法二</span></span><br><span class="line">        ListNode* fast = pHead;</span><br><span class="line">        ListNode* slow = pHead;</span><br><span class="line">        <span class="type">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line">		<span class="comment">// 判断有没有环</span></span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            fast = fast-&gt;next-&gt;next;</span><br><span class="line">            slow = slow-&gt;next;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(fast == slow)&#123;</span><br><span class="line">                flag = <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(flag)&#123;</span><br><span class="line">            <span class="comment">// 有环  接着计算环的长度</span></span><br><span class="line">            fast = fast-&gt;next;</span><br><span class="line">            <span class="type">int</span> n = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span> (slow != fast) &#123;</span><br><span class="line">                fast = fast-&gt;next;</span><br><span class="line">                n++;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//两个指针指向头部， 先让一个指针走 一个环的距离， 等两个指针再次相遇的时候， 就是环的入口点。</span></span><br><span class="line">            slow = fast = pHead;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i&lt;n; i++) &#123;</span><br><span class="line">                fast = fast-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (slow != fast) &#123;</span><br><span class="line">                slow = slow-&gt;next;</span><br><span class="line">                fast = fast-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> slow;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+        cur = cur-&gt;next;
+        if(cur-&gt;next)&#123;
+            q.push(cur-&gt;next);
+        &#125;
+    &#125;
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 二分查找</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// write code here</span></span><br><span class="line">    <span class="keyword">if</span>(nums.<span class="built_in">size</span>()==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> l = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> r = nums.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">    <span class="type">int</span> m = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (l&lt;=r) &#123;</span><br><span class="line">        m = (l+r)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[m]==target)&#123;</span><br><span class="line">            <span class="keyword">return</span> m;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[m]&gt;target)&#123;</span><br><span class="line">            r = m<span class="number">-1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[m]&lt;target)&#123;</span><br><span class="line">            l = m<span class="number">+1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    return newHead-&gt;next;
+&#125;
+</code></pre>
+<pre><code class="language-c++">// 链表有没有环
+bool hasCycle(ListNode *head) &#123;
+        ListNode* fast = head;
+        ListNode* slow = head;
+
+        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) &#123;
+            fast = fast-&gt;next-&gt;next;
+            slow = slow-&gt;next;
+            if(fast == slow)&#123;
+                return true;
+            &#125;
+        &#125;
+        return false;
+    &#125;
+</code></pre>
+<pre><code class="language-c++">// 找到有环链表的入口节点
+
+ListNode* EntryNodeOfLoop(ListNode* pHead) &#123;
+
+    // 方法一
+
+    set&lt;ListNode*&gt; s;
+    ListNode* cur = pHead;
+
+    while (cur!= nullptr) &#123;
+
+        if(s.count(cur))&#123;
+            return cur;
+        &#125;
+
+        s.insert(cur);
+
+        cur = cur-&gt;next;
+    &#125;
+
+    return nullptr;
+
+&#125;
 
 
+/*
+struct ListNode &#123;
+    int val;
+    struct ListNode *next;
+    ListNode(int x) :
+        val(x), next(NULL) &#123;
+    &#125;
+&#125;;
+*/
+class Solution &#123;
+public:
+    ListNode* EntryNodeOfLoop(ListNode* pHead) &#123;
+        // 方法二
+        ListNode* fast = pHead;
+        ListNode* slow = pHead;
+        bool flag = false;
+		// 判断有没有环
+        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) &#123;
+            fast = fast-&gt;next-&gt;next;
+            slow = slow-&gt;next;
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 两个链表的第一个公共节点</span></span><br><span class="line"><span class="function">ListNode* <span class="title">FindFirstCommonNode</span><span class="params">( ListNode* pHead1, ListNode* pHead2)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">		<span class="comment">// 方法er</span></span><br><span class="line">		ListNode* l1 = pHead1;</span><br><span class="line">		ListNode* l2 = pHead2;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span> (l1 != l2) &#123;</span><br><span class="line">			l1 = (l1==<span class="literal">nullptr</span>)?pHead2:l1-&gt;next;</span><br><span class="line">			l2 = (l2==<span class="literal">nullptr</span>)?pHead1:l2-&gt;next;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> l1;</span><br><span class="line"></span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 方法一</span></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		set&lt;ListNode*&gt; s;</span></span><br><span class="line"><span class="comment">		while (pHead1 != nullptr) &#123;</span></span><br><span class="line"><span class="comment">			s.insert(pHead1);</span></span><br><span class="line"><span class="comment">			pHead1 = pHead1-&gt;next;</span></span><br><span class="line"><span class="comment">		&#125;</span></span><br><span class="line"><span class="comment">		while (pHead2 != nullptr) &#123;</span></span><br><span class="line"><span class="comment">			if(s.count(pHead2))&#123;</span></span><br><span class="line"><span class="comment">				return pHead2;</span></span><br><span class="line"><span class="comment">			&#125;</span></span><br><span class="line"><span class="comment">			pHead2 = pHead2-&gt;next;</span></span><br><span class="line"><span class="comment">		&#125;</span></span><br><span class="line"><span class="comment">		return nullptr;</span></span><br><span class="line"><span class="comment">		*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+            if(fast == slow)&#123;
+                flag = true;
+                break;
+            &#125;
+        &#125;
+        if(flag)&#123;
+            // 有环  接着计算环的长度
+            fast = fast-&gt;next;
+            int n = 1;
+            while (slow != fast) &#123;
+                fast = fast-&gt;next;
+                n++;
+            &#125;
+            
+            //两个指针指向头部， 先让一个指针走 一个环的距离， 等两个指针再次相遇的时候， 就是环的入口点。
+            slow = fast = pHead;
+            for (int i = 0; i&lt;n; i++) &#123;
+                fast = fast-&gt;next;
+            &#125;
+
+            while (slow != fast) &#123;
+                slow = slow-&gt;next;
+                fast = fast-&gt;next;
+            &#125;
+
+            return slow;
+
+        &#125;
+
+        return nullptr;
+
+    &#125;
+&#125;;
+</code></pre>
+<pre><code class="language-c++">// 二分查找
+int search(vector&lt;int&gt;&amp; nums, int target) &#123;
+    // write code here
+    if(nums.size()==0)&#123;
+        return -1;
+    &#125;
+
+    int l = 0;
+    int r = nums.size()-1;
+    int m = -1;
+
+    while (l&lt;=r) &#123;
+        m = (l+r)/2;
+        if(nums[m]==target)&#123;
+            return m;
+        &#125;else if(nums[m]&gt;target)&#123;
+            r = m-1;
+        &#125;else if(nums[m]&lt;target)&#123;
+            l = m+1;
+        &#125;
+    &#125;
+    return -1;
+
+&#125;
+</code></pre>
+<pre><code class="language-c++">// 两个链表的第一个公共节点
+ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) &#123;
+        
+		// 方法er
+		ListNode* l1 = pHead1;
+		ListNode* l2 = pHead2;
+		
+		while (l1 != l2) &#123;
+			l1 = (l1==nullptr)?pHead2:l1-&gt;next;
+			l2 = (l2==nullptr)?pHead1:l2-&gt;next;
+		&#125;
+		return l1;
+
+		
+		// 方法一
+		/*
+		set&lt;ListNode*&gt; s;
+		while (pHead1 != nullptr) &#123;
+			s.insert(pHead1);
+			pHead1 = pHead1-&gt;next;
+		&#125;
+		while (pHead2 != nullptr) &#123;
+			if(s.count(pHead2))&#123;
+				return pHead2;
+			&#125;
+			pHead2 = pHead2-&gt;next;
+		&#125;
+		return nullptr;
+		*/
 
 
+    &#125;
+</code></pre>
+<pre><code class="language-c++">// 两个stack模拟queue
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 两个stack模拟queue</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">int</span> node)</span> </span>&#123;</span><br><span class="line">        stack<span class="number">1.</span><span class="built_in">push</span>(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (stack<span class="number">2.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">            <span class="keyword">while</span> (!stack<span class="number">1.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">                stack<span class="number">2.</span><span class="built_in">push</span>(stack<span class="number">1.</span><span class="built_in">top</span>());</span><br><span class="line">                stack<span class="number">1.</span><span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> val = stack<span class="number">2.</span><span class="built_in">top</span>();</span><br><span class="line">        stack<span class="number">2.</span><span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">return</span> val;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    stack&lt;<span class="type">int</span>&gt; stack1;</span><br><span class="line">    stack&lt;<span class="type">int</span>&gt; stack2;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+class Solution
+&#123;
+public:
+    void push(int node) &#123;
+        stack1.push(node);
+    &#125;
 
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 最长公共前缀</span></span><br><span class="line"><span class="function">string <span class="title">longestCommonPrefix</span><span class="params">(vector&lt;string&gt;&amp; strs)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// write code here</span></span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> n = strs.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">0</span> || n==<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> n==<span class="number">0</span>?<span class="string">&quot;&quot;</span>:strs[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">      </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j&lt;n<span class="number">-1</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(strs[j][i] != strs[j<span class="number">+1</span>][i])&#123;</span><br><span class="line">                    <span class="keyword">return</span> strs[j].<span class="built_in">substr</span>(<span class="number">0</span>,i);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+    int pop() &#123;
 
+        if (stack2.empty()) &#123;
+            while (!stack1.empty()) &#123;
+                stack2.push(stack1.top());
+                stack1.pop();
+            &#125;
 
+        &#125;
 
+        int val = stack2.top();
+        stack2.pop();
+        return val;
+
+    &#125;
+
+private:
+    stack&lt;int&gt; stack1;
+    stack&lt;int&gt; stack2;
+&#125;;
+</code></pre>
+<pre><code class="language-cpp">// 最长公共前缀
+string longestCommonPrefix(vector&lt;string&gt;&amp; strs) &#123;
+        // write code here
+        
+        int n = strs.size();
+        if(n==0 || n==1)&#123;
+            return n==0?&quot;&quot;:strs[0];
+        &#125;
+      
+        for (int i = 0; 1; i++) &#123;
+            for (int j = 0; j&lt;n-1; j++) &#123;
+                if(strs[j][i] != strs[j+1][i])&#123;
+                    return strs[j].substr(0,i);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
@@ -989,16 +1234,6 @@
     /*文章列表背景图*/
     
 
-    
-    #post .pjax article :not(pre) > code {
-        color: #24292e;
-        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-        background-color: rgba(27,31,35,.05);
-        border-radius: 3px;
-        font-size: 85%;
-        margin: 0;
-        padding: .2em .4em;
-    }
     
 </style>
 

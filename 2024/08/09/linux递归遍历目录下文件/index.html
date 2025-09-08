@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -785,8 +785,86 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cerrno&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;dirent.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printFileType</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">struct</span> <span class="title class_">stat</span> sb;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">stat</span>(path, &amp;sb) == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">S_ISREG</span>(sb.st_mode))</span><br><span class="line">                &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;Regular file: &quot;</span> &lt;&lt; path &lt;&lt; std::endl;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">S_ISDIR</span>(sb.st_mode))</span><br><span class="line">                &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;Directory: &quot;</span> &lt;&lt; path &lt;&lt; std::endl;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">S_ISBLK</span>(sb.st_mode))</span><br><span class="line">                &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;Block device: &quot;</span> &lt;&lt; path &lt;&lt; std::endl;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">S_ISCHR</span>(sb.st_mode))</span><br><span class="line">                &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;Character device: &quot;</span> &lt;&lt; path &lt;&lt; std::endl;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">S_ISFIFO</span>(sb.st_mode))</span><br><span class="line">                &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;FIFO/pipe: &quot;</span> &lt;&lt; path &lt;&lt; std::endl;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">S_ISSOCK</span>(sb.st_mode))</span><br><span class="line">                &#123;</span><br><span class="line">                        std::cout &lt;&lt; <span class="string">&quot;Socket: &quot;</span> &lt;&lt; path &lt;&lt; std::endl;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">                std::cerr &lt;&lt; <span class="string">&quot;Error: &quot;</span> &lt;&lt; <span class="built_in">strerror</span>(errno) &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">listDirectoryRecursively</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* dirPath)</span> </span>&#123;</span><br><span class="line">    DIR* dir;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">dirent</span>* entry;</span><br><span class="line">    <span class="keyword">if</span> ((dir = <span class="built_in">opendir</span>(dirPath)) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> ((entry = <span class="built_in">readdir</span>(dir)) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">strcmp</span>(entry-&gt;d_name, <span class="string">&quot;.&quot;</span>) == <span class="number">0</span> || <span class="built_in">strcmp</span>(entry-&gt;d_name, <span class="string">&quot;..&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>; <span class="comment">// Skip current and parent directories to avoid infinite loop</span></span><br><span class="line">            &#125;</span><br><span class="line">            string filePath = dirPath;</span><br><span class="line">            <span class="keyword">if</span> (filePath.<span class="built_in">back</span>() != <span class="string">&#x27;/&#x27;</span>) &#123;</span><br><span class="line">                filePath += <span class="string">&quot;/&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            filePath += entry-&gt;d_name;</span><br><span class="line">            <span class="built_in">printFileType</span>(filePath.<span class="built_in">c_str</span>());</span><br><span class="line">            <span class="keyword">if</span> (entry-&gt;d_type == DT_DIR) &#123;</span><br><span class="line">                <span class="built_in">listDirectoryRecursively</span>(filePath.<span class="built_in">c_str</span>());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">closedir</span>(dir);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;Error opening directory: &quot;</span> &lt;&lt; <span class="built_in">strerror</span>(errno) &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="built_in">listDirectoryRecursively</span>(<span class="string">&quot;/home/zhao/mytest&quot;</span>);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string&gt;
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;cerrno&gt;
+#include &lt;dirent.h&gt;
 
+
+void printFileType(const char *path)
+&#123;
+        struct stat sb;
+        if (stat(path, &amp;sb) == 0)
+        &#123;
+                if (S_ISREG(sb.st_mode))
+                &#123;
+                        std::cout &lt;&lt; &quot;Regular file: &quot; &lt;&lt; path &lt;&lt; std::endl;
+                &#125;
+                else if (S_ISDIR(sb.st_mode))
+                &#123;
+                        std::cout &lt;&lt; &quot;Directory: &quot; &lt;&lt; path &lt;&lt; std::endl;
+                &#125;
+                else if (S_ISBLK(sb.st_mode))
+                &#123;
+                        std::cout &lt;&lt; &quot;Block device: &quot; &lt;&lt; path &lt;&lt; std::endl;
+                &#125;
+                else if (S_ISCHR(sb.st_mode))
+                &#123;
+                        std::cout &lt;&lt; &quot;Character device: &quot; &lt;&lt; path &lt;&lt; std::endl;
+                &#125;
+                else if (S_ISFIFO(sb.st_mode))
+                &#123;
+                        std::cout &lt;&lt; &quot;FIFO/pipe: &quot; &lt;&lt; path &lt;&lt; std::endl;
+                &#125;
+                else if (S_ISSOCK(sb.st_mode))
+                &#123;
+                        std::cout &lt;&lt; &quot;Socket: &quot; &lt;&lt; path &lt;&lt; std::endl;
+                &#125;
+        &#125;
+        else
+        &#123;
+                std::cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; strerror(errno) &lt;&lt; std::endl;
+        &#125;
+&#125;
+
+void listDirectoryRecursively(const char* dirPath) &#123;
+    DIR* dir;
+    struct dirent* entry;
+    if ((dir = opendir(dirPath)) != NULL) &#123;
+        while ((entry = readdir(dir)) != NULL) &#123;
+            if (strcmp(entry-&gt;d_name, &quot;.&quot;) == 0 || strcmp(entry-&gt;d_name, &quot;..&quot;) == 0) &#123;
+                continue; // Skip current and parent directories to avoid infinite loop
+            &#125;
+            string filePath = dirPath;
+            if (filePath.back() != &#39;/&#39;) &#123;
+                filePath += &quot;/&quot;;
+            &#125;
+            filePath += entry-&gt;d_name;
+            printFileType(filePath.c_str());
+            if (entry-&gt;d_type == DT_DIR) &#123;
+                listDirectoryRecursively(filePath.c_str());
+            &#125;
+        &#125;
+        closedir(dir);
+    &#125; else &#123;
+        std::cerr &lt;&lt; &quot;Error opening directory: &quot; &lt;&lt; strerror(errno) &lt;&lt; std::endl;
+    &#125;
+&#125;
+
+int main()
+&#123;
+        listDirectoryRecursively(&quot;/home/zhao/mytest&quot;);
+    
+        return 0;
+&#125;
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
@@ -967,16 +1045,6 @@
     /*文章列表背景图*/
     
 
-    
-    #post .pjax article :not(pre) > code {
-        color: #24292e;
-        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-        background-color: rgba(27,31,35,.05);
-        border-radius: 3px;
-        font-size: 85%;
-        margin: 0;
-        padding: .2em .4em;
-    }
     
 </style>
 

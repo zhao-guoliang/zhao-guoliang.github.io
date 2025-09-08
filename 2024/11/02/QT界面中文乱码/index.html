@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -789,8 +789,19 @@
 <p>QT程序界面显示中文乱码。</p>
 <p>解决方法：</p>
 <p>在文件开始位置，包含头文件位置，增加：<code>#pragma execution_character_set(&quot;utf-8&quot;)</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;widget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> execution_character_set(<span class="string">&quot;utf-8&quot;</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    Widget w;</span><br><span class="line">    w.<span class="built_in">setWindowTitle</span>(<span class="string">&quot;一个窗口&quot;</span>);</span><br><span class="line">    w.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="language-cpp">#include &quot;widget.h&quot;
+#include &lt;QApplication&gt;
+#pragma execution_character_set(&quot;utf-8&quot;)
 
+int main(int argc, char *argv[])
+&#123;
+    QApplication a(argc, argv);
+    Widget w;
+    w.setWindowTitle(&quot;一个窗口&quot;);
+    w.show();
+    return a.exec();
+&#125;
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
@@ -971,16 +982,6 @@
     /*文章列表背景图*/
     
 
-    
-    #post .pjax article :not(pre) > code {
-        color: #24292e;
-        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-        background-color: rgba(27,31,35,.05);
-        border-radius: 3px;
-        font-size: 85%;
-        margin: 0;
-        padding: .2em .4em;
-    }
     
 </style>
 

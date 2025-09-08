@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -785,8 +785,86 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;csignal&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sigchld_handler</span><span class="params">(<span class="type">int</span> signum)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 保存和恢复 errno，防止在信号处理程序中改变 errno 导致其他代码出现意外行为</span></span><br><span class="line">    <span class="type">int</span> saved_errno = errno;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用循环等待所有已终止的子进程</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="type">pid_t</span> pid = <span class="built_in">waitpid</span>(<span class="number">-1</span>, <span class="literal">nullptr</span>, WNOHANG);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (pid &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 子进程成功终止，进行处理</span></span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;Child process &quot;</span> &lt;&lt; pid &lt;&lt; <span class="string">&quot; terminated.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 没有已终止的子进程</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 发生错误，检查错误类型</span></span><br><span class="line">            <span class="keyword">if</span> (errno == ECHILD) &#123;</span><br><span class="line">                <span class="comment">// 没有更多的子进程</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (errno == EINTR) &#123;</span><br><span class="line">                <span class="comment">// 调用被中断，继续循环处理</span></span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 其他错误，打印错误信息</span></span><br><span class="line">                <span class="built_in">perror</span>(<span class="string">&quot;waitpid&quot;</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 恢复 errno</span></span><br><span class="line">    errno = saved_errno;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 设置 SIGCHLD 信号处理函数</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sigaction</span> sa;</span><br><span class="line">    sa.sa_handler = sigchld_handler;</span><br><span class="line">    sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;</span><br><span class="line">    <span class="built_in">sigemptyset</span>(&amp;sa.sa_mask);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">sigaction</span>(SIGCHLD, &amp;sa, <span class="literal">nullptr</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;sigaction&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> NUM_CHILDREN = <span class="number">5</span>; <span class="comment">// 要创建的子进程数量</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; NUM_CHILDREN; ++i) &#123;</span><br><span class="line">        <span class="type">pid_t</span> pid = fork();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pid == <span class="number">-1</span>) &#123;</span><br><span class="line">            <span class="comment">// fork 失败</span></span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 子进程</span></span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;Child process &quot;</span> &lt;&lt; <span class="built_in">getpid</span>() &lt;&lt; <span class="string">&quot; started.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">            <span class="built_in">sleep</span>(<span class="number">2</span>); <span class="comment">// 模拟子进程执行一些工作</span></span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;Child process &quot;</span> &lt;&lt; <span class="built_in">getpid</span>() &lt;&lt; <span class="string">&quot; exiting.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 父进程</span></span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;Parent created child process &quot;</span> &lt;&lt; pid &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 父进程持续运行，等待所有子进程终止</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="built_in">pause</span>(); <span class="comment">// 暂停父进程，等待信号到来</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;csignal&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
 
+void sigchld_handler(int signum) &#123;
+    // 保存和恢复 errno，防止在信号处理程序中改变 errno 导致其他代码出现意外行为
+    int saved_errno = errno;
+
+    // 使用循环等待所有已终止的子进程
+    while (true) &#123;
+        pid_t pid = waitpid(-1, nullptr, WNOHANG);
+        
+        if (pid &gt; 0) &#123;
+            // 子进程成功终止，进行处理
+            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; pid &lt;&lt; &quot; terminated.&quot; &lt;&lt; std::endl;
+        &#125; else if (pid == 0) &#123;
+            // 没有已终止的子进程
+            break;
+        &#125; else &#123;
+            // 发生错误，检查错误类型
+            if (errno == ECHILD) &#123;
+                // 没有更多的子进程
+                break;
+            &#125; else if (errno == EINTR) &#123;
+                // 调用被中断，继续循环处理
+                continue;
+            &#125; else &#123;
+                // 其他错误，打印错误信息
+                perror(&quot;waitpid&quot;);
+                break;
+            &#125;
+        &#125;
+    &#125;
+
+    // 恢复 errno
+    errno = saved_errno;
+&#125;
+
+int main() &#123;
+    // 设置 SIGCHLD 信号处理函数
+    struct sigaction sa;
+    sa.sa_handler = sigchld_handler;
+    sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
+    sigemptyset(&amp;sa.sa_mask);
+
+    if (sigaction(SIGCHLD, &amp;sa, nullptr) == -1) &#123;
+        perror(&quot;sigaction&quot;);
+        return 1;
+    &#125;
+
+    const int NUM_CHILDREN = 5; // 要创建的子进程数量
+
+    for (int i = 0; i &lt; NUM_CHILDREN; ++i) &#123;
+        pid_t pid = fork();
+
+        if (pid == -1) &#123;
+            // fork 失败
+            perror(&quot;fork&quot;);
+            return 1;
+        &#125; else if (pid == 0) &#123;
+            // 子进程
+            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; getpid() &lt;&lt; &quot; started.&quot; &lt;&lt; std::endl;
+            sleep(2); // 模拟子进程执行一些工作
+            std::cout &lt;&lt; &quot;Child process &quot; &lt;&lt; getpid() &lt;&lt; &quot; exiting.&quot; &lt;&lt; std::endl;
+            return 0;
+        &#125; else &#123;
+            // 父进程
+            std::cout &lt;&lt; &quot;Parent created child process &quot; &lt;&lt; pid &lt;&lt; std::endl;
+        &#125;
+    &#125;
+
+    // 父进程持续运行，等待所有子进程终止
+    while (true) &#123;
+        pause(); // 暂停父进程，等待信号到来
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
 <h3 id="关键改进"><a href="#关键改进" class="headerlink" title="关键改进"></a>关键改进</h3><ol>
 <li><p><strong>保存和恢复 <code>errno</code></strong>:</p>
 <ul>
@@ -995,16 +1073,6 @@
     /*文章列表背景图*/
     
 
-    
-    #post .pjax article :not(pre) > code {
-        color: #24292e;
-        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-        background-color: rgba(27,31,35,.05);
-        border-radius: 3px;
-        font-size: 85%;
-        margin: 0;
-        padding: .2em .4em;
-    }
     
 </style>
 

@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -843,8 +843,12 @@
 <li><strong>多路复用 I&#x2F;O</strong>: 在网络编程中，通常需要同时处理多个 I&#x2F;O 操作，如监视多个套接字的状态。<code>select</code> 允许程序同时等待多个文件描述符的状态变化，如读、写或异常情况，而不必为每个文件描述符创建一个线程。</li>
 <li><strong>文件描述符（File Descriptor）</strong>: 在UNIX&#x2F;Linux系统中，文件描述符是一个整数，表示打开的文件、套接字或其他I&#x2F;O资源。</li>
 </ul>
-<h3 id="2-函数原型"><a href="#2-函数原型" class="headerlink" title="2. 函数原型"></a>2. <strong>函数原型</strong></h3>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">select</span><span class="params">(<span class="type">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *timeout)</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="2-函数原型"><a href="#2-函数原型" class="headerlink" title="2. 函数原型"></a>2. <strong>函数原型</strong></h3><pre><code class="language-c">#include &lt;sys/select.h&gt;
+#include &lt;sys/time.h&gt;
+#include &lt;unistd.h&gt;
 
+int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+</code></pre>
 <ul>
 <li><p><code>nfds</code>: 需要监视的文件描述符的数量。通常设置为所有文件描述符中最大值加1。</p>
 </li>
@@ -870,7 +874,41 @@
 <li><strong>检查结果</strong>: 使用 <code>FD_ISSET</code> 检查哪些文件描述符发生了状态变化，然后处理相应的 I&#x2F;O 操作。</li>
 <li><strong>处理超时</strong>: 如果 <code>select</code> 返回 0，表示已超时，可以根据应用需要处理这个情况。</li>
 </ol>
-<h3 id="4-简单示例"><a href="#4-简单示例" class="headerlink" title="4. 简单示例"></a>4. <strong>简单示例</strong></h3><p>   下面是一个简单的例子，演示如何使用 <code>select</code> 监视标准输入和一个套接字的可读性：<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    fd_set readfds;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">timeout</span>;</span></span><br><span class="line">    <span class="type">int</span> retval;</span><br><span class="line"></span><br><span class="line">    FD_ZERO(&amp;readfds);  <span class="comment">// 清空文件描述符集</span></span><br><span class="line">    FD_SET(STDIN_FILENO, &amp;readfds);  <span class="comment">// 监视标准输入</span></span><br><span class="line"></span><br><span class="line">    timeout.tv_sec = <span class="number">5</span>;  <span class="comment">// 超时等待5秒</span></span><br><span class="line">    timeout.tv_usec = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    retval = select(STDIN_FILENO + <span class="number">1</span>, &amp;readfds, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;timeout);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (retval == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;select()&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (retval) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Data is available now.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (FD_ISSET(STDIN_FILENO, &amp;readfds)) &#123;</span><br><span class="line">            <span class="type">char</span> buffer[<span class="number">100</span>];</span><br><span class="line">            read(STDIN_FILENO, buffer, <span class="keyword">sizeof</span>(buffer));</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Input: %s\n&quot;</span>, buffer);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;No data within five seconds.\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-简单示例"><a href="#4-简单示例" class="headerlink" title="4. 简单示例"></a>4. <strong>简单示例</strong></h3><p>   下面是一个简单的例子，演示如何使用 <code>select</code> 监视标准输入和一个套接字的可读性：</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;sys/select.h&gt;
+#include &lt;sys/time.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() &#123;
+    fd_set readfds;
+    struct timeval timeout;
+    int retval;
+
+    FD_ZERO(&amp;readfds);  // 清空文件描述符集
+    FD_SET(STDIN_FILENO, &amp;readfds);  // 监视标准输入
+
+    timeout.tv_sec = 5;  // 超时等待5秒
+    timeout.tv_usec = 0;
+
+    retval = select(STDIN_FILENO + 1, &amp;readfds, NULL, NULL, &amp;timeout);
+
+    if (retval == -1) &#123;
+        perror(&quot;select()&quot;);
+    &#125; else if (retval) &#123;
+        printf(&quot;Data is available now.\n&quot;);
+        if (FD_ISSET(STDIN_FILENO, &amp;readfds)) &#123;
+            char buffer[100];
+            read(STDIN_FILENO, buffer, sizeof(buffer));
+            printf(&quot;Input: %s\n&quot;, buffer);
+        &#125;
+    &#125; else &#123;
+        printf(&quot;No data within five seconds.\n&quot;);
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
 <h3 id="5-常见应用场景"><a href="#5-常见应用场景" class="headerlink" title="5. 常见应用场景"></a>5. <strong>常见应用场景</strong></h3><ul>
 <li><strong>网络服务器</strong>: 在服务器端同时处理多个客户端连接时，<code>select</code> 可以用于监视多个客户端套接字的读写状态。</li>
 <li><strong>并发 I&#x2F;O</strong>: 在不使用多线程或多进程的情况下，<code>select</code> 可以帮助处理多个 I&#x2F;O 设备，如文件、套接字或管道。</li>
@@ -895,7 +933,8 @@
 <li><strong>epoll</strong>: <code>epoll</code> 是 Linux 提供的 I&#x2F;O 多路复用接口，具有高效的事件通知机制，通过减少内核与用户空间的切换次数以及优化数据结构来提升性能。</li>
 </ul>
 <h3 id="2-函数原型与使用步骤"><a href="#2-函数原型与使用步骤" class="headerlink" title="2. 函数原型与使用步骤"></a>2. <strong>函数原型与使用步骤</strong></h3><p>   <code>epoll</code> 主要包括三个系统调用：<code>epoll_create</code>、<code>epoll_ctl</code> 和 <code>epoll_wait</code>。</p>
-<h4 id="2-1-epoll-create"><a href="#2-1-epoll-create" class="headerlink" title="2.1 epoll_create"></a>2.1 <strong>epoll_create</strong></h4>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-epoll-create"><a href="#2-1-epoll-create" class="headerlink" title="2.1 epoll_create"></a>2.1 <strong>epoll_create</strong></h4><pre><code class="language-c">int epoll_create(int size);
+</code></pre>
 <ul>
 <li><strong>参数</strong>:<ul>
 <li><code>size</code>: 在 Linux 2.6.8 之前，此参数用于建议内核初始分配的空间大小。现在已被忽略，但必须大于零。</li>
@@ -908,8 +947,15 @@
 </li>
 <li><strong>说明</strong>: <code>epoll_create</code> 用于创建一个 <code>epoll</code> 实例，该实例用于管理将要监视的文件描述符集合。</li>
 </ul>
-<p>   <strong>示例</strong>:<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> epfd = epoll_create(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">if</span> (epfd == <span class="number">-1</span>) &#123;</span><br><span class="line">    perror(<span class="string">&quot;epoll_create&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="2-2-epoll-ctl"><a href="#2-2-epoll-ctl" class="headerlink" title="2.2 epoll_ctl"></a>2.2 <strong>epoll_ctl</strong></h4>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span>;</span><br></pre></td></tr></table></figure>
+<p>   <strong>示例</strong>:</p>
+<pre><code class="language-c">int epfd = epoll_create(1);
+if (epfd == -1) &#123;
+    perror(&quot;epoll_create&quot;);
+    exit(EXIT_FAILURE);
+&#125;
+</code></pre>
+<h4 id="2-2-epoll-ctl"><a href="#2-2-epoll-ctl" class="headerlink" title="2.2 epoll_ctl"></a>2.2 <strong>epoll_ctl</strong></h4><pre><code class="language-c">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+</code></pre>
 <ul>
 <li><strong>参数</strong>:<ul>
 <li><code>epfd</code>: <code>epoll</code> 实例的文件描述符，由 <code>epoll_create</code> 返回。</li>
@@ -924,8 +970,18 @@
 </ul>
 </li>
 </ul>
-<p>   <strong>示例</strong>:<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>;</span></span><br><span class="line">event.events = EPOLLIN;  <span class="comment">// 监听可读事件</span></span><br><span class="line">event.data.fd = sockfd;  <span class="comment">// 设置事件关联的文件描述符</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &amp;event) == <span class="number">-1</span>) &#123;</span><br><span class="line">    perror(<span class="string">&quot;epoll_ctl: sockfd&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="2-3-epoll-wait"><a href="#2-3-epoll-wait" class="headerlink" title="2.3 epoll_wait"></a>2.3 <strong>epoll_wait</strong></h4>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_wait</span><span class="params">(<span class="type">int</span> epfd, <span class="keyword">struct</span> epoll_event *events, <span class="type">int</span> maxevents, <span class="type">int</span> timeout)</span>;</span><br></pre></td></tr></table></figure>
+<p>   <strong>示例</strong>:</p>
+<pre><code class="language-c">struct epoll_event event;
+event.events = EPOLLIN;  // 监听可读事件
+event.data.fd = sockfd;  // 设置事件关联的文件描述符
+
+if (epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &amp;event) == -1) &#123;
+    perror(&quot;epoll_ctl: sockfd&quot;);
+    exit(EXIT_FAILURE);
+&#125;
+</code></pre>
+<h4 id="2-3-epoll-wait"><a href="#2-3-epoll-wait" class="headerlink" title="2.3 epoll_wait"></a>2.3 <strong>epoll_wait</strong></h4><pre><code class="language-c">int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+</code></pre>
 <ul>
 <li><strong>参数</strong>:<ul>
 <li><code>epfd</code>: <code>epoll</code> 实例的文件描述符。</li>
@@ -941,7 +997,20 @@
 </ul>
 </li>
 </ul>
-<p>   <strong>示例</strong>:<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">events</span>[<span class="title">MAX_EVENTS</span>];</span></span><br><span class="line"><span class="type">int</span> nfds = epoll_wait(epfd, events, MAX_EVENTS, <span class="number">-1</span>);</span><br><span class="line"><span class="keyword">if</span> (nfds == <span class="number">-1</span>) &#123;</span><br><span class="line">    perror(<span class="string">&quot;epoll_wait&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> n = <span class="number">0</span>; n &lt; nfds; ++n) &#123;</span><br><span class="line">    <span class="keyword">if</span> (events[n].events &amp; EPOLLIN) &#123;</span><br><span class="line">        <span class="comment">// 处理可读事件</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>   <strong>示例</strong>:</p>
+<pre><code class="language-c">struct epoll_event events[MAX_EVENTS];
+int nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
+if (nfds == -1) &#123;
+    perror(&quot;epoll_wait&quot;);
+    exit(EXIT_FAILURE);
+&#125;
+
+for (int n = 0; n &lt; nfds; ++n) &#123;
+    if (events[n].events &amp; EPOLLIN) &#123;
+        // 处理可读事件
+    &#125;
+&#125;
+</code></pre>
 <h3 id="3-工作模式"><a href="#3-工作模式" class="headerlink" title="3. 工作模式"></a>3. <strong>工作模式</strong></h3><p>   <code>epoll</code> 具有两种主要的工作模式：</p>
 <ul>
 <li><strong>水平触发（Level Triggered, LT）</strong>:<ul>
@@ -962,7 +1031,106 @@
 <li><strong>高并发网络服务器</strong>: <code>epoll</code> 常用于构建高性能网络服务器，如 Nginx、Redis 等，能高效处理大量并发连接。</li>
 <li><strong>事件驱动的系统</strong>: 如消息队列、事件通知系统等，需要高效监控大量 I&#x2F;O 事件的场景。</li>
 </ul>
-<h3 id="6-示例代码"><a href="#6-示例代码" class="headerlink" title="6. 示例代码"></a>6. <strong>示例代码</strong></h3><p>   下面是一个使用 <code>epoll</code> 的简单服务器示例，展示如何使用 <code>epoll</code> 处理多个客户端连接的 I&#x2F;O 事件：<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_EVENTS 10</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PORT 8080</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> server_fd, new_socket, epfd;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">address</span>;</span></span><br><span class="line">    <span class="type">int</span> addrlen = <span class="keyword">sizeof</span>(address);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>, <span class="title">events</span>[<span class="title">MAX_EVENTS</span>];</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建监听套接字</span></span><br><span class="line">    <span class="keyword">if</span> ((server_fd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>)) == <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;socket failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    address.sin_family = AF_INET;</span><br><span class="line">    address.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line">    address.sin_port = htons(PORT);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (bind(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address, <span class="keyword">sizeof</span>(address)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;bind failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (listen(server_fd, <span class="number">3</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;listen&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 epoll 实例</span></span><br><span class="line">    epfd = epoll_create(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (epfd == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;epoll_create1&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 server_fd 添加到 epoll 实例中</span></span><br><span class="line">    event.events = EPOLLIN;</span><br><span class="line">    event.data.fd = server_fd;</span><br><span class="line">    <span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, server_fd, &amp;event) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;epoll_ctl&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 循环等待事件</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">int</span> nfds = epoll_wait(epfd, events, MAX_EVENTS, <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nfds == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;epoll_wait&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> n = <span class="number">0</span>; n &lt; nfds; ++n) &#123;</span><br><span class="line">            <span class="keyword">if</span> (events[n].data.fd == server_fd) &#123;</span><br><span class="line">                <span class="comment">// 接受新的连接</span></span><br><span class="line">                new_socket = accept(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address, (<span class="type">socklen_t</span>*)&amp;addrlen);</span><br><span class="line">                <span class="keyword">if</span> (new_socket == <span class="number">-1</span>) &#123;</span><br><span class="line">                    perror(<span class="string">&quot;accept&quot;</span>);</span><br><span class="line">                    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">                &#125;</span><br><span class="line">                event.events = EPOLLIN;</span><br><span class="line">                event.data.fd = new_socket;</span><br><span class="line">                <span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, new_socket, &amp;event) == <span class="number">-1</span>) &#123;</span><br><span class="line">                    perror(<span class="string">&quot;epoll_ctl&quot;</span>);</span><br><span class="line">                    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 处理已连接的客户端数据</span></span><br><span class="line">                <span class="type">char</span> buffer[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">                <span class="type">int</span> bytes_read = read(events[n].data.fd, buffer, <span class="keyword">sizeof</span>(buffer));</span><br><span class="line">                <span class="keyword">if</span> (bytes_read == <span class="number">-1</span>) &#123;</span><br><span class="line">                    perror(<span class="string">&quot;read&quot;</span>);</span><br><span class="line">                    close(events[n].data.fd);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bytes_read == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// 客户端断开连接</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                    close(events[n].data.fd);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">&quot;Received: %s\n&quot;</span>, buffer);</span><br><span class="line">                    <span class="comment">// 回送数据</span></span><br><span class="line">                    write(events[n].data.fd, buffer, bytes_read);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(server_fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="6-示例代码"><a href="#6-示例代码" class="headerlink" title="6. 示例代码"></a>6. <strong>示例代码</strong></h3><p>   下面是一个使用 <code>epoll</code> 的简单服务器示例，展示如何使用 <code>epoll</code> 处理多个客户端连接的 I&#x2F;O 事件：</p>
+<pre><code class="language-c">#include &lt;sys/epoll.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;netinet/in.h&gt;
+
+#define MAX_EVENTS 10
+#define PORT 8080
+
+int main() &#123;
+    int server_fd, new_socket, epfd;
+    struct sockaddr_in address;
+    int addrlen = sizeof(address);
+
+    struct epoll_event event, events[MAX_EVENTS];
+
+    // 创建监听套接字
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) &#123;
+        perror(&quot;socket failed&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+
+    if (bind(server_fd, (struct sockaddr *)&amp;address, sizeof(address)) &lt; 0) &#123;
+        perror(&quot;bind failed&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+    if (listen(server_fd, 3) &lt; 0) &#123;
+        perror(&quot;listen&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    // 创建 epoll 实例
+    epfd = epoll_create(1);
+    if (epfd == -1) &#123;
+        perror(&quot;epoll_create1&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    // 将 server_fd 添加到 epoll 实例中
+    event.events = EPOLLIN;
+    event.data.fd = server_fd;
+    if (epoll_ctl(epfd, EPOLL_CTL_ADD, server_fd, &amp;event) == -1) &#123;
+        perror(&quot;epoll_ctl&quot;);
+        exit(EXIT_FAILURE);
+    &#125;
+
+    // 循环等待事件
+    while (1) &#123;
+        int nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
+        if (nfds == -1) &#123;
+            perror(&quot;epoll_wait&quot;);
+            exit(EXIT_FAILURE);
+        &#125;
+
+        for (int n = 0; n &lt; nfds; ++n) &#123;
+            if (events[n].data.fd == server_fd) &#123;
+                // 接受新的连接
+                new_socket = accept(server_fd, (struct sockaddr *)&amp;address, (socklen_t*)&amp;addrlen);
+                if (new_socket == -1) &#123;
+                    perror(&quot;accept&quot;);
+                    exit(EXIT_FAILURE);
+                &#125;
+                event.events = EPOLLIN;
+                event.data.fd = new_socket;
+                if (epoll_ctl(epfd, EPOLL_CTL_ADD, new_socket, &amp;event) == -1) &#123;
+                    perror(&quot;epoll_ctl&quot;);
+                    exit(EXIT_FAILURE);
+                &#125;
+            &#125; else &#123;
+                // 处理已连接的客户端数据
+                char buffer[1024] = &#123;0&#125;;
+                int bytes_read = read(events[n].data.fd, buffer, sizeof(buffer));
+                if (bytes_read == -1) &#123;
+                    perror(&quot;read&quot;);
+                    close(events[n].data.fd);
+                &#125; else if (bytes_read == 0) &#123;
+                    // 客户端断开连接
+
+
+                    close(events[n].data.fd);
+                &#125; else &#123;
+                    printf(&quot;Received: %s\n&quot;, buffer);
+                    // 回送数据
+                    write(events[n].data.fd, buffer, bytes_read);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    close(server_fd);
+    return 0;
+&#125;
+</code></pre>
 <h3 id="7-epoll-的缺点"><a href="#7-epoll-的缺点" class="headerlink" title="7. epoll 的缺点"></a>7. <strong>epoll 的缺点</strong></h3><ul>
 <li><strong>仅支持 Linux</strong>: <code>epoll</code> 是 Linux 特有的系统调用，因此在跨平台开发中需要考虑兼容性问题。</li>
 <li><strong>复杂度较高</strong>: 相较于 <code>select</code>，<code>epoll</code> 的 API 使用稍复杂，特别是在处理边缘触发模式时，需要开发者更加细致地处理 I&#x2F;O 事件。</li>
@@ -1148,16 +1316,6 @@
     /*文章列表背景图*/
     
 
-    
-    #post .pjax article :not(pre) > code {
-        color: #24292e;
-        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-        background-color: rgba(27,31,35,.05);
-        border-radius: 3px;
-        font-size: 85%;
-        margin: 0;
-        padding: .2em .4em;
-    }
     
 </style>
 

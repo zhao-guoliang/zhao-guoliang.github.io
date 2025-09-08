@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -780,8 +780,79 @@
         <p><code>hiredis</code> 是一个 C 语言编写的 Redis 客户端库，用于与 Redis 数据库交互。如果你想要通过 hiredis 存储和检索结构体数组的信息，你需要编写相应的 C 代码来处理这些操作。</p>
 <p>下面我将给出一个简单的示例，展示如何使用 hiredis 在 Redis 中存储和检索结构体数组信息。我们将使用 Redis 的 <code>HMSET</code> 和 <code>HGETALL</code> 命令来处理结构体数组。</p>
 <p>首先，让我们定义一个结构体来模拟你的需求：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">User</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> *name;</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125; User;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">storeUserInRedis</span><span class="params">(<span class="keyword">struct</span> User *user, <span class="type">long</span> id)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">getUserFromRedis</span><span class="params">(<span class="type">long</span> id, <span class="keyword">struct</span> User *user)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">printUser</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> User *user)</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化 hiredis 和连接 Redis</span></span><br><span class="line">    redisContext *c = redisConnect(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">6379</span>);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="literal">NULL</span> || c-&gt;err) &#123;</span><br><span class="line">        <span class="keyword">if</span> (c) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Error: %s\n&quot;</span>, c-&gt;errstr);</span><br><span class="line">            redisFree(c);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Connection error: can&#x27;t allocate redis context\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建用户结构体</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">User</span> <span class="title">fred</span> =</span> &#123;<span class="string">&quot;Fred&quot;</span>, <span class="number">25</span>&#125;;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">User</span> <span class="title">alice</span> =</span> &#123;<span class="string">&quot;Alice&quot;</span>, <span class="number">30</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 生成用户 ID</span></span><br><span class="line">    redisReply *reply = (redisReply *)redisCommand(c, <span class="string">&quot;INCR id:users&quot;</span>);</span><br><span class="line">    <span class="type">long</span> fred_id = reply-&gt;integer;</span><br><span class="line">    freeReplyObject(reply);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存储用户信息</span></span><br><span class="line">    storeUserInRedis(&amp;fred, fred_id);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 再次生成用户 ID</span></span><br><span class="line">    reply = (redisReply *)redisCommand(c, <span class="string">&quot;INCR id:users&quot;</span>);</span><br><span class="line">    <span class="type">long</span> alice_id = reply-&gt;integer;</span><br><span class="line">    freeReplyObject(reply);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存储用户信息</span></span><br><span class="line">    storeUserInRedis(&amp;alice, alice_id);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 Redis 中获取用户信息</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">User</span> <span class="title">retrieved_user</span>;</span></span><br><span class="line">    getUserFromRedis(fred_id, &amp;retrieved_user);</span><br><span class="line">    printUser(&amp;retrieved_user);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 清理资源</span></span><br><span class="line">    redisFree(c);</span><br><span class="line">    <span class="built_in">free</span>(retrieved_user.name); <span class="comment">// 释放内存</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">storeUserInRedis</span><span class="params">(<span class="keyword">struct</span> User *user, <span class="type">long</span> id)</span> &#123;</span><br><span class="line">    redisReply *reply = (redisReply *)redisCommand(<span class="literal">NULL</span>, <span class="string">&quot;HMSET user:%ld name %s age %d&quot;</span>, id, user-&gt;name, user-&gt;age);</span><br><span class="line">    freeReplyObject(reply);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">getUserFromRedis</span><span class="params">(<span class="type">long</span> id, <span class="keyword">struct</span> User *user)</span> &#123;</span><br><span class="line">    redisReply *reply = (redisReply *)redisCommand(<span class="literal">NULL</span>, <span class="string">&quot;HGETALL user:%ld&quot;</span>, id);</span><br><span class="line">    <span class="keyword">if</span> (reply-&gt;type == REDIS_REPLY_ARRAY &amp;&amp; reply-&gt;elements &gt;= <span class="number">4</span>) &#123;</span><br><span class="line">        user-&gt;name = strdup(reply-&gt;element[<span class="number">1</span>]-&gt;str);</span><br><span class="line">        user-&gt;age = atoi(reply-&gt;element[<span class="number">3</span>]-&gt;str);</span><br><span class="line">    &#125;</span><br><span class="line">    freeReplyObject(reply);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">printUser</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> User *user)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Name: %s, Age: %d\n&quot;</span>, user-&gt;name, user-&gt;age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="language-c">typedef struct User &#123;
+    char *name;
+    int age;
+&#125; User;
 
+// 函数声明
+void storeUserInRedis(struct User *user, long id);
+void getUserFromRedis(long id, struct User *user);
+void printUser(const struct User *user);
+
+int main(void) &#123;
+    // 初始化 hiredis 和连接 Redis
+    redisContext *c = redisConnect(&quot;127.0.0.1&quot;, 6379);
+    if (c == NULL || c-&gt;err) &#123;
+        if (c) &#123;
+            printf(&quot;Error: %s\n&quot;, c-&gt;errstr);
+            redisFree(c);
+        &#125; else &#123;
+            printf(&quot;Connection error: can&#39;t allocate redis context\n&quot;);
+        &#125;
+        return 1;
+    &#125;
+
+    // 创建用户结构体
+    struct User fred = &#123;&quot;Fred&quot;, 25&#125;;
+    struct User alice = &#123;&quot;Alice&quot;, 30&#125;;
+
+    // 生成用户 ID
+    redisReply *reply = (redisReply *)redisCommand(c, &quot;INCR id:users&quot;);
+    long fred_id = reply-&gt;integer;
+    freeReplyObject(reply);
+
+    // 存储用户信息
+    storeUserInRedis(&amp;fred, fred_id);
+
+    // 再次生成用户 ID
+    reply = (redisReply *)redisCommand(c, &quot;INCR id:users&quot;);
+    long alice_id = reply-&gt;integer;
+    freeReplyObject(reply);
+
+    // 存储用户信息
+    storeUserInRedis(&amp;alice, alice_id);
+
+    // 从 Redis 中获取用户信息
+    struct User retrieved_user;
+    getUserFromRedis(fred_id, &amp;retrieved_user);
+    printUser(&amp;retrieved_user);
+
+    // 清理资源
+    redisFree(c);
+    free(retrieved_user.name); // 释放内存
+
+    return 0;
+&#125;
+
+void storeUserInRedis(struct User *user, long id) &#123;
+    redisReply *reply = (redisReply *)redisCommand(NULL, &quot;HMSET user:%ld name %s age %d&quot;, id, user-&gt;name, user-&gt;age);
+    freeReplyObject(reply);
+&#125;
+
+void getUserFromRedis(long id, struct User *user) &#123;
+    redisReply *reply = (redisReply *)redisCommand(NULL, &quot;HGETALL user:%ld&quot;, id);
+    if (reply-&gt;type == REDIS_REPLY_ARRAY &amp;&amp; reply-&gt;elements &gt;= 4) &#123;
+        user-&gt;name = strdup(reply-&gt;element[1]-&gt;str);
+        user-&gt;age = atoi(reply-&gt;element[3]-&gt;str);
+    &#125;
+    freeReplyObject(reply);
+&#125;
+
+void printUser(const struct User *user) &#123;
+    printf(&quot;Name: %s, Age: %d\n&quot;, user-&gt;name, user-&gt;age);
+&#125;
+</code></pre>
 <p>这个示例程序包含了以下几个部分：</p>
 <ol>
 <li><strong>定义结构体</strong>: <code>struct User</code> 包含用户的姓名和年龄。</li>
@@ -973,16 +1044,6 @@
     /*文章列表背景图*/
     
 
-    
-    #post .pjax article :not(pre) > code {
-        color: #24292e;
-        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-        background-color: rgba(27,31,35,.05);
-        border-radius: 3px;
-        font-size: 85%;
-        margin: 0;
-        padding: .2em .4em;
-    }
     
 </style>
 

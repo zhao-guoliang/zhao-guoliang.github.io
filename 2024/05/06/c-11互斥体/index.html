@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -798,8 +798,9 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::mutex mtx;</span><br><span class="line">mtx.<span class="built_in">lock</span>();</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">std::mutex mtx;
+mtx.lock();
+</code></pre>
 <ul>
 <li><code>bool try_lock() noexcept</code><ul>
 <li><strong>作用</strong>: 尝试锁定互斥体。如果互斥体没有被其他线程锁定，则锁定并返回 <code>true</code>；如果互斥体已经被锁定，则立即返回 <code>false</code>。</li>
@@ -807,8 +808,12 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mtx.<span class="built_in">try_lock</span>()) &#123;</span><br><span class="line">    <span class="comment">// 成功锁定互斥体</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 互斥体已经被其他线程锁定</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">if (mtx.try_lock()) &#123;
+    // 成功锁定互斥体
+&#125; else &#123;
+    // 互斥体已经被其他线程锁定
+&#125;
+</code></pre>
 <ul>
 <li><code>void unlock()</code><ul>
 <li><strong>作用</strong>: 解锁互斥体。如果当前线程没有持有该互斥体的锁，将导致未定义行为。</li>
@@ -816,11 +821,31 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mtx.<span class="built_in">unlock</span>();</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">mtx.unlock();
+</code></pre>
 <h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><p>以下是一个完整的示例，演示如何使用 <code>std::mutex</code> 及其方法来保护共享资源。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;  <span class="comment">// 定义一个互斥体</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_thread_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    mtx.<span class="built_in">lock</span>();  <span class="comment">// 加锁</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br><span class="line">    mtx.<span class="built_in">unlock</span>();  <span class="comment">// 解锁</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(print_thread_id, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(print_thread_id, <span class="number">2</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
 
+std::mutex mtx;  // 定义一个互斥体
+
+void print_thread_id(int id) &#123;
+    mtx.lock();  // 加锁
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; id &lt;&lt; std::endl;
+    mtx.unlock();  // 解锁
+&#125;
+
+int main() &#123;
+    std::thread t1(print_thread_id, 1);
+    std::thread t2(print_thread_id, 2);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+&#125;
+</code></pre>
 <p>在这个例子中，<code>mtx.lock()</code> 和 <code>mtx.unlock()</code> 确保了 <code>std::cout</code> 在同一时刻只能被一个线程访问，从而避免了输出竞争条件。</p>
 <h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
 <li><strong>死锁</strong>: 如果一个线程在没有解锁互斥体之前尝试再次锁定它，将导致死锁。因此，应该特别注意在每个加锁的地方确保有相应的解锁。</li>
@@ -834,37 +859,156 @@
 </ul>
 <p>通过这些方法，可以在多线程编程中有效地保护共享资源，确保线程安全。</p>
 <h3 id="2-std-lock-guard"><a href="#2-std-lock-guard" class="headerlink" title="2. std::lock_guard"></a>2. <code>std::lock_guard</code></h3><p><code>std::lock_guard</code> 是一种方便的 RAII 机制，用于<strong>自动管理互斥体的锁定和解锁</strong>。<strong>它在构造时锁定互斥体，在析构时解锁互斥体，确保互斥体在作用域结束时总是被解锁。</strong></p>
-<h4 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_thread_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(print_thread_id, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(print_thread_id, <span class="number">2</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h4><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
 
+std::mutex mtx;
+
+void print_thread_id(int id) &#123;
+    std::lock_guard&lt;std::mutex&gt; lock(mtx);
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; id &lt;&lt; std::endl;
+&#125;
+
+int main() &#123;
+    std::thread t1(print_thread_id, 1);
+    std::thread t2(print_thread_id, 2);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+&#125;
+</code></pre>
 <p>在这个例子中，<code>std::lock_guard</code> 确保了 <code>mtx</code> 在函数 <code>print_thread_id</code> 中的整个作用域内都是锁定的。</p>
 <p>在 C++ 中，<code>std::lock_guard</code> 是一个用于自动管理互斥体锁定和解锁的工具，确保在作用域内互斥体被正确锁定和解锁。如果你写的是：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::lock_guard <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">std::lock_guard lock(mtx);
+</code></pre>
 <p>这在 C++17 及之后的标准中是正确的，因为从 C++17 开始，<code>std::lock_guard</code> 可以省略模板参数的类型推导。但是在 C++11 和 C++14 中，应该显式指定互斥体的类型。具体来说：</p>
 <h3 id="C-11-和-C-14"><a href="#C-11-和-C-14" class="headerlink" title="C++11 和 C++14"></a>C++11 和 C++14</h3><p>在 C++11 和 C++14 中，你需要显式指定模板参数：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">std::lock_guard&lt;std::mutex&gt; lock(mtx);
+</code></pre>
 <h3 id="C-17-及之后的标准"><a href="#C-17-及之后的标准" class="headerlink" title="C++17 及之后的标准"></a>C++17 及之后的标准</h3><p>从 C++17 开始，你可以使用类型推导来简化代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::lock_guard <span class="title">lock</span><span class="params">(mtx)</span></span>;  <span class="comment">// C++17 及之后版本</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">std::lock_guard lock(mtx);  // C++17 及之后版本
+</code></pre>
 <p>在这个版本中，编译器可以根据构造函数的参数 <code>mtx</code> 自动推导出 <code>std::lock_guard</code> 的模板参数类型为 <code>std::mutex</code>。</p>
 <h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>这是一个使用 <code>std::lock_guard</code> 的完整示例：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;  <span class="comment">// 定义一个全局互斥体</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_thread_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;  <span class="comment">// C++11 和 C++14 中必须指定模板参数</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(print_thread_id, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(print_thread_id, <span class="number">2</span>)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
 
+std::mutex mtx;  // 定义一个全局互斥体
+
+void print_thread_id(int id) &#123;
+    std::lock_guard&lt;std::mutex&gt; lock(mtx);  // C++11 和 C++14 中必须指定模板参数
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; id &lt;&lt; std::endl;
+&#125;
+
+int main() &#123;
+    std::thread t1(print_thread_id, 1);
+    std::thread t2(print_thread_id, 2);
+    t1.join();
+    t2.join();
+    return 0;
+&#125;
+</code></pre>
 <p>在 C++17 中，可以写成：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;  <span class="comment">// 定义一个全局互斥体</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_thread_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard <span class="title">lock</span><span class="params">(mtx)</span></span>;  <span class="comment">// C++17 中可以省略模板参数</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(print_thread_id, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(print_thread_id, <span class="number">2</span>)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
 
+std::mutex mtx;  // 定义一个全局互斥体
+
+void print_thread_id(int id) &#123;
+    std::lock_guard lock(mtx);  // C++17 中可以省略模板参数
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; id &lt;&lt; std::endl;
+&#125;
+
+int main() &#123;
+    std::thread t1(print_thread_id, 1);
+    std::thread t2(print_thread_id, 2);
+    t1.join();
+    t2.join();
+    return 0;
+&#125;
+</code></pre>
 <h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ul>
 <li><strong>C++11 和 C++14</strong>: 使用 <code>std::lock_guard&lt;std::mutex&gt;</code> 明确指定模板参数类型。</li>
 <li><strong>C++17 及之后</strong>: 可以使用 <code>std::lock_guard</code> 并省略模板参数，编译器会进行类型推导。</li>
 </ul>
 <h3 id="3-std-unique-lock"><a href="#3-std-unique-lock" class="headerlink" title="3. std::unique_lock"></a>3. <code>std::unique_lock</code></h3><p><code>std::unique_lock</code> 是一种更灵活的互斥体锁管理器。与 <code>std::lock_guard</code> 相比，<code>std::unique_lock</code> 还支持<strong>延迟锁定、锁定超时和锁的解锁&#x2F;重新锁定。</strong></p>
-<h4 id="基本用法-1"><a href="#基本用法-1" class="headerlink" title="基本用法"></a>基本用法</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_thread_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(print_thread_id, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(print_thread_id, <span class="number">2</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="基本用法-1"><a href="#基本用法-1" class="headerlink" title="基本用法"></a>基本用法</h4><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
 
-<h4 id="延迟锁定和手动锁定-解锁"><a href="#延迟锁定和手动锁定-解锁" class="headerlink" title="延迟锁定和手动锁定&#x2F;解锁"></a>延迟锁定和手动锁定&#x2F;解锁</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_thread_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx, std::defer_lock)</span></span>; <span class="comment">// 延迟锁定</span></span><br><span class="line">    <span class="comment">// 其他操作</span></span><br><span class="line">    lock.<span class="built_in">lock</span>(); <span class="comment">// 手动锁定</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br><span class="line">    lock.<span class="built_in">unlock</span>(); <span class="comment">// 手动解锁</span></span><br><span class="line">    <span class="comment">// 其他操作</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(print_thread_id, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(print_thread_id, <span class="number">2</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+std::mutex mtx;
 
-<h4 id="带超时的锁定"><a href="#带超时的锁定" class="headerlink" title="带超时的锁定"></a>带超时的锁定</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">try_lock_for_example</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx, std::try_to_lock)</span></span>;</span><br><span class="line">    <span class="keyword">if</span> (lock.<span class="built_in">owns_lock</span>()) &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Lock acquired.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Lock not acquired.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(try_lock_for_example)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(try_lock_for_example)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+void print_thread_id(int id) &#123;
+    std::unique_lock&lt;std::mutex&gt; lock(mtx);
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; id &lt;&lt; std::endl;
+&#125;
 
+int main() &#123;
+    std::thread t1(print_thread_id, 1);
+    std::thread t2(print_thread_id, 2);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+&#125;
+</code></pre>
+<h4 id="延迟锁定和手动锁定-解锁"><a href="#延迟锁定和手动锁定-解锁" class="headerlink" title="延迟锁定和手动锁定&#x2F;解锁"></a>延迟锁定和手动锁定&#x2F;解锁</h4><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+
+std::mutex mtx;
+
+void print_thread_id(int id) &#123;
+    std::unique_lock&lt;std::mutex&gt; lock(mtx, std::defer_lock); // 延迟锁定
+    // 其他操作
+    lock.lock(); // 手动锁定
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; id &lt;&lt; std::endl;
+    lock.unlock(); // 手动解锁
+    // 其他操作
+&#125;
+
+int main() &#123;
+    std::thread t1(print_thread_id, 1);
+    std::thread t2(print_thread_id, 2);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+&#125;
+</code></pre>
+<h4 id="带超时的锁定"><a href="#带超时的锁定" class="headerlink" title="带超时的锁定"></a>带超时的锁定</h4><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;chrono&gt;
+
+std::mutex mtx;
+
+void try_lock_for_example() &#123;
+    std::unique_lock&lt;std::mutex&gt; lock(mtx, std::try_to_lock);
+    if (lock.owns_lock()) &#123;
+        std::cout &lt;&lt; &quot;Lock acquired.&quot; &lt;&lt; std::endl;
+    &#125; else &#123;
+        std::cout &lt;&lt; &quot;Lock not acquired.&quot; &lt;&lt; std::endl;
+    &#125;
+&#125;
+
+int main() &#123;
+    std::thread t1(try_lock_for_example);
+    std::thread t2(try_lock_for_example);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+&#125;
+</code></pre>
 <h3 id="4-std-timed-mutex-和-std-recursive-mutex"><a href="#4-std-timed-mutex-和-std-recursive-mutex" class="headerlink" title="4. std::timed_mutex 和 std::recursive_mutex"></a>4. <code>std::timed_mutex</code> 和 <code>std::recursive_mutex</code></h3><h3 id="std-timed-mutex"><a href="#std-timed-mutex" class="headerlink" title="std::timed_mutex"></a><code>std::timed_mutex</code></h3><p><code>std::timed_mutex</code> 是一种互斥体，除了提供基本的锁定和解锁功能外，还支持带超时的锁定操作。</p>
 <h4 id="成员函数-1"><a href="#成员函数-1" class="headerlink" title="成员函数"></a>成员函数</h4><ul>
 <li><code>void lock()</code><ul>
@@ -873,8 +1017,9 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::timed_mutex tmtx;</span><br><span class="line">tmtx.<span class="built_in">lock</span>();</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">std::timed_mutex tmtx;
+tmtx.lock();
+</code></pre>
 <ul>
 <li><code>bool try_lock() noexcept</code><ul>
 <li><strong>作用</strong>: 尝试锁定互斥体。如果互斥体没有被其他线程锁定，则锁定并返回 <code>true</code>；如果互斥体已经被锁定，则立即返回 <code>false</code>。</li>
@@ -882,8 +1027,12 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (tmtx.<span class="built_in">try_lock</span>()) &#123;</span><br><span class="line">    <span class="comment">// 成功锁定互斥体</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 互斥体已经被其他线程锁定</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">if (tmtx.try_lock()) &#123;
+    // 成功锁定互斥体
+&#125; else &#123;
+    // 互斥体已经被其他线程锁定
+&#125;
+</code></pre>
 <ul>
 <li><code>bool try_lock_for(const std::chrono::duration&lt;Rep, Period&gt;&amp; rel_time)</code><ul>
 <li><strong>作用</strong>: 尝试锁定互斥体，直到指定的相对时间间隔过去。如果互斥体在这段时间内变为可用，则锁定并返回 <code>true</code>；如果超时，则返回 <code>false</code>。</li>
@@ -891,8 +1040,12 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (tmtx.<span class="built_in">try_lock_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>))) &#123;</span><br><span class="line">    <span class="comment">// 成功锁定互斥体</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 超时</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">if (tmtx.try_lock_for(std::chrono::seconds(1))) &#123;
+    // 成功锁定互斥体
+&#125; else &#123;
+    // 超时
+&#125;
+</code></pre>
 <ul>
 <li><code>bool try_lock_until(const std::chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time)</code><ul>
 <li><strong>作用</strong>: 尝试锁定互斥体，直到指定的绝对时间点。如果互斥体在这段时间内变为可用，则锁定并返回 <code>true</code>；如果超时，则返回 <code>false</code>。</li>
@@ -900,8 +1053,12 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (tmtx.<span class="built_in">try_lock_until</span>(std::chrono::steady_clock::<span class="built_in">now</span>() + std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>))) &#123;</span><br><span class="line">    <span class="comment">// 成功锁定互斥体</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 超时</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">if (tmtx.try_lock_until(std::chrono::steady_clock::now() + std::chrono::seconds(1))) &#123;
+    // 成功锁定互斥体
+&#125; else &#123;
+    // 超时
+&#125;
+</code></pre>
 <ul>
 <li><code>void unlock()</code><ul>
 <li><strong>作用</strong>: 解锁互斥体。如果当前线程没有持有该互斥体的锁，将导致未定义行为。</li>
@@ -909,10 +1066,34 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmtx.<span class="built_in">unlock</span>();</span><br></pre></td></tr></table></figure>
+<pre><code class="language-cpp">tmtx.unlock();
+</code></pre>
+<h3 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h3><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;chrono&gt;
 
-<h3 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::timed_mutex tmtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">try_lock_for_example</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tmtx.<span class="built_in">try_lock_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>))) &#123;  <span class="comment">// 尝试锁定，最多等待1秒</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Lock acquired.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        tmtx.<span class="built_in">unlock</span>();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Lock not acquired within timeout.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(try_lock_for_example)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(try_lock_for_example)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+std::timed_mutex tmtx;
 
+void try_lock_for_example() &#123;
+    if (tmtx.try_lock_for(std::chrono::seconds(1))) &#123;  // 尝试锁定，最多等待1秒
+        std::cout &lt;&lt; &quot;Lock acquired.&quot; &lt;&lt; std::endl;
+        tmtx.unlock();
+    &#125; else &#123;
+        std::cout &lt;&lt; &quot;Lock not acquired within timeout.&quot; &lt;&lt; std::endl;
+    &#125;
+&#125;
+
+int main() &#123;
+    std::thread t1(try_lock_for_example);
+    std::thread t2(try_lock_for_example);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+&#125;
+</code></pre>
 <h3 id="std-recursive-mutex"><a href="#std-recursive-mutex" class="headerlink" title="std::recursive_mutex"></a><code>std::recursive_mutex</code></h3><p><code>std::recursive_mutex</code> 是一种递归互斥体，允许同一个线程多次锁定同一个互斥体，而不会导致死锁。每次调用 <code>lock</code> 必须有相应的 <code>unlock</code>。</p>
 <h4 id="成员函数-2"><a href="#成员函数-2" class="headerlink" title="成员函数"></a>成员函数</h4><ul>
 <li><code>void lock()</code><ul>
@@ -920,26 +1101,52 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::recursive_mutex rmtx;</span><br><span class="line">rmtx.<span class="built_in">lock</span>();</span><br><span class="line">rmtx.<span class="built_in">lock</span>();  <span class="comment">// 可以多次锁定</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">std::recursive_mutex rmtx;
+rmtx.lock();
+rmtx.lock();  // 可以多次锁定
+</code></pre>
 <ul>
 <li><code>bool try_lock() noexcept</code><ul>
 <li><strong>作用</strong>: 尝试锁定互斥体。如果互斥体没有被其他线程锁定或已经被当前线程锁定，则锁定并返回 <code>true</code>；如果互斥体已经被其他线程锁定，则立即返回 <code>false</code>。</li>
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (rmtx.<span class="built_in">try_lock</span>()) &#123;</span><br><span class="line">    <span class="comment">// 成功锁定互斥体</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 互斥体已经被其他线程锁定</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-cpp">if (rmtx.try_lock()) &#123;
+    // 成功锁定互斥体
+&#125; else &#123;
+    // 互斥体已经被其他线程锁定
+&#125;
+</code></pre>
 <ul>
 <li><code>void unlock()</code><ul>
 <li><strong>作用</strong>: 解锁互斥体。如果当前线程多次锁定了互斥体，则每次调用 <code>unlock</code> 只减少一次锁定计数，直到计数归零后才真正解锁。</li>
 </ul>
 </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rmtx.<span class="built_in">unlock</span>();</span><br><span class="line">rmtx.<span class="built_in">unlock</span>();  <span class="comment">// 必须匹配 lock 的次数</span></span><br></pre></td></tr></table></figure>
+<pre><code class="language-cpp">rmtx.unlock();
+rmtx.unlock();  // 必须匹配 lock 的次数
+</code></pre>
+<h3 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h3><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
 
-<h3 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::recursive_mutex rmtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">recursive_function</span><span class="params">(<span class="type">int</span> count)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (count &lt;= <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">    rmtx.<span class="built_in">lock</span>();  <span class="comment">// 可以多次锁定</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Count: &quot;</span> &lt;&lt; count &lt;&lt; std::endl;</span><br><span class="line">    <span class="built_in">recursive_function</span>(--count);</span><br><span class="line">    rmtx.<span class="built_in">unlock</span>();  <span class="comment">// 对应解锁</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(recursive_function, <span class="number">3</span>)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+std::recursive_mutex rmtx;
 
+void recursive_function(int count) &#123;
+    if (count &lt;= 0) return;
+    rmtx.lock();  // 可以多次锁定
+    std::cout &lt;&lt; &quot;Count: &quot; &lt;&lt; count &lt;&lt; std::endl;
+    recursive_function(--count);
+    rmtx.unlock();  // 对应解锁
+&#125;
+
+int main() &#123;
+    std::thread t1(recursive_function, 3);
+    t1.join();
+
+    return 0;
+&#125;
+</code></pre>
 <h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><ul>
 <li><p><strong><code>std::timed_mutex</code></strong>:</p>
 <ul>
@@ -1144,16 +1351,6 @@
     /*文章列表背景图*/
     
 
-    
-    #post .pjax article :not(pre) > code {
-        color: #24292e;
-        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-        background-color: rgba(27,31,35,.05);
-        border-radius: 3px;
-        font-size: 85%;
-        margin: 0;
-        padding: .2em .4em;
-    }
     
 </style>
 
