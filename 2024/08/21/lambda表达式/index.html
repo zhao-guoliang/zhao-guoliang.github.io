@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/brown-paper.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -800,33 +800,115 @@
 </ul>
 <h3 id="捕获列表"><a href="#捕获列表" class="headerlink" title="捕获列表"></a>捕获列表</h3><p>lambda表达式的捕获列表可以捕获一定范围内的变量，具体使用方式如下：</p>
 <p>[] - 不捕捉任何变量<br>[&amp;] - 捕获外部作用域中所有变量, 并作为引用在函数体内使用 (按引用捕获)<br>[&#x3D;] - 捕获外部作用域中所有变量, 并作为副本在函数体内使用 (按值捕获)<br>拷贝的副本在匿名函数体内部是只读的<br>[&#x3D;, &amp;foo] - 按值捕获外部作用域中所有变量, 并按照引用捕获外部变量 foo<br>[bar] - 按值捕获 bar 变量, 同时不捕获其他变量<br>[&amp;bar] - 按引用捕获 bar 变量, 同时不捕获其他变量<br>[this] - 捕获当前类中的this指针<br>让lambda表达式拥有和当前类成员函数同样的访问权限<br>如果已经使用了 &amp; 或者 &#x3D;, 默认添加此选项<br>下面通过一个例子，看一下初始化列表的具体用法：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;functional&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">output</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span></span><br><span class="hljs-function">    </span>&#123;<br>        <span class="hljs-keyword">auto</span> x1 = [] &#123;<span class="hljs-keyword">return</span> m_number; &#125;;                      <span class="hljs-comment">// error</span><br>        <span class="hljs-keyword">auto</span> x2 = [=] &#123;<span class="hljs-keyword">return</span> m_number + x + y; &#125;;             <span class="hljs-comment">// ok</span><br>        <span class="hljs-keyword">auto</span> x3 = [&amp;] &#123;<span class="hljs-keyword">return</span> m_number + x + y; &#125;;             <span class="hljs-comment">// ok</span><br>        <span class="hljs-keyword">auto</span> x4 = [<span class="hljs-keyword">this</span>] &#123;<span class="hljs-keyword">return</span> m_number; &#125;;                  <span class="hljs-comment">// ok</span><br>        <span class="hljs-keyword">auto</span> x5 = [<span class="hljs-keyword">this</span>] &#123;<span class="hljs-keyword">return</span> m_number + x + y; &#125;;          <span class="hljs-comment">// error</span><br>        <span class="hljs-keyword">auto</span> x6 = [<span class="hljs-keyword">this</span>, x, y] &#123;<span class="hljs-keyword">return</span> m_number + x + y; &#125;;    <span class="hljs-comment">// ok</span><br>        <span class="hljs-keyword">auto</span> x7 = [<span class="hljs-keyword">this</span>] &#123;<span class="hljs-keyword">return</span> m_number++; &#125;;                <span class="hljs-comment">// ok</span><br>    &#125;<br>    <span class="hljs-type">int</span> m_number = <span class="hljs-number">100</span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> std;
+
+<span class="keyword">class</span> <span class="title class_">Test</span>
+&#123;
+<span class="keyword">public</span>:
+    <span class="function"><span class="type">void</span> <span class="title">output</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span>
+<span class="function">    </span>&#123;
+        <span class="keyword">auto</span> x1 = [] &#123;<span class="keyword">return</span> m_number; &#125;;                      <span class="comment">// error</span>
+        <span class="keyword">auto</span> x2 = [=] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;             <span class="comment">// ok</span>
+        <span class="keyword">auto</span> x3 = [&amp;] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;             <span class="comment">// ok</span>
+        <span class="keyword">auto</span> x4 = [<span class="keyword">this</span>] &#123;<span class="keyword">return</span> m_number; &#125;;                  <span class="comment">// ok</span>
+        <span class="keyword">auto</span> x5 = [<span class="keyword">this</span>] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;          <span class="comment">// error</span>
+        <span class="keyword">auto</span> x6 = [<span class="keyword">this</span>, x, y] &#123;<span class="keyword">return</span> m_number + x + y; &#125;;    <span class="comment">// ok</span>
+        <span class="keyword">auto</span> x7 = [<span class="keyword">this</span>] &#123;<span class="keyword">return</span> m_number++; &#125;;                <span class="comment">// ok</span>
+    &#125;
+    <span class="type">int</span> m_number = <span class="number">100</span>;
+&#125;;</code></pre>
 
 <p>x1：错误，没有捕获外部变量，不能使用类成员 m_number<br>x2：正确，以值拷贝的方式捕获所有外部变量<br>x3：正确，以引用的方式捕获所有外部变量<br>x4：正确，捕获this指针，可访问对象内部成员<br>x5：错误，捕获this指针，可访问类内部成员，没有捕获到变量x，y，因此不能访问。<br>x6：正确，捕获this指针，x，y<br>x7：正确，捕获this指针，并且可以修改对象内部变量的值</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> a = <span class="hljs-number">10</span>, b = <span class="hljs-number">20</span>;<br>    <span class="hljs-keyword">auto</span> f1 = [] &#123;<span class="hljs-keyword">return</span> a; &#125;;                        <span class="hljs-comment">// error</span><br>    <span class="hljs-keyword">auto</span> f2 = [&amp;] &#123;<span class="hljs-keyword">return</span> a++; &#125;;                     <span class="hljs-comment">// ok</span><br>    <span class="hljs-keyword">auto</span> f3 = [=] &#123;<span class="hljs-keyword">return</span> a; &#125;;                       <span class="hljs-comment">// ok</span><br>    <span class="hljs-keyword">auto</span> f4 = [=] &#123;<span class="hljs-keyword">return</span> a++; &#125;;                     <span class="hljs-comment">// error</span><br>    <span class="hljs-keyword">auto</span> f5 = [a] &#123;<span class="hljs-keyword">return</span> a + b; &#125;;                   <span class="hljs-comment">// error</span><br>    <span class="hljs-keyword">auto</span> f6 = [a, &amp;b] &#123;<span class="hljs-keyword">return</span> a + (b++); &#125;;           <span class="hljs-comment">// ok</span><br>    <span class="hljs-keyword">auto</span> f7 = [=, &amp;b] &#123;<span class="hljs-keyword">return</span> a + (b++); &#125;;           <span class="hljs-comment">// ok</span><br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span>
+<span class="function"></span>&#123;
+    <span class="type">int</span> a = <span class="number">10</span>, b = <span class="number">20</span>;
+    <span class="keyword">auto</span> f1 = [] &#123;<span class="keyword">return</span> a; &#125;;                        <span class="comment">// error</span>
+    <span class="keyword">auto</span> f2 = [&amp;] &#123;<span class="keyword">return</span> a++; &#125;;                     <span class="comment">// ok</span>
+    <span class="keyword">auto</span> f3 = [=] &#123;<span class="keyword">return</span> a; &#125;;                       <span class="comment">// ok</span>
+    <span class="keyword">auto</span> f4 = [=] &#123;<span class="keyword">return</span> a++; &#125;;                     <span class="comment">// error</span>
+    <span class="keyword">auto</span> f5 = [a] &#123;<span class="keyword">return</span> a + b; &#125;;                   <span class="comment">// error</span>
+    <span class="keyword">auto</span> f6 = [a, &amp;b] &#123;<span class="keyword">return</span> a + (b++); &#125;;           <span class="comment">// ok</span>
+    <span class="keyword">auto</span> f7 = [=, &amp;b] &#123;<span class="keyword">return</span> a + (b++); &#125;;           <span class="comment">// ok</span>
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+
+&#125;</code></pre>
 
 
 <p>f1：错误，没有捕获外部变量，因此无法访问变量 a<br>f2：正确，使用引用的方式捕获外部变量，可读写<br>f3：正确，使用值拷贝的方式捕获外部变量，可读<br>f4：错误，使用值拷贝的方式捕获外部变量，可读不能写<br>f5：错误，使用拷贝的方式捕获了外部变量a，没有捕获外部变量b，因此无法访问变量b<br>f6：正确，使用拷贝的方式捕获了外部变量a，只读，使用引用的方式捕获外部变量b，可读写<br>f7：正确，使用值拷贝的方式捕获所有外部变量以及b的引用，b可读写，其他只读<br>在匿名函数内部，需要通过lambda表达式的捕获列表控制如何捕获外部变量，以及访问哪些变量。默认状态下lambda表达式无法修改通过复制方式捕获外部变量，如果希望修改这些外部变量，需要通过引用的方式进行捕获。</p>
 <h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>很多时候，lambda表达式的返回值是非常明显的，因此在C++11中允许省略lambda表达式的返回值。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 完整的lambda表达式定义</span><br><span class="hljs-keyword">auto</span> f = [](<span class="hljs-type">int</span> a) -&gt; <span class="hljs-type">int</span><br>&#123;<br>    <span class="hljs-keyword">return</span> a<span class="hljs-number">+10</span>;  <br>&#125;;<br><br><span class="hljs-comment">// 忽略返回值的lambda表达式定义</span><br><span class="hljs-keyword">auto</span> f = [](<span class="hljs-type">int</span> a)<br>&#123;<br>    <span class="hljs-keyword">return</span> a<span class="hljs-number">+10</span>;  <br>&#125;;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">一般情况下，不指定lambda表达式的返回值，编译器会根据return语句自动推导返回值的类型，但需要注意的是labmda表达式不能通过列表初始化自动推导出返回值类型。</span><br><span class="hljs-comment">*/</span><br><br><br><span class="hljs-comment">// ok，可以自动推导出返回值类型</span><br><span class="hljs-keyword">auto</span> f = [](<span class="hljs-type">int</span> i)<br>&#123;<br>    <span class="hljs-keyword">return</span> i;<br>&#125;<br><br><span class="hljs-comment">// error，不能推导出返回值类型</span><br><span class="hljs-keyword">auto</span> f1 = []()<br>&#123;<br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>&#125;;	<span class="hljs-comment">// 基于列表初始化推导返回值，错误</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="comment">// 完整的lambda表达式定义</span>
+<span class="keyword">auto</span> f = [](<span class="type">int</span> a) -&gt; <span class="type">int</span>
+&#123;
+    <span class="keyword">return</span> a<span class="number">+10</span>;  
+&#125;;
+
+<span class="comment">// 忽略返回值的lambda表达式定义</span>
+<span class="keyword">auto</span> f = [](<span class="type">int</span> a)
+&#123;
+    <span class="keyword">return</span> a<span class="number">+10</span>;  
+&#125;;
+<span class="comment">/*</span>
+<span class="comment">一般情况下，不指定lambda表达式的返回值，编译器会根据return语句自动推导返回值的类型，但需要注意的是labmda表达式不能通过列表初始化自动推导出返回值类型。</span>
+<span class="comment">*/</span>
+
+
+<span class="comment">// ok，可以自动推导出返回值类型</span>
+<span class="keyword">auto</span> f = [](<span class="type">int</span> i)
+&#123;
+    <span class="keyword">return</span> i;
+&#125;
+
+<span class="comment">// error，不能推导出返回值类型</span>
+<span class="keyword">auto</span> f1 = []()
+&#123;
+    <span class="keyword">return</span> &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;	<span class="comment">// 基于列表初始化推导返回值，错误</span>
+&#125;</code></pre>
 
 
 
 
 <h3 id="函数本质"><a href="#函数本质" class="headerlink" title="函数本质"></a>函数本质</h3><p>使用lambda表达式捕获列表捕获外部变量，如果希望去修改按值捕获的外部变量，那么应该如何处理呢？这就需要使用mutable选项，被mutable修改是lambda表达式就算没有参数也要写明参数列表，并且可以去掉按值捕获的外部变量的只读（const）属性。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">auto</span> f1 = [=] &#123;<span class="hljs-keyword">return</span> a++; &#125;;              <span class="hljs-comment">// error, 按值捕获外部变量, a是只读的</span><br><span class="hljs-keyword">auto</span> f2 = [=]()<span class="hljs-keyword">mutable</span> &#123;<span class="hljs-keyword">return</span> a++; &#125;;     <span class="hljs-comment">// ok</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="type">int</span> a = <span class="number">0</span>;
+<span class="keyword">auto</span> f1 = [=] &#123;<span class="keyword">return</span> a++; &#125;;              <span class="comment">// error, 按值捕获外部变量, a是只读的</span>
+<span class="keyword">auto</span> f2 = [=]()<span class="keyword">mutable</span> &#123;<span class="keyword">return</span> a++; &#125;;     <span class="comment">// ok</span></code></pre>
 
 
 <p>最后再剖析一下为什么通过值拷贝的方式捕获的外部变量是只读的:</p>
 <p>lambda表达式的类型在C++11中会被看做是一个带operator()的类，即仿函数。<br>按照C++标准，lambda表达式的operator()默认是const的，一个const成员函数是无法修改成员变量值的。<br>mutable选项的作用就在于取消operator()的const属性。</p>
 <p>因为lambda表达式在C++中会被看做是一个仿函数，因此可以使用std::function和std::bind来存储和操作lambda表达式：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;functional&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// 包装可调用函数</span><br>    std::function&lt;<span class="hljs-type">int</span>(<span class="hljs-type">int</span>)&gt; f1 = [](<span class="hljs-type">int</span> a) &#123;<span class="hljs-keyword">return</span> a; &#125;;<br>    <span class="hljs-comment">// 绑定可调用函数</span><br>    std::function&lt;<span class="hljs-type">int</span>(<span class="hljs-type">int</span>)&gt; f2 = <span class="hljs-built_in">bind</span>([](<span class="hljs-type">int</span> a) &#123;<span class="hljs-keyword">return</span> a; &#125;, placeholders::_1);<br><br>    <span class="hljs-comment">// 函数调用</span><br>    cout &lt;&lt; <span class="hljs-built_in">f1</span>(<span class="hljs-number">100</span>) &lt;&lt; endl;<br>    cout &lt;&lt; <span class="hljs-built_in">f2</span>(<span class="hljs-number">200</span>) &lt;&lt; endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> std;
+
+<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span>
+<span class="function"></span>&#123;
+    <span class="comment">// 包装可调用函数</span>
+    std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; f1 = [](<span class="type">int</span> a) &#123;<span class="keyword">return</span> a; &#125;;
+    <span class="comment">// 绑定可调用函数</span>
+    std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; f2 = <span class="built_in">bind</span>([](<span class="type">int</span> a) &#123;<span class="keyword">return</span> a; &#125;, placeholders::_1);
+
+    <span class="comment">// 函数调用</span>
+    cout &lt;&lt; <span class="built_in">f1</span>(<span class="number">100</span>) &lt;&lt; endl;
+    cout &lt;&lt; <span class="built_in">f2</span>(<span class="number">200</span>) &lt;&lt; endl;
+    <span class="keyword">return</span> <span class="number">0</span>;
+
+&#125;</code></pre>
 
 
 
 
 <p>对于没有捕获任何变量的lambda表达式，还可以转换成一个普通的函数指针：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">using</span> func_ptr = <span class="hljs-built_in">int</span>(*)(<span class="hljs-type">int</span>);<br><span class="hljs-comment">// 没有捕获任何外部变量的匿名函数</span><br>func_ptr f = [](<span class="hljs-type">int</span> a)<br>&#123;<br>    <span class="hljs-keyword">return</span> a;  <br>&#125;;<br><span class="hljs-comment">// 函数调用</span><br><span class="hljs-built_in">f</span>(<span class="hljs-number">1314</span>);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="keyword">using</span> func_ptr = <span class="built_in">int</span>(*)(<span class="type">int</span>);
+<span class="comment">// 没有捕获任何外部变量的匿名函数</span>
+func_ptr f = [](<span class="type">int</span> a)
+&#123;
+    <span class="keyword">return</span> a;  
+&#125;;
+<span class="comment">// 函数调用</span>
+<span class="built_in">f</span>(<span class="number">1314</span>);</code></pre>
 
 
 
@@ -1012,6 +1094,16 @@
     /*文章列表背景图*/
     
 
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
     
 </style>
 

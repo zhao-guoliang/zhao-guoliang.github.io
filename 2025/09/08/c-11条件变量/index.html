@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/brown-paper.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -841,7 +841,42 @@
 </li>
 </ol>
 <h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>下面是一个使用条件变量的完整示例，其中 <code>cv.wait()</code> 用于等待生产者线程准备数据：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;queue&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;condition_variable&gt;</span></span><br><br>std::queue&lt;<span class="hljs-type">int</span>&gt; data_queue;<br>std::mutex mtx;<br>std::condition_variable cv;<br><span class="hljs-type">bool</span> ready = <span class="hljs-literal">false</span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">producer</span><span class="hljs-params">()</span> </span>&#123;<br>    std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">seconds</span>(<span class="hljs-number">1</span>)); <span class="hljs-comment">// 模拟生产过程</span><br>    &#123;<br>        <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>        data_queue.<span class="hljs-built_in">push</span>(<span class="hljs-number">42</span>); <span class="hljs-comment">// 放入数据</span><br>        ready = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 标记数据准备好了</span><br>    &#125;<br>    cv.<span class="hljs-built_in">notify_one</span>(); <span class="hljs-comment">// 通知消费者线程</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">consumer</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>    cv.<span class="hljs-built_in">wait</span>(lock, [] &#123; <span class="hljs-keyword">return</span> ready; &#125;); <span class="hljs-comment">// 等待直到数据准备好</span><br>    <span class="hljs-type">int</span> data = data_queue.<span class="hljs-built_in">front</span>(); <span class="hljs-comment">// 获取数据</span><br>    data_queue.<span class="hljs-built_in">pop</span>();<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;Consumed: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::thread <span class="hljs-title">prod</span><span class="hljs-params">(producer)</span></span>;<br>    <span class="hljs-function">std::thread <span class="hljs-title">cons</span><span class="hljs-params">(consumer)</span></span>;<br>    prod.<span class="hljs-built_in">join</span>();<br>    cons.<span class="hljs-built_in">join</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span>
+
+std::queue&lt;<span class="type">int</span>&gt; data_queue;
+std::mutex mtx;
+std::condition_variable cv;
+<span class="type">bool</span> ready = <span class="literal">false</span>;
+
+<span class="function"><span class="type">void</span> <span class="title">producer</span><span class="params">()</span> </span>&#123;
+    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>)); <span class="comment">// 模拟生产过程</span>
+    &#123;
+        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+        data_queue.<span class="built_in">push</span>(<span class="number">42</span>); <span class="comment">// 放入数据</span>
+        ready = <span class="literal">true</span>; <span class="comment">// 标记数据准备好了</span>
+    &#125;
+    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 通知消费者线程</span>
+&#125;
+
+<span class="function"><span class="type">void</span> <span class="title">consumer</span><span class="params">()</span> </span>&#123;
+    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+    cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> ready; &#125;); <span class="comment">// 等待直到数据准备好</span>
+    <span class="type">int</span> data = data_queue.<span class="built_in">front</span>(); <span class="comment">// 获取数据</span>
+    data_queue.<span class="built_in">pop</span>();
+    std::cout &lt;&lt; <span class="string">&quot;Consumed: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;
+&#125;
+
+<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
+    <span class="function">std::thread <span class="title">prod</span><span class="params">(producer)</span></span>;
+    <span class="function">std::thread <span class="title">cons</span><span class="params">(consumer)</span></span>;
+    prod.<span class="built_in">join</span>();
+    cons.<span class="built_in">join</span>();
+    <span class="keyword">return</span> <span class="number">0</span>;
+&#125;</code></pre>
 
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
 <li><code>cv.wait(lock, [] &#123; return ready; &#125;);</code> 是一种等待机制，线程会在 <code>ready</code> 条件满足之前挂起，直到条件变量被通知并条件满足后才会继续执行。</li>
@@ -869,11 +904,76 @@
 </li>
 </ol>
 <h3 id="示例说明"><a href="#示例说明" class="headerlink" title="示例说明"></a>示例说明</h3><p>下面是一个没有检查条件值的例子，展示了为什么检查条件值是重要的：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;condition_variable&gt;</span></span><br><br>std::mutex mtx;<br>std::condition_variable cv;<br><span class="hljs-type">bool</span> ready = <span class="hljs-literal">false</span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">producer</span><span class="hljs-params">()</span> </span>&#123;<br>    std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">seconds</span>(<span class="hljs-number">1</span>)); <span class="hljs-comment">// 模拟生产过程</span><br>    &#123;<br>        <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>        ready = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 标记数据准备好了</span><br>    &#125;<br>    cv.<span class="hljs-built_in">notify_one</span>(); <span class="hljs-comment">// 通知消费者线程</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">consumer</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>    cv.<span class="hljs-built_in">wait</span>(lock); <span class="hljs-comment">// 不检查条件值</span><br>    <span class="hljs-comment">// 由于没有检查条件值，线程可能在条件未满足时继续执行</span><br>    <span class="hljs-keyword">if</span> (ready) &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Condition is met.&quot;</span> &lt;&lt; std::endl;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Condition is not met.&quot;</span> &lt;&lt; std::endl;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::thread <span class="hljs-title">prod</span><span class="hljs-params">(producer)</span></span>;<br>    <span class="hljs-function">std::thread <span class="hljs-title">cons</span><span class="hljs-params">(consumer)</span></span>;<br>    prod.<span class="hljs-built_in">join</span>();<br>    cons.<span class="hljs-built_in">join</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span>
+
+std::mutex mtx;
+std::condition_variable cv;
+<span class="type">bool</span> ready = <span class="literal">false</span>;
+
+<span class="function"><span class="type">void</span> <span class="title">producer</span><span class="params">()</span> </span>&#123;
+    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>)); <span class="comment">// 模拟生产过程</span>
+    &#123;
+        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+        ready = <span class="literal">true</span>; <span class="comment">// 标记数据准备好了</span>
+    &#125;
+    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 通知消费者线程</span>
+&#125;
+
+<span class="function"><span class="type">void</span> <span class="title">consumer</span><span class="params">()</span> </span>&#123;
+    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+    cv.<span class="built_in">wait</span>(lock); <span class="comment">// 不检查条件值</span>
+    <span class="comment">// 由于没有检查条件值，线程可能在条件未满足时继续执行</span>
+    <span class="keyword">if</span> (ready) &#123;
+        std::cout &lt;&lt; <span class="string">&quot;Condition is met.&quot;</span> &lt;&lt; std::endl;
+    &#125; <span class="keyword">else</span> &#123;
+        std::cout &lt;&lt; <span class="string">&quot;Condition is not met.&quot;</span> &lt;&lt; std::endl;
+    &#125;
+&#125;
+
+<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
+    <span class="function">std::thread <span class="title">prod</span><span class="params">(producer)</span></span>;
+    <span class="function">std::thread <span class="title">cons</span><span class="params">(consumer)</span></span>;
+    prod.<span class="built_in">join</span>();
+    cons.<span class="built_in">join</span>();
+    <span class="keyword">return</span> <span class="number">0</span>;
+&#125;</code></pre>
 
 <p>在上面的代码中，<code>cv.wait(lock)</code> 不检查条件值。尽管我们在生产者线程中设置了 <code>ready = true</code> 并通知了条件变量，但消费者线程在 <code>wait</code> 后可能会继续执行而没有检查条件值。这可能会导致错误输出或逻辑不一致。</p>
 <h3 id="正确的做法"><a href="#正确的做法" class="headerlink" title="正确的做法"></a>正确的做法</h3><p>为了确保线程在条件满足时才继续执行，应使用 <code>wait</code> 方法的重载版本，它接受一个条件检查函数。例如：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;condition_variable&gt;</span></span><br><br>std::mutex mtx;<br>std::condition_variable cv;<br><span class="hljs-type">bool</span> ready = <span class="hljs-literal">false</span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">producer</span><span class="hljs-params">()</span> </span>&#123;<br>    std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">seconds</span>(<span class="hljs-number">1</span>)); <span class="hljs-comment">// 模拟生产过程</span><br>    &#123;<br>        <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>        ready = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 标记数据准备好了</span><br>    &#125;<br>    cv.<span class="hljs-built_in">notify_one</span>(); <span class="hljs-comment">// 通知消费者线程</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">consumer</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>    cv.<span class="hljs-built_in">wait</span>(lock, [] &#123; <span class="hljs-keyword">return</span> ready; &#125;); <span class="hljs-comment">// 检查条件值</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;Condition is met.&quot;</span> &lt;&lt; std::endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::thread <span class="hljs-title">prod</span><span class="hljs-params">(producer)</span></span>;<br>    <span class="hljs-function">std::thread <span class="hljs-title">cons</span><span class="hljs-params">(consumer)</span></span>;<br>    prod.<span class="hljs-built_in">join</span>();<br>    cons.<span class="hljs-built_in">join</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span>
+
+std::mutex mtx;
+std::condition_variable cv;
+<span class="type">bool</span> ready = <span class="literal">false</span>;
+
+<span class="function"><span class="type">void</span> <span class="title">producer</span><span class="params">()</span> </span>&#123;
+    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>)); <span class="comment">// 模拟生产过程</span>
+    &#123;
+        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+        ready = <span class="literal">true</span>; <span class="comment">// 标记数据准备好了</span>
+    &#125;
+    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 通知消费者线程</span>
+&#125;
+
+<span class="function"><span class="type">void</span> <span class="title">consumer</span><span class="params">()</span> </span>&#123;
+    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+    cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> ready; &#125;); <span class="comment">// 检查条件值</span>
+    std::cout &lt;&lt; <span class="string">&quot;Condition is met.&quot;</span> &lt;&lt; std::endl;
+&#125;
+
+<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
+    <span class="function">std::thread <span class="title">prod</span><span class="params">(producer)</span></span>;
+    <span class="function">std::thread <span class="title">cons</span><span class="params">(consumer)</span></span>;
+    prod.<span class="built_in">join</span>();
+    cons.<span class="built_in">join</span>();
+    <span class="keyword">return</span> <span class="number">0</span>;
+&#125;</code></pre>
 
 <p>在这个例子中，<code>cv.wait(lock, [] &#123; return ready; &#125;);</code> 检查 <code>ready</code> 条件值，确保只有在条件真正满足时消费者线程才会继续执行。这样可以避免虚假唤醒和其他潜在的同步问题。</p>
 <p>生产者-消费者模型是多线程编程中的经典问题，其主要任务是协调生产者线程和消费者线程，以便在生产和消费之间保持平衡。条件变量（<code>std::condition_variable</code>）是实现这一模型的一个重要工具，因为它提供了一种机制来协调和通知线程何时可以生产或消费数据。</p>
@@ -900,7 +1000,55 @@
 </li>
 </ol>
 <h3 id="生产者-消费者模型示例"><a href="#生产者-消费者模型示例" class="headerlink" title="生产者-消费者模型示例"></a>生产者-消费者模型示例</h3><p>下面是一个使用条件变量的生产者-消费者示例，展示了如何使用条件变量来协调生产者和消费者线程：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;queue&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;condition_variable&gt;</span></span><br><br>std::queue&lt;<span class="hljs-type">int</span>&gt; data_queue; <span class="hljs-comment">// 数据队列</span><br>std::mutex mtx; <span class="hljs-comment">// 互斥量</span><br>std::condition_variable cv; <span class="hljs-comment">// 条件变量</span><br><span class="hljs-type">const</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> max_queue_size = <span class="hljs-number">10</span>; <span class="hljs-comment">// 最大队列大小</span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">producer</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> data = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        &#123;<br>            <span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>            cv.<span class="hljs-built_in">wait</span>(lock, [] &#123; <span class="hljs-keyword">return</span> data_queue.<span class="hljs-built_in">size</span>() &lt; max_queue_size; &#125;); <span class="hljs-comment">// 等待直到有空间</span><br>            data_queue.<span class="hljs-built_in">push</span>(data++); <span class="hljs-comment">// 生产数据</span><br>            std::cout &lt;&lt; <span class="hljs-string">&quot;Produced: &quot;</span> &lt;&lt; data - <span class="hljs-number">1</span> &lt;&lt; std::endl;<br>        &#125;<br>        cv.<span class="hljs-built_in">notify_all</span>(); <span class="hljs-comment">// 通知消费者线程</span><br>        std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">milliseconds</span>(<span class="hljs-number">100</span>)); <span class="hljs-comment">// 模拟生产延迟</span><br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">consumer</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-type">int</span> data;<br>        &#123;<br>            <span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mtx)</span></span>;<br>            cv.<span class="hljs-built_in">wait</span>(lock, [] &#123; <span class="hljs-keyword">return</span> !data_queue.<span class="hljs-built_in">empty</span>(); &#125;); <span class="hljs-comment">// 等待直到有数据</span><br>            data = data_queue.<span class="hljs-built_in">front</span>(); <span class="hljs-comment">// 消费数据</span><br>            data_queue.<span class="hljs-built_in">pop</span>();<br>            std::cout &lt;&lt; <span class="hljs-string">&quot;Consumed: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;<br>        &#125;<br>        cv.<span class="hljs-built_in">notify_all</span>(); <span class="hljs-comment">// 通知生产者线程</span><br>        std::this_thread::<span class="hljs-built_in">sleep_for</span>(std::chrono::<span class="hljs-built_in">milliseconds</span>(<span class="hljs-number">150</span>)); <span class="hljs-comment">// 模拟消费延迟</span><br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::thread <span class="hljs-title">prod_thread</span><span class="hljs-params">(producer)</span></span>;<br>    <span class="hljs-function">std::thread <span class="hljs-title">cons_thread</span><span class="hljs-params">(consumer)</span></span>;<br><br>    prod_thread.<span class="hljs-built_in">join</span>();<br>    cons_thread.<span class="hljs-built_in">join</span>();<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span>
+
+std::queue&lt;<span class="type">int</span>&gt; data_queue; <span class="comment">// 数据队列</span>
+std::mutex mtx; <span class="comment">// 互斥量</span>
+std::condition_variable cv; <span class="comment">// 条件变量</span>
+<span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> max_queue_size = <span class="number">10</span>; <span class="comment">// 最大队列大小</span>
+
+<span class="function"><span class="type">void</span> <span class="title">producer</span><span class="params">()</span> </span>&#123;
+    <span class="type">int</span> data = <span class="number">0</span>;
+    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;
+        &#123;
+            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+            cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> data_queue.<span class="built_in">size</span>() &lt; max_queue_size; &#125;); <span class="comment">// 等待直到有空间</span>
+            data_queue.<span class="built_in">push</span>(data++); <span class="comment">// 生产数据</span>
+            std::cout &lt;&lt; <span class="string">&quot;Produced: &quot;</span> &lt;&lt; data - <span class="number">1</span> &lt;&lt; std::endl;
+        &#125;
+        cv.<span class="built_in">notify_all</span>(); <span class="comment">// 通知消费者线程</span>
+        std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">milliseconds</span>(<span class="number">100</span>)); <span class="comment">// 模拟生产延迟</span>
+    &#125;
+&#125;
+
+<span class="function"><span class="type">void</span> <span class="title">consumer</span><span class="params">()</span> </span>&#123;
+    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;
+        <span class="type">int</span> data;
+        &#123;
+            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;
+            cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> !data_queue.<span class="built_in">empty</span>(); &#125;); <span class="comment">// 等待直到有数据</span>
+            data = data_queue.<span class="built_in">front</span>(); <span class="comment">// 消费数据</span>
+            data_queue.<span class="built_in">pop</span>();
+            std::cout &lt;&lt; <span class="string">&quot;Consumed: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;
+        &#125;
+        cv.<span class="built_in">notify_all</span>(); <span class="comment">// 通知生产者线程</span>
+        std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">milliseconds</span>(<span class="number">150</span>)); <span class="comment">// 模拟消费延迟</span>
+    &#125;
+&#125;
+
+<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;
+    <span class="function">std::thread <span class="title">prod_thread</span><span class="params">(producer)</span></span>;
+    <span class="function">std::thread <span class="title">cons_thread</span><span class="params">(consumer)</span></span>;
+
+    prod_thread.<span class="built_in">join</span>();
+    cons_thread.<span class="built_in">join</span>();
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+&#125;</code></pre>
 
 <h3 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h3><ol>
 <li><p><strong>生产者线程</strong>:</p>
@@ -1097,6 +1245,16 @@
     /*文章列表背景图*/
     
 
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
     
 </style>
 

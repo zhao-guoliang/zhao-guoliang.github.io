@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/brown-paper.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -787,16 +787,49 @@
       
         <p>慢速系统调用（如 <code>read</code>、<code>write</code>、<code>accept</code>、<code>recv</code>、<code>sleep</code> 等）在某些情况下会被信号中断。当这些系统调用在等待某个事件（例如等待输入&#x2F;输出或计时器到期）时，如果接收到一个信号，并且信号处理程序执行完毕后系统调用未完成，系统调用会返回一个错误，并且 <code>errno</code> 会被设置为 <code>EINTR</code>（表示系统调用被中断）。处理这些情况的方式有几种，具体取决于应用程序的需求。</p>
 <h3 id="1-自动重新启动系统调用"><a href="#1-自动重新启动系统调用" class="headerlink" title="1. 自动重新启动系统调用"></a>1. <strong>自动重新启动系统调用</strong></h3><p>   使用 <code>sigaction</code> 设置信号处理函数时，可以指定 <code>SA_RESTART</code> 标志，这会自动重新启动那些可以重新启动的慢速系统调用。当系统调用被信号中断后，内核会在信号处理程序返回后自动重启该系统调用。</p>
-   <figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">sigaction</span> sa;<br>sa.sa_handler = signal_handler;<br>sa.sa_flags = SA_RESTART; <span class="hljs-comment">// 自动重新启动系统调用</span><br><span class="hljs-built_in">sigemptyset</span>(&amp;sa.sa_mask);<br><span class="hljs-keyword">if</span> (<span class="hljs-built_in">sigaction</span>(SIGINT, &amp;sa, <span class="hljs-literal">nullptr</span>) == <span class="hljs-number">-1</span>) &#123;<br>    <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;sigaction&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+   <pre><code class="highlight cpp"><span class="keyword">struct</span> <span class="title class_">sigaction</span> sa;
+sa.sa_handler = signal_handler;
+sa.sa_flags = SA_RESTART; <span class="comment">// 自动重新启动系统调用</span>
+<span class="built_in">sigemptyset</span>(&amp;sa.sa_mask);
+<span class="keyword">if</span> (<span class="built_in">sigaction</span>(SIGINT, &amp;sa, <span class="literal">nullptr</span>) == <span class="number">-1</span>) &#123;
+    <span class="built_in">perror</span>(<span class="string">&quot;sigaction&quot;</span>);
+    <span class="keyword">return</span> <span class="number">1</span>;
+&#125;</code></pre>
 
 <p>   <strong>注意</strong>: 并非所有系统调用都能被自动重启，只有那些被标记为“可以重启”的系统调用（例如 <code>read</code>、<code>write</code> 等）才会自动重新启动。</p>
 <h3 id="2-手动处理-EINTR-错误"><a href="#2-手动处理-EINTR-错误" class="headerlink" title="2. 手动处理 EINTR 错误"></a>2. <strong>手动处理 <code>EINTR</code> 错误</strong></h3><p>   在某些情况下，应用程序可能希望在系统调用被中断后，决定是否重新执行系统调用。为此，你可以手动检查 <code>errno</code> 是否等于 <code>EINTR</code>，并在必要时重新执行该系统调用。</p>
 <p>   这里是一个手动处理 <code>EINTR</code> 错误的示例：</p>
-   <figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">read_data</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> count)</span> </span>&#123;<br>    <span class="hljs-type">ssize_t</span> result;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        result = <span class="hljs-built_in">read</span>(fd, buf, count);<br>        <span class="hljs-keyword">if</span> (result == <span class="hljs-number">-1</span>) &#123;<br>            <span class="hljs-keyword">if</span> (errno == EINTR) &#123;<br>                <span class="hljs-comment">// 系统调用被信号中断，重试</span><br>                <span class="hljs-keyword">continue</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 其他错误，处理或返回</span><br>                <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;read&quot;</span>);<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 成功读取或遇到不可恢复的错误，退出循环</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+   <pre><code class="highlight cpp"><span class="function"><span class="type">ssize_t</span> <span class="title">read_data</span><span class="params">(<span class="type">int</span> fd, <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span> </span>&#123;
+    <span class="type">ssize_t</span> result;
+    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;
+        result = <span class="built_in">read</span>(fd, buf, count);
+        <span class="keyword">if</span> (result == <span class="number">-1</span>) &#123;
+            <span class="keyword">if</span> (errno == EINTR) &#123;
+                <span class="comment">// 系统调用被信号中断，重试</span>
+                <span class="keyword">continue</span>;
+            &#125; <span class="keyword">else</span> &#123;
+                <span class="comment">// 其他错误，处理或返回</span>
+                <span class="built_in">perror</span>(<span class="string">&quot;read&quot;</span>);
+                <span class="keyword">break</span>;
+            &#125;
+        &#125;
+        <span class="keyword">break</span>; <span class="comment">// 成功读取或遇到不可恢复的错误，退出循环</span>
+    &#125;
+    <span class="keyword">return</span> result;
+&#125;</code></pre>
 
 <p>   <strong>这种方法的优点</strong>是你可以在每次中断后决定是否要重新尝试调用。某些情况下，应用程序可能不希望自动重试，例如希望捕获到中断并做一些特殊的处理。</p>
 <h3 id="3-使用非阻塞-I-O"><a href="#3-使用非阻塞-I-O" class="headerlink" title="3. 使用非阻塞 I&#x2F;O"></a>3. <strong>使用非阻塞 I&#x2F;O</strong></h3><p>   在某些场景下，你可以通过将文件描述符设置为非阻塞模式来避免因信号中断而阻塞的系统调用。这样，即使系统调用被信号中断，它也不会导致整个程序阻塞。你可以使用 <code>fcntl</code> 设置文件描述符为非阻塞模式：</p>
-   <figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">int</span> flags = <span class="hljs-built_in">fcntl</span>(fd, F_GETFL, <span class="hljs-number">0</span>);<br><span class="hljs-keyword">if</span> (flags == <span class="hljs-number">-1</span>) &#123;<br>    <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;fcntl&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br><br><span class="hljs-keyword">if</span> (<span class="hljs-built_in">fcntl</span>(fd, F_SETFL, flags | O_NONBLOCK) == <span class="hljs-number">-1</span>) &#123;<br>    <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;fcntl&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+   <pre><code class="highlight cpp"><span class="type">int</span> flags = <span class="built_in">fcntl</span>(fd, F_GETFL, <span class="number">0</span>);
+<span class="keyword">if</span> (flags == <span class="number">-1</span>) &#123;
+    <span class="built_in">perror</span>(<span class="string">&quot;fcntl&quot;</span>);
+    <span class="keyword">return</span> <span class="number">-1</span>;
+&#125;
+
+<span class="keyword">if</span> (<span class="built_in">fcntl</span>(fd, F_SETFL, flags | O_NONBLOCK) == <span class="number">-1</span>) &#123;
+    <span class="built_in">perror</span>(<span class="string">&quot;fcntl&quot;</span>);
+    <span class="keyword">return</span> <span class="number">-1</span>;
+&#125;</code></pre>
 
 <p>   <strong>非阻塞 I&#x2F;O 的缺点</strong>是它可能需要更多的代码来处理部分完成的 I&#x2F;O 操作，并且需要反复检查操作的完成状态。</p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
@@ -985,6 +1018,16 @@
     /*文章列表背景图*/
     
 
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
     
 </style>
 

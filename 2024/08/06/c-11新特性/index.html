@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/brown-paper.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -790,7 +790,7 @@
 <h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><ol>
 <li><p><strong>值初始化</strong></p>
 <p>当使用 <code>int sum&#123;&#125;;</code> 时，变量 <code>sum</code> 被值初始化。对于基本类型（如 <code>int</code>），值初始化将变量初始化为其默认值。在这种情况下，<code>int</code> 类型的变量将被初始化为 <code>0</code>。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">int</span> sum&#123;&#125;;  <span class="hljs-comment">// sum 被初始化为 0</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="type">int</span> sum&#123;&#125;;  <span class="comment">// sum 被初始化为 0</span></code></pre>
 
 <p>这种初始化方式可以确保变量在声明时被初始化为确定的值，防止未初始化的变量导致潜在的错误。</p>
 </li>
@@ -800,7 +800,9 @@
 <li><strong>防止窄化转换</strong>：使用 <code>&#123;&#125;</code> 语法时，如果初始化值的类型不能隐式转换为变量的类型，编译器会报错。例如，<code>int x&#123;3.14&#125;;</code> 会导致编译错误，因为 <code>3.14</code> 是 <code>double</code> 类型，而不能隐式转换为 <code>int</code>。</li>
 <li><strong>统一的初始化方式</strong>：不论是内置类型还是自定义类型（如类和结构体），都可以使用 <code>&#123;&#125;</code> 进行初始化，提供了一致性。</li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">int</span> x&#123;<span class="hljs-number">5</span>&#125;;         <span class="hljs-comment">// 初始化为 5</span><br><span class="hljs-type">double</span> y&#123;<span class="hljs-number">3.14</span>&#125;;   <span class="hljs-comment">// 初始化为 3.14</span><br>std::vector&lt;<span class="hljs-type">int</span>&gt; v&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;; <span class="hljs-comment">// 初始化 std::vector</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="type">int</span> x&#123;<span class="number">5</span>&#125;;         <span class="comment">// 初始化为 5</span>
+<span class="type">double</span> y&#123;<span class="number">3.14</span>&#125;;   <span class="comment">// 初始化为 3.14</span>
+std::vector&lt;<span class="type">int</span>&gt; v&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;; <span class="comment">// 初始化 std::vector</span></code></pre>
 </li>
 <li><p><strong>值初始化 vs. 默认初始化</strong></p>
 <ul>
@@ -991,6 +993,16 @@
     /*文章列表背景图*/
     
 
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
     
 </style>
 

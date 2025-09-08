@@ -23,7 +23,7 @@
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
-<link href="/css/hl_theme/brown-paper.css?v=1.1.0" rel="stylesheet">
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
 
 <link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
 
@@ -789,7 +789,18 @@
 <p>QT程序界面显示中文乱码。</p>
 <p>解决方法：</p>
 <p>在文件开始位置，包含头文件位置，增加：<code>#pragma execution_character_set(&quot;utf-8&quot;)</code></p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;widget.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;QApplication&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> execution_character_set(<span class="hljs-string">&quot;utf-8&quot;</span>)</span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">QApplication <span class="hljs-title">a</span><span class="hljs-params">(argc, argv)</span></span>;<br>    Widget w;<br>    w.<span class="hljs-built_in">setWindowTitle</span>(<span class="hljs-string">&quot;一个窗口&quot;</span>);<br>    w.<span class="hljs-built_in">show</span>();<br>    <span class="hljs-keyword">return</span> a.<span class="hljs-built_in">exec</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight cpp"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;widget.h&quot;</span></span>
+<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span>
+<span class="meta">#<span class="keyword">pragma</span> execution_character_set(<span class="string">&quot;utf-8&quot;</span>)</span>
+
+<span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span>
+<span class="function"></span>&#123;
+    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;
+    Widget w;
+    w.<span class="built_in">setWindowTitle</span>(<span class="string">&quot;一个窗口&quot;</span>);
+    w.<span class="built_in">show</span>();
+    <span class="keyword">return</span> a.<span class="built_in">exec</span>();
+&#125;</code></pre>
 
 
       
@@ -971,6 +982,16 @@
     /*文章列表背景图*/
     
 
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
     
 </style>
 
