@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>fcntl函数 | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="fcntl函数 | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="在 C++11 中，std::condition_variable 的 wait 方法用于使线程在某个条件满足之前等待，并自动释放和重新获得互斥量。下面详细解释 cv.wait(lock, [] &#123; return ready; &#125;); 这行代码的作用和工作原理： cv.wait(lock, [] &#123; return ready; &#125;); 解释 cv.wait(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++11条件变量">
+<meta property="og:url" content="http://example.com/2025/09/08/c-11%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在 C++11 中，std::condition_variable 的 wait 方法用于使线程在某个条件满足之前等待，并自动释放和重新获得互斥量。下面详细解释 cv.wait(lock, [] &#123; return ready; &#125;); 这行代码的作用和工作原理： cv.wait(lock, [] &#123; return ready; &#125;); 解释 cv.wait(">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
+<meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(38)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                
+    <li>
+        <div data-rel="数据结构">
+            
+            数据结构
+            <small>(3)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="C/C++">
+            
+            C/C++
+            <small>(8)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="Linux">
+            
+            Linux
+            <small>(9)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="QT">
+            
+            QT
+            <small>(2)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  site_url"
+               
+               href="/about">About</a>
+        
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="38">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="search shortcut key i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="switch to outline view shortcut key w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="return"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="case sensitive"></i>
+            <i class="iconfont icon-tag" data-title="label"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">outline</div>
+            <i class="iconfont icon-list" data-title="switch to article list"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="All C/C++ "
+           href="/2025/09/08/c-11%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11条件变量">c++11条件变量</span>
+            <span class="post-date" title="2025-09-08 20:43:21">2025/09/08</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2025/09/08/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2025-09-08 20:32:57">2025/09/08</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E2%80%94%E2%80%94QSS%E7%95%8C%E9%9D%A2%E9%A3%8E%E6%A0%BC%E5%88%86%E4%BA%AB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT——QSS界面风格分享">QT——QSS界面风格分享</span>
+            <span class="post-date" title="2024-11-02 17:15:50">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT多线程">QT多线程</span>
+            <span class="post-date" title="2024-11-02 17:15:25">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E9%85%8D%E7%BD%AE%E5%8A%A8%E6%80%81%E5%BA%93%E9%9D%99%E6%80%81%E5%BA%93%E5%A4%B4%E6%96%87%E4%BB%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT配置动态库静态库头文件">QT配置动态库静态库头文件</span>
+            <span class="post-date" title="2024-11-02 17:15:03">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QTest%E6%B5%8B%E8%AF%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QTest测试">QTest测试</span>
+            <span class="post-date" title="2024-11-02 17:14:12">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/Visualstudio%E6%89%93%E5%BC%80qt%E7%95%8C%E9%9D%A2%E9%97%AA%E9%80%80/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Visualstudio打开qt界面闪退">Visualstudio打开qt界面闪退</span>
+            <span class="post-date" title="2024-11-02 17:13:52">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/QT%E7%A8%8B%E5%BA%8F%E6%89%93%E5%8C%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT程序打包">QT程序打包</span>
+            <span class="post-date" title="2024-11-02 17:11:39">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/QT%E7%95%8C%E9%9D%A2%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT中文乱码">QT中文乱码</span>
+            <span class="post-date" title="2024-11-02 16:58:21">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/22/%E3%80%82%E3%80%82%E3%80%82/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="。。。">。。。</span>
+            <span class="post-date" title="2024-08-22 21:41:20">2024/08/22</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/21/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="lambda表达式">lambda表达式</span>
+            <span class="post-date" title="2024-08-21 17:17:25">2024/08/21</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/17/pthread-rwlock-t%E6%9C%AA%E5%AE%9A%E4%B9%89%E9%97%AE%E9%A2%98/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="pthread_rwlock_t未定义问题">pthread_rwlock_t未定义问题</span>
+            <span class="post-date" title="2024-08-17 22:14:38">2024/08/17</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/17/C-100/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C100">C100</span>
+            <span class="post-date" title="2024-08-17 09:53:59">2024/08/17</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/14/linux-gdb/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gdb调试">gdb调试</span>
+            <span class="post-date" title="2024-08-14 21:34:19">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/14/linux-select%E5%92%8Cepoll/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-select和epoll">linux-select和epoll</span>
+            <span class="post-date" title="2024-08-14 21:09:14">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/14/linux-return%E5%92%8Cexit/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="return和exit">return和exit</span>
+            <span class="post-date" title="2024-08-14 10:00:27">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/13/linux-%E6%85%A2%E9%80%9F%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E8%A2%AB%E4%BF%A1%E5%8F%B7%E4%B8%AD%E6%96%AD/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-慢速系统调用被信号中断">linux-慢速系统调用被信号中断</span>
+            <span class="post-date" title="2024-08-13 20:04:15">2024/08/13</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/13/linux-%E4%BD%BF%E7%94%A8SIGCHILD%E4%BF%A1%E5%8F%B7%E5%9B%9E%E6%94%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%A9%BA%E9%97%B4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用SIGCHLD信号回收子进程空间">使用SIGCHLD信号回收子进程空间</span>
+            <span class="post-date" title="2024-08-13 19:43:05">2024/08/13</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/11/linux-sigaction/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sigaction函数">sigaction函数</span>
+            <span class="post-date" title="2024-08-11 22:08:03">2024/08/11</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/10/linux-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-进程间通信">linux-进程间通信</span>
+            <span class="post-date" title="2024-08-10 15:19:29">2024/08/10</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux-fcntl%E5%87%BD%E6%95%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fcntl函数">fcntl函数</span>
+            <span class="post-date" title="2024-08-09 21:43:28">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux%E9%80%92%E5%BD%92%E9%81%8D%E5%8E%86%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%96%87%E4%BB%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux递归遍历目录下文件,并判断文件类型">linux递归遍历目录下文件,并判断文件类型</span>
+            <span class="post-date" title="2024-08-09 21:25:09">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux%E6%89%A9%E5%AE%B9/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="给CentOS7根目录所对应的分区扩容">给CentOS7根目录所对应的分区扩容</span>
+            <span class="post-date" title="2024-08-09 19:34:20">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/08/google%E6%90%9C%E7%B4%A2%E8%AF%AD%E6%B3%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="google搜索语法">google搜索语法</span>
+            <span class="post-date" title="2024-08-08 23:45:44">2024/08/08</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/08/B-%E6%A0%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="B+树">B+树</span>
+            <span class="post-date" title="2024-08-08 16:50:41">2024/08/08</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/07/%E8%B7%B3%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="跳表">跳表</span>
+            <span class="post-date" title="2024-08-07 10:27:53">2024/08/07</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/06/c-11%E6%96%B0%E7%89%B9%E6%80%A7/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11新特性">c++11新特性</span>
+            <span class="post-date" title="2024-08-06 18:50:24">2024/08/06</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/c-11%E7%B1%BB%E5%9E%8B%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11类型强制转换">c++11类型强制转换</span>
+            <span class="post-date" title="2024-08-05 21:53:46">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/c-%E7%9A%84const/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++的const">c++的const</span>
+            <span class="post-date" title="2024-08-05 21:49:15">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/05/cmp%E6%8A%A5%E9%94%99/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="cmp报错">cmp报错</span>
+            <span class="post-date" title="2024-08-05 21:30:27">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/C-11%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++11智能指针">C++11智能指针</span>
+            <span class="post-date" title="2024-08-05 16:58:34">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/29/%E6%B6%88%E6%81%AF%E9%AA%8C%E8%AF%81%E7%A0%81%E5%92%8C%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="消息验证码和数字签名">消息验证码和数字签名</span>
+            <span class="post-date" title="2024-07-29 20:02:34">2024/07/29</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="设计模式">设计模式</span>
+            <span class="post-date" title="2024-07-29 10:29:57">2024/07/29</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/26/Linux%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux配置环境变量">Linux配置环境变量</span>
+            <span class="post-date" title="2024-07-26 20:05:24">2024/07/26</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/05/06/c-11%E7%BA%BF%E7%A8%8B%E5%BA%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11线程库">c++11线程库</span>
+            <span class="post-date" title="2024-05-06 18:32:10">2024/05/06</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/05/06/c-11%E4%BA%92%E6%96%A5%E4%BD%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11互斥体">c++11互斥体</span>
+            <span class="post-date" title="2024-05-06 17:46:53">2024/05/06</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/03/02/redis/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="redis数据库存取结构体数组数据">redis数据库存取结构体数组数据</span>
+            <span class="post-date" title="2024-03-02 18:23:42">2024/03/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/02/01/127%E6%8A%A5%E9%94%99/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="解决spawn-fcgi:child exited with:127报错">解决spawn-fcgi:child exited with:127报错</span>
+            <span class="post-date" title="2024-02-01 13:53:22">2024/02/01</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="Toggle full screen shortcut key s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-linux-fcntl函数" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">fcntl函数</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Linux">Linux</a>
+            
+        </span>
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2024-08-09 21:44:30'>2024-08-09 21:43</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#fcntl-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-text">fcntl 函数原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">常见用法示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="toc-text">1. 复制文件描述符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E8%8E%B7%E5%8F%96%E5%92%8C%E8%AE%BE%E7%BD%AE%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E6%A0%87%E5%BF%97"><span class="toc-text">2. 获取和设置文件描述符标志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%8E%B7%E5%8F%96%E5%92%8C%E8%AE%BE%E7%BD%AE%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81%E6%A0%87%E5%BF%97"><span class="toc-text">3. 获取和设置文件状态标志</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-text">错误处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><code>fcntl</code> 是一个在 Unix 和 Linux 系统中广泛使用的系统调用，用于操作文件描述符。这个函数提供了一种灵活的方式来控制和管理文件描述符的各种属性和行为。</p>
+<h3 id="fcntl-函数原型"><a href="#fcntl-函数原型" class="headerlink" title="fcntl 函数原型"></a><code>fcntl</code> 函数原型</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">fcntl</span><span class="params">(<span class="type">int</span> fd, <span class="type">int</span> cmd, ... <span class="comment">/* arg */</span> )</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><ol>
+<li><p><strong><code>fd</code></strong>: 文件描述符，是一个正整数，表示一个打开的文件或设备。</p>
+</li>
+<li><p><strong><code>cmd</code></strong>: 操作命令，用于指定要执行的操作类型。常见的命令有以下几种：</p>
+<ul>
+<li><strong><code>F_DUPFD</code></strong>: 复制文件描述符，返回一个新的文件描述符，该文件描述符最小为 <code>arg</code>。</li>
+<li><strong><code>F_GETFD</code></strong>: 获取文件描述符标志（file descriptor flags），返回 <code>FD_CLOEXEC</code> 的状态。</li>
+<li><strong><code>F_SETFD</code></strong>: 设置文件描述符标志，可以用来设置 <code>FD_CLOEXEC</code>。</li>
+<li><strong><code>F_GETFL</code></strong>: 获取文件状态标志（file status flags），例如 <code>O_RDONLY</code>、<code>O_NONBLOCK</code> 等。</li>
+<li><strong><code>F_SETFL</code></strong>: 设置文件状态标志，可以设置文件的访问模式（例如将文件设置为非阻塞模式 <code>O_NONBLOCK</code>）。</li>
+<li><strong><code>F_GETLK</code></strong>: 获取文件锁的状态。</li>
+<li><strong><code>F_SETLK</code></strong>: 设置或清除文件锁，不会阻塞。如果不能获取锁，将返回错误。</li>
+<li><strong><code>F_SETLKW</code></strong>: 与 <code>F_SETLK</code> 类似，但会阻塞直到锁可以被设置。</li>
+<li><strong><code>F_GETOWN</code></strong>: 获取文件的所有者（通常用于异步 I&#x2F;O 操作的通知）。</li>
+<li><strong><code>F_SETOWN</code></strong>: 设置文件的所有者。</li>
+</ul>
+</li>
+<li><p><strong><code>arg</code></strong>: 可选参数，取决于 <code>cmd</code> 的值。有些命令需要传递一个整型值或指向结构的指针作为 <code>arg</code>。</p>
+</li>
+</ol>
+<h3 id="常见用法示例"><a href="#常见用法示例" class="headerlink" title="常见用法示例"></a>常见用法示例</h3><h4 id="1-复制文件描述符"><a href="#1-复制文件描述符" class="headerlink" title="1. 复制文件描述符"></a>1. 复制文件描述符</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> new_fd = fcntl(fd, F_DUPFD, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>复制 <code>fd</code> 并返回一个新的文件描述符 <code>new_fd</code>，两个描述符共享同一个打开的文件&#x2F;设备。</p>
+<h4 id="2-获取和设置文件描述符标志"><a href="#2-获取和设置文件描述符标志" class="headerlink" title="2. 获取和设置文件描述符标志"></a>2. 获取和设置文件描述符标志</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> flags = fcntl(fd, F_GETFD); <span class="comment">// 获取标志</span></span><br><span class="line">fcntl(fd, F_SETFD, flags | FD_CLOEXEC); <span class="comment">// 设置 FD_CLOEXEC 标志</span></span><br></pre></td></tr></table></figure>
+<p>这段代码在执行 exec 系列函数时关闭文件描述符。</p>
+<h4 id="3-获取和设置文件状态标志"><a href="#3-获取和设置文件状态标志" class="headerlink" title="3. 获取和设置文件状态标志"></a>3. 获取和设置文件状态标志</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> flags = fcntl(fd, F_GETFL); <span class="comment">// 获取当前的文件状态标志</span></span><br><span class="line">fcntl(fd, F_SETFL, flags | O_NONBLOCK); <span class="comment">// 将文件设置为非阻塞模式</span></span><br></pre></td></tr></table></figure>
+<p>这段代码将文件描述符设置为非阻塞模式。</p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p><code>fcntl</code> 调用成功时返回正数（通常是新的文件描述符或命令的结果），如果失败则返回 <code>-1</code> 并设置 <code>errno</code> 以指示错误类型。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>fcntl</code> 是一个非常强大和灵活的系统调用，它可以用来管理文件描述符的各种属性，包括文件锁、非阻塞模式、文件描述符的复制等。它在系统编程中广泛用于控制和管理文件 I&#x2F;O 操作。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">💰</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 Yelog
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="Toggle full screen shortcut key s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>Help us with donation</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">alipay</label></span><span><label><input type="radio" name="pay" value="weixin">weixin</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
+    
+</style>
+
+
+
+
+
+
+
+</html>

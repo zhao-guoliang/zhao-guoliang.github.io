@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>linux-select和epoll | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="linux-select和epoll | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="在 C++11 中，std::condition_variable 的 wait 方法用于使线程在某个条件满足之前等待，并自动释放和重新获得互斥量。下面详细解释 cv.wait(lock, [] &#123; return ready; &#125;); 这行代码的作用和工作原理： cv.wait(lock, [] &#123; return ready; &#125;); 解释 cv.wait(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++11条件变量">
+<meta property="og:url" content="http://example.com/2025/09/08/c-11%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在 C++11 中，std::condition_variable 的 wait 方法用于使线程在某个条件满足之前等待，并自动释放和重新获得互斥量。下面详细解释 cv.wait(lock, [] &#123; return ready; &#125;); 这行代码的作用和工作原理： cv.wait(lock, [] &#123; return ready; &#125;); 解释 cv.wait(">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
+<meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(38)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                
+    <li>
+        <div data-rel="数据结构">
+            
+            数据结构
+            <small>(3)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="C/C++">
+            
+            C/C++
+            <small>(8)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="Linux">
+            
+            Linux
+            <small>(9)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="QT">
+            
+            QT
+            <small>(2)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  site_url"
+               
+               href="/about">About</a>
+        
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="38">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="search shortcut key i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="switch to outline view shortcut key w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="return"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="case sensitive"></i>
+            <i class="iconfont icon-tag" data-title="label"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">outline</div>
+            <i class="iconfont icon-list" data-title="switch to article list"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="All C/C++ "
+           href="/2025/09/08/c-11%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11条件变量">c++11条件变量</span>
+            <span class="post-date" title="2025-09-08 20:43:21">2025/09/08</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2025/09/08/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2025-09-08 20:32:57">2025/09/08</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E2%80%94%E2%80%94QSS%E7%95%8C%E9%9D%A2%E9%A3%8E%E6%A0%BC%E5%88%86%E4%BA%AB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT——QSS界面风格分享">QT——QSS界面风格分享</span>
+            <span class="post-date" title="2024-11-02 17:15:50">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT多线程">QT多线程</span>
+            <span class="post-date" title="2024-11-02 17:15:25">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E9%85%8D%E7%BD%AE%E5%8A%A8%E6%80%81%E5%BA%93%E9%9D%99%E6%80%81%E5%BA%93%E5%A4%B4%E6%96%87%E4%BB%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT配置动态库静态库头文件">QT配置动态库静态库头文件</span>
+            <span class="post-date" title="2024-11-02 17:15:03">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QTest%E6%B5%8B%E8%AF%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QTest测试">QTest测试</span>
+            <span class="post-date" title="2024-11-02 17:14:12">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/Visualstudio%E6%89%93%E5%BC%80qt%E7%95%8C%E9%9D%A2%E9%97%AA%E9%80%80/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Visualstudio打开qt界面闪退">Visualstudio打开qt界面闪退</span>
+            <span class="post-date" title="2024-11-02 17:13:52">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/QT%E7%A8%8B%E5%BA%8F%E6%89%93%E5%8C%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT程序打包">QT程序打包</span>
+            <span class="post-date" title="2024-11-02 17:11:39">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/QT%E7%95%8C%E9%9D%A2%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT中文乱码">QT中文乱码</span>
+            <span class="post-date" title="2024-11-02 16:58:21">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/22/%E3%80%82%E3%80%82%E3%80%82/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="。。。">。。。</span>
+            <span class="post-date" title="2024-08-22 21:41:20">2024/08/22</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/21/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="lambda表达式">lambda表达式</span>
+            <span class="post-date" title="2024-08-21 17:17:25">2024/08/21</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/17/pthread-rwlock-t%E6%9C%AA%E5%AE%9A%E4%B9%89%E9%97%AE%E9%A2%98/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="pthread_rwlock_t未定义问题">pthread_rwlock_t未定义问题</span>
+            <span class="post-date" title="2024-08-17 22:14:38">2024/08/17</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/17/C-100/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C100">C100</span>
+            <span class="post-date" title="2024-08-17 09:53:59">2024/08/17</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/14/linux-gdb/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gdb调试">gdb调试</span>
+            <span class="post-date" title="2024-08-14 21:34:19">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/14/linux-select%E5%92%8Cepoll/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-select和epoll">linux-select和epoll</span>
+            <span class="post-date" title="2024-08-14 21:09:14">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/14/linux-return%E5%92%8Cexit/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="return和exit">return和exit</span>
+            <span class="post-date" title="2024-08-14 10:00:27">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/13/linux-%E6%85%A2%E9%80%9F%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E8%A2%AB%E4%BF%A1%E5%8F%B7%E4%B8%AD%E6%96%AD/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-慢速系统调用被信号中断">linux-慢速系统调用被信号中断</span>
+            <span class="post-date" title="2024-08-13 20:04:15">2024/08/13</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/13/linux-%E4%BD%BF%E7%94%A8SIGCHILD%E4%BF%A1%E5%8F%B7%E5%9B%9E%E6%94%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%A9%BA%E9%97%B4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用SIGCHLD信号回收子进程空间">使用SIGCHLD信号回收子进程空间</span>
+            <span class="post-date" title="2024-08-13 19:43:05">2024/08/13</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/11/linux-sigaction/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sigaction函数">sigaction函数</span>
+            <span class="post-date" title="2024-08-11 22:08:03">2024/08/11</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/10/linux-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-进程间通信">linux-进程间通信</span>
+            <span class="post-date" title="2024-08-10 15:19:29">2024/08/10</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux-fcntl%E5%87%BD%E6%95%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fcntl函数">fcntl函数</span>
+            <span class="post-date" title="2024-08-09 21:43:28">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux%E9%80%92%E5%BD%92%E9%81%8D%E5%8E%86%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%96%87%E4%BB%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux递归遍历目录下文件,并判断文件类型">linux递归遍历目录下文件,并判断文件类型</span>
+            <span class="post-date" title="2024-08-09 21:25:09">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux%E6%89%A9%E5%AE%B9/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="给CentOS7根目录所对应的分区扩容">给CentOS7根目录所对应的分区扩容</span>
+            <span class="post-date" title="2024-08-09 19:34:20">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/08/google%E6%90%9C%E7%B4%A2%E8%AF%AD%E6%B3%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="google搜索语法">google搜索语法</span>
+            <span class="post-date" title="2024-08-08 23:45:44">2024/08/08</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/08/B-%E6%A0%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="B+树">B+树</span>
+            <span class="post-date" title="2024-08-08 16:50:41">2024/08/08</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/07/%E8%B7%B3%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="跳表">跳表</span>
+            <span class="post-date" title="2024-08-07 10:27:53">2024/08/07</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/06/c-11%E6%96%B0%E7%89%B9%E6%80%A7/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11新特性">c++11新特性</span>
+            <span class="post-date" title="2024-08-06 18:50:24">2024/08/06</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/c-11%E7%B1%BB%E5%9E%8B%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11类型强制转换">c++11类型强制转换</span>
+            <span class="post-date" title="2024-08-05 21:53:46">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/c-%E7%9A%84const/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++的const">c++的const</span>
+            <span class="post-date" title="2024-08-05 21:49:15">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/05/cmp%E6%8A%A5%E9%94%99/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="cmp报错">cmp报错</span>
+            <span class="post-date" title="2024-08-05 21:30:27">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/C-11%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++11智能指针">C++11智能指针</span>
+            <span class="post-date" title="2024-08-05 16:58:34">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/29/%E6%B6%88%E6%81%AF%E9%AA%8C%E8%AF%81%E7%A0%81%E5%92%8C%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="消息验证码和数字签名">消息验证码和数字签名</span>
+            <span class="post-date" title="2024-07-29 20:02:34">2024/07/29</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="设计模式">设计模式</span>
+            <span class="post-date" title="2024-07-29 10:29:57">2024/07/29</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/26/Linux%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux配置环境变量">Linux配置环境变量</span>
+            <span class="post-date" title="2024-07-26 20:05:24">2024/07/26</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/05/06/c-11%E7%BA%BF%E7%A8%8B%E5%BA%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11线程库">c++11线程库</span>
+            <span class="post-date" title="2024-05-06 18:32:10">2024/05/06</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/05/06/c-11%E4%BA%92%E6%96%A5%E4%BD%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11互斥体">c++11互斥体</span>
+            <span class="post-date" title="2024-05-06 17:46:53">2024/05/06</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/03/02/redis/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="redis数据库存取结构体数组数据">redis数据库存取结构体数组数据</span>
+            <span class="post-date" title="2024-03-02 18:23:42">2024/03/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/02/01/127%E6%8A%A5%E9%94%99/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="解决spawn-fcgi:child exited with:127报错">解决spawn-fcgi:child exited with:127报错</span>
+            <span class="post-date" title="2024-02-01 13:53:22">2024/02/01</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="Toggle full screen shortcut key s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-linux-select和epoll" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">linux-select和epoll</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2024-08-14 21:31:10'>2024-08-14 21:09</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%8A%80%E6%9C%AF"><span class="toc-text">具体技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-text">2. 函数原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">3. 使用步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">4. 简单示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">6. 优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-1"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-text">2. 函数原型与使用步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-epoll-create"><span class="toc-text">2.1 epoll_create</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-epoll-ctl"><span class="toc-text">2.2 epoll_ctl</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-epoll-wait"><span class="toc-text">2.3 epoll_wait</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-text">3. 工作模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-epoll-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">4. epoll 的优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="toc-text">5. 常见应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-text">6. 示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-epoll-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-text">7. epoll 的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>IO多路复用技术主要为了解决在网络编程中处理大量并发连接时遇到的问题。下面是IO多路复用技术所解决的关键问题：</p>
+<ol>
+<li><p><strong>性能瓶颈</strong>：</p>
+<ul>
+<li>在传统的网络编程模型中，每个客户端连接都需要一个单独的线程或进程来处理。</li>
+<li>当客户端连接数量非常大时，这种模型会导致大量的线程或进程开销，包括上下文切换和内存管理等。</li>
+</ul>
+</li>
+<li><p><strong>资源管理</strong>：</p>
+<ul>
+<li>传统模型中的每个连接都需要一个线程或进程，这会导致较高的内存和CPU使用率。</li>
+<li>在多路复用模型中，可以使用较少的线程或进程来处理大量的连接，从而更有效地利用资源。</li>
+</ul>
+</li>
+<li><p><strong>并发连接的处理</strong>：</p>
+<ul>
+<li>传统模型难以有效处理大量并发连接，因为每个连接都需要独立的线程或进程。</li>
+<li>多路复用技术允许一个线程或进程同时监听多个文件描述符（通常是网络套接字），从而可以同时处理多个连接。</li>
+</ul>
+</li>
+<li><p><strong>避免轮询</strong>：</p>
+<ul>
+<li>在没有多路复用的情况下，服务器可能需要不断轮询每个连接的状态，以检查是否有数据可以读取或写入。</li>
+<li>多路复用技术允许服务器等待一组文件描述符中的任意一个或多个变为就绪状态，而不是不断轮询。</li>
+</ul>
+</li>
+<li><p><strong>提高性能</strong>：</p>
+<ul>
+<li>通过减少上下文切换和轮询，多路复用技术可以显著提高服务器处理大量并发连接的能力。</li>
+<li>这种方法可以降低CPU和内存的使用率，提高系统的响应时间和吞吐量。</li>
+</ul>
+</li>
+</ol>
+<h3 id="具体技术"><a href="#具体技术" class="headerlink" title="具体技术"></a>具体技术</h3><p>一些常用的IO多路复用技术包括：</p>
+<ul>
+<li><p><strong><code>select</code></strong>：</p>
+<ul>
+<li><code>select</code> 是最早的多路复用技术之一，它允许同时监听多个文件描述符。</li>
+<li>它有一个限制，即最多只能监听 FD_SETSIZE 个文件描述符（通常是 1024）。</li>
+</ul>
+</li>
+<li><p><strong><code>poll</code></strong>：</p>
+<ul>
+<li><code>poll</code> 类似于 <code>select</code>，但是没有文件描述符数量的限制。</li>
+<li><code>poll</code> 仍然使用轮询的方式检查文件描述符的状态，但它的效率通常高于 <code>select</code>。</li>
+</ul>
+</li>
+<li><p><strong><code>epoll</code></strong>：</p>
+<ul>
+<li><code>epoll</code> 是 Linux 内核中的一种高效的多路复用技术。</li>
+<li>它使用边缘触发（edge-triggered）和水平触发（level-triggered）模式来提高性能。</li>
+<li><code>epoll</code> 使用红黑树等数据结构来高效地管理文件描述符。</li>
+</ul>
+</li>
+<li><p><strong><code>kqueue</code></strong>：</p>
+<ul>
+<li><code>kqueue</code> 是 BSD 系统中的多路复用技术。</li>
+<li>它提供了类似于 <code>epoll</code> 的功能，但在 BSD 系统中更为常见。</li>
+</ul>
+</li>
+</ul>
+<p><code>select</code> 是一种用于多路复用 I&#x2F;O 操作的系统调用，在处理多个文件描述符时非常有用。它允许程序在等待多个文件描述符的状态变化时阻塞，从而在网络编程和并发 I&#x2F;O 操作中广泛应用。</p>
+<h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. <strong>基本概念</strong></h3><ul>
+<li><strong>多路复用 I&#x2F;O</strong>: 在网络编程中，通常需要同时处理多个 I&#x2F;O 操作，如监视多个套接字的状态。<code>select</code> 允许程序同时等待多个文件描述符的状态变化，如读、写或异常情况，而不必为每个文件描述符创建一个线程。</li>
+<li><strong>文件描述符（File Descriptor）</strong>: 在UNIX&#x2F;Linux系统中，文件描述符是一个整数，表示打开的文件、套接字或其他I&#x2F;O资源。</li>
+</ul>
+<h3 id="2-函数原型"><a href="#2-函数原型" class="headerlink" title="2. 函数原型"></a>2. <strong>函数原型</strong></h3>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">select</span><span class="params">(<span class="type">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *timeout)</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>nfds</code>: 需要监视的文件描述符的数量。通常设置为所有文件描述符中最大值加1。</p>
+</li>
+<li><p><code>readfds</code>: 指向 <code>fd_set</code> 结构体的指针，用于监视可读的文件描述符集合。</p>
+</li>
+<li><p><code>writefds</code>: 指向 <code>fd_set</code> 结构体的指针，用于监视可写的文件描述符集合。</p>
+</li>
+<li><p><code>exceptfds</code>: 指向 <code>fd_set</code> 结构体的指针，用于监视异常状态的文件描述符集合。</p>
+</li>
+<li><p><code>timeout</code>: 指向 <code>timeval</code> 结构体的指针，表示等待的超时时间。如果 <code>timeout</code> 为 <code>NULL</code>，则 <code>select</code> 会无限期地阻塞直到有文件描述符发生变化。</p>
+</li>
+<li><p><strong>返回值</strong>:</p>
+<ul>
+<li>成功时，返回值为文件描述符集合中发生变化的文件描述符数量。</li>
+<li>如果超时返回，返回值为 0。</li>
+<li>如果出错，返回值为 -1，且 <code>errno</code> 被设置为适当的错误代码。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-使用步骤"><a href="#3-使用步骤" class="headerlink" title="3. 使用步骤"></a>3. <strong>使用步骤</strong></h3><ol>
+<li><strong>设置文件描述符集</strong>: 使用 <code>FD_ZERO</code> 清空文件描述符集，然后使用 <code>FD_SET</code> 将需要监视的文件描述符加入集合中。</li>
+<li><strong>调用 <code>select</code></strong>: 传递文件描述符集合，<code>select</code> 将阻塞直到至少一个文件描述符的状态发生变化，或超时时间到。</li>
+<li><strong>检查结果</strong>: 使用 <code>FD_ISSET</code> 检查哪些文件描述符发生了状态变化，然后处理相应的 I&#x2F;O 操作。</li>
+<li><strong>处理超时</strong>: 如果 <code>select</code> 返回 0，表示已超时，可以根据应用需要处理这个情况。</li>
+</ol>
+<h3 id="4-简单示例"><a href="#4-简单示例" class="headerlink" title="4. 简单示例"></a>4. <strong>简单示例</strong></h3><p>   下面是一个简单的例子，演示如何使用 <code>select</code> 监视标准输入和一个套接字的可读性：<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    fd_set readfds;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">timeout</span>;</span></span><br><span class="line">    <span class="type">int</span> retval;</span><br><span class="line"></span><br><span class="line">    FD_ZERO(&amp;readfds);  <span class="comment">// 清空文件描述符集</span></span><br><span class="line">    FD_SET(STDIN_FILENO, &amp;readfds);  <span class="comment">// 监视标准输入</span></span><br><span class="line"></span><br><span class="line">    timeout.tv_sec = <span class="number">5</span>;  <span class="comment">// 超时等待5秒</span></span><br><span class="line">    timeout.tv_usec = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    retval = select(STDIN_FILENO + <span class="number">1</span>, &amp;readfds, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;timeout);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (retval == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;select()&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (retval) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Data is available now.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (FD_ISSET(STDIN_FILENO, &amp;readfds)) &#123;</span><br><span class="line">            <span class="type">char</span> buffer[<span class="number">100</span>];</span><br><span class="line">            read(STDIN_FILENO, buffer, <span class="keyword">sizeof</span>(buffer));</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Input: %s\n&quot;</span>, buffer);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;No data within five seconds.\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-常见应用场景"><a href="#5-常见应用场景" class="headerlink" title="5. 常见应用场景"></a>5. <strong>常见应用场景</strong></h3><ul>
+<li><strong>网络服务器</strong>: 在服务器端同时处理多个客户端连接时，<code>select</code> 可以用于监视多个客户端套接字的读写状态。</li>
+<li><strong>并发 I&#x2F;O</strong>: 在不使用多线程或多进程的情况下，<code>select</code> 可以帮助处理多个 I&#x2F;O 设备，如文件、套接字或管道。</li>
+<li><strong>超时控制</strong>: <code>select</code> 允许程序在等待 I&#x2F;O 操作时设置超时，以避免长时间阻塞。</li>
+</ul>
+<h3 id="6-优缺点"><a href="#6-优缺点" class="headerlink" title="6. 优缺点"></a>6. <strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>:<ul>
+<li>简单易用，跨平台支持良好。</li>
+<li>无需创建大量线程或进程，节省资源。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>:<ul>
+<li><code>select</code> 的性能在大量文件描述符（通常超过1024个）时会显著下降。</li>
+<li>每次调用 <code>select</code> 都需要重新设置文件描述符集合，效率较低。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>select</code> 是一个在网络编程和并发 I&#x2F;O 中广泛使用的系统调用，通过监视多个文件描述符的状态变化来实现 I&#x2F;O 多路复用。虽然 <code>select</code> 在处理少量文件描述符时表现良好，但在处理大量文件描述符时性能较差，因此在现代应用中，<code>poll</code> 和 <code>epoll</code> 等替代方案可能更合适。</p>
+<p><code>epoll</code> 是 Linux 内核提供的一种高效的 I&#x2F;O 多路复用机制，相比于传统的 <code>select</code> 和 <code>poll</code>，<code>epoll</code> 能够更高效地处理大量并发连接，尤其是在处理大规模网络服务时表现出色。</p>
+<h3 id="1-基本概念-1"><a href="#1-基本概念-1" class="headerlink" title="1. 基本概念"></a>1. <strong>基本概念</strong></h3><ul>
+<li><strong>I&#x2F;O 多路复用</strong>: 允许程序同时监视多个文件描述符的 I&#x2F;O 事件，并在任一文件描述符就绪时进行相应的处理。这种机制在网络服务器、事件驱动的应用程序中广泛使用。</li>
+<li><strong>epoll</strong>: <code>epoll</code> 是 Linux 提供的 I&#x2F;O 多路复用接口，具有高效的事件通知机制，通过减少内核与用户空间的切换次数以及优化数据结构来提升性能。</li>
+</ul>
+<h3 id="2-函数原型与使用步骤"><a href="#2-函数原型与使用步骤" class="headerlink" title="2. 函数原型与使用步骤"></a>2. <strong>函数原型与使用步骤</strong></h3><p>   <code>epoll</code> 主要包括三个系统调用：<code>epoll_create</code>、<code>epoll_ctl</code> 和 <code>epoll_wait</code>。</p>
+<h4 id="2-1-epoll-create"><a href="#2-1-epoll-create" class="headerlink" title="2.1 epoll_create"></a>2.1 <strong>epoll_create</strong></h4>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>参数</strong>:<ul>
+<li><code>size</code>: 在 Linux 2.6.8 之前，此参数用于建议内核初始分配的空间大小。现在已被忽略，但必须大于零。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>:<ul>
+<li>成功时返回 <code>epoll</code> 实例的文件描述符。</li>
+<li>失败时返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+</li>
+<li><strong>说明</strong>: <code>epoll_create</code> 用于创建一个 <code>epoll</code> 实例，该实例用于管理将要监视的文件描述符集合。</li>
+</ul>
+<p>   <strong>示例</strong>:<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> epfd = epoll_create(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">if</span> (epfd == <span class="number">-1</span>) &#123;</span><br><span class="line">    perror(<span class="string">&quot;epoll_create&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-2-epoll-ctl"><a href="#2-2-epoll-ctl" class="headerlink" title="2.2 epoll_ctl"></a>2.2 <strong>epoll_ctl</strong></h4>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>参数</strong>:<ul>
+<li><code>epfd</code>: <code>epoll</code> 实例的文件描述符，由 <code>epoll_create</code> 返回。</li>
+<li><code>op</code>: 表示操作类型，包括 <code>EPOLL_CTL_ADD</code>（注册新的 fd 到 epoll）、<code>EPOLL_CTL_MOD</code>（修改已注册 fd 的监听事件）、<code>EPOLL_CTL_DEL</code>（从 epoll 中删除一个 fd）。</li>
+<li><code>fd</code>: 需要操作的文件描述符。</li>
+<li><code>event</code>: 指向 <code>epoll_event</code> 结构体的指针，描述监听的事件类型和关联的数据。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>:<ul>
+<li>成功时返回 0。</li>
+<li>失败时返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+</li>
+</ul>
+<p>   <strong>示例</strong>:<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>;</span></span><br><span class="line">event.events = EPOLLIN;  <span class="comment">// 监听可读事件</span></span><br><span class="line">event.data.fd = sockfd;  <span class="comment">// 设置事件关联的文件描述符</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &amp;event) == <span class="number">-1</span>) &#123;</span><br><span class="line">    perror(<span class="string">&quot;epoll_ctl: sockfd&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-3-epoll-wait"><a href="#2-3-epoll-wait" class="headerlink" title="2.3 epoll_wait"></a>2.3 <strong>epoll_wait</strong></h4>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_wait</span><span class="params">(<span class="type">int</span> epfd, <span class="keyword">struct</span> epoll_event *events, <span class="type">int</span> maxevents, <span class="type">int</span> timeout)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>参数</strong>:<ul>
+<li><code>epfd</code>: <code>epoll</code> 实例的文件描述符。</li>
+<li><code>events</code>: 用于存储从内核得到的事件的数组。</li>
+<li><code>maxevents</code>: 每次调用最多返回的事件数。这个值必须大于 0。</li>
+<li><code>timeout</code>: 等待事件发生的超时时间（毫秒）。-1 表示无限等待，0 表示立即返回。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>:<ul>
+<li>成功时返回就绪的文件描述符数量。</li>
+<li>超时返回 0。</li>
+<li>失败时返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+</li>
+</ul>
+<p>   <strong>示例</strong>:<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">events</span>[<span class="title">MAX_EVENTS</span>];</span></span><br><span class="line"><span class="type">int</span> nfds = epoll_wait(epfd, events, MAX_EVENTS, <span class="number">-1</span>);</span><br><span class="line"><span class="keyword">if</span> (nfds == <span class="number">-1</span>) &#123;</span><br><span class="line">    perror(<span class="string">&quot;epoll_wait&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> n = <span class="number">0</span>; n &lt; nfds; ++n) &#123;</span><br><span class="line">    <span class="keyword">if</span> (events[n].events &amp; EPOLLIN) &#123;</span><br><span class="line">        <span class="comment">// 处理可读事件</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-工作模式"><a href="#3-工作模式" class="headerlink" title="3. 工作模式"></a>3. <strong>工作模式</strong></h3><p>   <code>epoll</code> 具有两种主要的工作模式：</p>
+<ul>
+<li><strong>水平触发（Level Triggered, LT）</strong>:<ul>
+<li>默认工作模式，类似于 <code>select</code> 和 <code>poll</code> 的行为。当文件描述符就绪时，会持续通知，直到事件被处理。</li>
+</ul>
+</li>
+<li><strong>边缘触发（Edge Triggered, ET）</strong>:<ul>
+<li>高效模式，仅当文件描述符从未就绪变为就绪时才通知一次。通常配合非阻塞 I&#x2F;O 使用，避免因未处理的事件导致高 CPU 占用。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-epoll-的优点"><a href="#4-epoll-的优点" class="headerlink" title="4. epoll 的优点"></a>4. <strong>epoll 的优点</strong></h3><ul>
+<li><strong>高效性</strong>: <code>epoll</code> 内部使用红黑树（用于管理监控的文件描述符）和链表（用于保存待处理的就绪文件描述符），相比 <code>select</code> 和 <code>poll</code>，无需每次调用时重新遍历文件描述符列表，因此在处理大量文件描述符时性能表现更优。</li>
+<li><strong>不受文件描述符限制</strong>: <code>select</code> 有最大文件描述符数量限制，而 <code>epoll</code> 没有这一限制，因此更适合高并发场景。</li>
+<li><strong>事件驱动机制</strong>: 边缘触发模式下，<code>epoll</code> 仅在状态发生变化时通知用户，减少不必要的系统调用。</li>
+</ul>
+<h3 id="5-常见应用场景-1"><a href="#5-常见应用场景-1" class="headerlink" title="5. 常见应用场景"></a>5. <strong>常见应用场景</strong></h3><ul>
+<li><strong>高并发网络服务器</strong>: <code>epoll</code> 常用于构建高性能网络服务器，如 Nginx、Redis 等，能高效处理大量并发连接。</li>
+<li><strong>事件驱动的系统</strong>: 如消息队列、事件通知系统等，需要高效监控大量 I&#x2F;O 事件的场景。</li>
+</ul>
+<h3 id="6-示例代码"><a href="#6-示例代码" class="headerlink" title="6. 示例代码"></a>6. <strong>示例代码</strong></h3><p>   下面是一个使用 <code>epoll</code> 的简单服务器示例，展示如何使用 <code>epoll</code> 处理多个客户端连接的 I&#x2F;O 事件：<br>   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_EVENTS 10</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PORT 8080</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> server_fd, new_socket, epfd;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">address</span>;</span></span><br><span class="line">    <span class="type">int</span> addrlen = <span class="keyword">sizeof</span>(address);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>, <span class="title">events</span>[<span class="title">MAX_EVENTS</span>];</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建监听套接字</span></span><br><span class="line">    <span class="keyword">if</span> ((server_fd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>)) == <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;socket failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    address.sin_family = AF_INET;</span><br><span class="line">    address.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line">    address.sin_port = htons(PORT);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (bind(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address, <span class="keyword">sizeof</span>(address)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;bind failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (listen(server_fd, <span class="number">3</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;listen&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 epoll 实例</span></span><br><span class="line">    epfd = epoll_create(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (epfd == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;epoll_create1&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 server_fd 添加到 epoll 实例中</span></span><br><span class="line">    event.events = EPOLLIN;</span><br><span class="line">    event.data.fd = server_fd;</span><br><span class="line">    <span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, server_fd, &amp;event) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;epoll_ctl&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 循环等待事件</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">int</span> nfds = epoll_wait(epfd, events, MAX_EVENTS, <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nfds == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;epoll_wait&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> n = <span class="number">0</span>; n &lt; nfds; ++n) &#123;</span><br><span class="line">            <span class="keyword">if</span> (events[n].data.fd == server_fd) &#123;</span><br><span class="line">                <span class="comment">// 接受新的连接</span></span><br><span class="line">                new_socket = accept(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address, (<span class="type">socklen_t</span>*)&amp;addrlen);</span><br><span class="line">                <span class="keyword">if</span> (new_socket == <span class="number">-1</span>) &#123;</span><br><span class="line">                    perror(<span class="string">&quot;accept&quot;</span>);</span><br><span class="line">                    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">                &#125;</span><br><span class="line">                event.events = EPOLLIN;</span><br><span class="line">                event.data.fd = new_socket;</span><br><span class="line">                <span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, new_socket, &amp;event) == <span class="number">-1</span>) &#123;</span><br><span class="line">                    perror(<span class="string">&quot;epoll_ctl&quot;</span>);</span><br><span class="line">                    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 处理已连接的客户端数据</span></span><br><span class="line">                <span class="type">char</span> buffer[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">                <span class="type">int</span> bytes_read = read(events[n].data.fd, buffer, <span class="keyword">sizeof</span>(buffer));</span><br><span class="line">                <span class="keyword">if</span> (bytes_read == <span class="number">-1</span>) &#123;</span><br><span class="line">                    perror(<span class="string">&quot;read&quot;</span>);</span><br><span class="line">                    close(events[n].data.fd);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bytes_read == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// 客户端断开连接</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                    close(events[n].data.fd);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">&quot;Received: %s\n&quot;</span>, buffer);</span><br><span class="line">                    <span class="comment">// 回送数据</span></span><br><span class="line">                    write(events[n].data.fd, buffer, bytes_read);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(server_fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="7-epoll-的缺点"><a href="#7-epoll-的缺点" class="headerlink" title="7. epoll 的缺点"></a>7. <strong>epoll 的缺点</strong></h3><ul>
+<li><strong>仅支持 Linux</strong>: <code>epoll</code> 是 Linux 特有的系统调用，因此在跨平台开发中需要考虑兼容性问题。</li>
+<li><strong>复杂度较高</strong>: 相较于 <code>select</code>，<code>epoll</code> 的 API 使用稍复杂，特别是在处理边缘触发模式时，需要开发者更加细致地处理 I&#x2F;O 事件。</li>
+</ul>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>epoll</code> 是 Linux 上高效的 I&#x2F;O 多路复用机制，特别适合处理大量并发连接的网络服务。通过减少系统调用和优化数据结构，<code>epoll</code> 提供了比传统的 <code>select</code> 和 <code>poll</code> 更高的性能，是现代高性能网络服务器和事件驱动系统的核心技术之一。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">💰</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 Yelog
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="Toggle full screen shortcut key s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>Help us with donation</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">alipay</label></span><span><label><input type="radio" name="pay" value="weixin">weixin</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
+    
+</style>
+
+
+
+
+
+
+
+</html>

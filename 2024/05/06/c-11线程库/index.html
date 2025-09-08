@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>c++11线程库 | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="c++11线程库 | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="在 C++11 中，std::condition_variable 的 wait 方法用于使线程在某个条件满足之前等待，并自动释放和重新获得互斥量。下面详细解释 cv.wait(lock, [] &#123; return ready; &#125;); 这行代码的作用和工作原理： cv.wait(lock, [] &#123; return ready; &#125;); 解释 cv.wait(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++11条件变量">
+<meta property="og:url" content="http://example.com/2025/09/08/c-11%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在 C++11 中，std::condition_variable 的 wait 方法用于使线程在某个条件满足之前等待，并自动释放和重新获得互斥量。下面详细解释 cv.wait(lock, [] &#123; return ready; &#125;); 这行代码的作用和工作原理： cv.wait(lock, [] &#123; return ready; &#125;); 解释 cv.wait(">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-09-08T12:43:21.321Z">
+<meta property="article:modified_time" content="2025-09-08T10:48:50.915Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="facebook"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-facebook"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+    
+        
+            <a title="instagram"
+               href="https://www.facebook.com/faker.tops"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-instagram"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="reddit"
+               href="https://www.reddit.com/user/yelog/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-reddit"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="weibo"
+               href="http://weibo.com/u/2307534817"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-weibo"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/ff56736de7cf"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="zhihu"
+               href="https://www.zhihu.com/people/jaytp/activities"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-zhihu"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="oschina"
+               href="https://my.oschina.net/yelog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-oschina"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+    
+        
+            <a title="email"
+               href="mailto:jaytp@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="kugou"
+               href="https://www.kugou.com/"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-kugou"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="neteasemusic"
+               href="https://music.163.com/#/user/home?id=88151013"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-neteasemusic"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(38)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                
+    <li>
+        <div data-rel="数据结构">
+            
+            数据结构
+            <small>(3)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="C/C++">
+            
+            C/C++
+            <small>(8)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="Linux">
+            
+            Linux
+            <small>(9)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+        
+            
+                
+    <li>
+        <div data-rel="QT">
+            
+            QT
+            <small>(2)</small>
+        </div>
+        
+    </li>
+
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  site_url"
+               
+               href="/about">About</a>
+        
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="38">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="search shortcut key i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="switch to outline view shortcut key w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="return"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="case sensitive"></i>
+            <i class="iconfont icon-tag" data-title="label"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">outline</div>
+            <i class="iconfont icon-list" data-title="switch to article list"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="All C/C++ "
+           href="/2025/09/08/c-11%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11条件变量">c++11条件变量</span>
+            <span class="post-date" title="2025-09-08 20:43:21">2025/09/08</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2025/09/08/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2025-09-08 20:32:57">2025/09/08</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E2%80%94%E2%80%94QSS%E7%95%8C%E9%9D%A2%E9%A3%8E%E6%A0%BC%E5%88%86%E4%BA%AB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT——QSS界面风格分享">QT——QSS界面风格分享</span>
+            <span class="post-date" title="2024-11-02 17:15:50">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT多线程">QT多线程</span>
+            <span class="post-date" title="2024-11-02 17:15:25">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QT%E9%85%8D%E7%BD%AE%E5%8A%A8%E6%80%81%E5%BA%93%E9%9D%99%E6%80%81%E5%BA%93%E5%A4%B4%E6%96%87%E4%BB%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT配置动态库静态库头文件">QT配置动态库静态库头文件</span>
+            <span class="post-date" title="2024-11-02 17:15:03">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/QTest%E6%B5%8B%E8%AF%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QTest测试">QTest测试</span>
+            <span class="post-date" title="2024-11-02 17:14:12">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/11/02/Visualstudio%E6%89%93%E5%BC%80qt%E7%95%8C%E9%9D%A2%E9%97%AA%E9%80%80/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Visualstudio打开qt界面闪退">Visualstudio打开qt界面闪退</span>
+            <span class="post-date" title="2024-11-02 17:13:52">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/QT%E7%A8%8B%E5%BA%8F%E6%89%93%E5%8C%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT程序打包">QT程序打包</span>
+            <span class="post-date" title="2024-11-02 17:11:39">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All QT "
+           href="/2024/11/02/QT%E7%95%8C%E9%9D%A2%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="QT中文乱码">QT中文乱码</span>
+            <span class="post-date" title="2024-11-02 16:58:21">2024/11/02</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/22/%E3%80%82%E3%80%82%E3%80%82/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="。。。">。。。</span>
+            <span class="post-date" title="2024-08-22 21:41:20">2024/08/22</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/21/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="lambda表达式">lambda表达式</span>
+            <span class="post-date" title="2024-08-21 17:17:25">2024/08/21</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/17/pthread-rwlock-t%E6%9C%AA%E5%AE%9A%E4%B9%89%E9%97%AE%E9%A2%98/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="pthread_rwlock_t未定义问题">pthread_rwlock_t未定义问题</span>
+            <span class="post-date" title="2024-08-17 22:14:38">2024/08/17</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/17/C-100/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C100">C100</span>
+            <span class="post-date" title="2024-08-17 09:53:59">2024/08/17</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/14/linux-gdb/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gdb调试">gdb调试</span>
+            <span class="post-date" title="2024-08-14 21:34:19">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/14/linux-select%E5%92%8Cepoll/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-select和epoll">linux-select和epoll</span>
+            <span class="post-date" title="2024-08-14 21:09:14">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/14/linux-return%E5%92%8Cexit/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="return和exit">return和exit</span>
+            <span class="post-date" title="2024-08-14 10:00:27">2024/08/14</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/13/linux-%E6%85%A2%E9%80%9F%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E8%A2%AB%E4%BF%A1%E5%8F%B7%E4%B8%AD%E6%96%AD/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-慢速系统调用被信号中断">linux-慢速系统调用被信号中断</span>
+            <span class="post-date" title="2024-08-13 20:04:15">2024/08/13</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/13/linux-%E4%BD%BF%E7%94%A8SIGCHILD%E4%BF%A1%E5%8F%B7%E5%9B%9E%E6%94%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%A9%BA%E9%97%B4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用SIGCHLD信号回收子进程空间">使用SIGCHLD信号回收子进程空间</span>
+            <span class="post-date" title="2024-08-13 19:43:05">2024/08/13</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/11/linux-sigaction/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sigaction函数">sigaction函数</span>
+            <span class="post-date" title="2024-08-11 22:08:03">2024/08/11</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/10/linux-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux-进程间通信">linux-进程间通信</span>
+            <span class="post-date" title="2024-08-10 15:19:29">2024/08/10</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux-fcntl%E5%87%BD%E6%95%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fcntl函数">fcntl函数</span>
+            <span class="post-date" title="2024-08-09 21:43:28">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux%E9%80%92%E5%BD%92%E9%81%8D%E5%8E%86%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%96%87%E4%BB%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux递归遍历目录下文件,并判断文件类型">linux递归遍历目录下文件,并判断文件类型</span>
+            <span class="post-date" title="2024-08-09 21:25:09">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All Linux "
+           href="/2024/08/09/linux%E6%89%A9%E5%AE%B9/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="给CentOS7根目录所对应的分区扩容">给CentOS7根目录所对应的分区扩容</span>
+            <span class="post-date" title="2024-08-09 19:34:20">2024/08/09</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/08/google%E6%90%9C%E7%B4%A2%E8%AF%AD%E6%B3%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="google搜索语法">google搜索语法</span>
+            <span class="post-date" title="2024-08-08 23:45:44">2024/08/08</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/08/B-%E6%A0%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="B+树">B+树</span>
+            <span class="post-date" title="2024-08-08 16:50:41">2024/08/08</span>
+        </a>
+        
+        
+        <a  class="All 数据结构 "
+           href="/2024/08/07/%E8%B7%B3%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="跳表">跳表</span>
+            <span class="post-date" title="2024-08-07 10:27:53">2024/08/07</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/06/c-11%E6%96%B0%E7%89%B9%E6%80%A7/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11新特性">c++11新特性</span>
+            <span class="post-date" title="2024-08-06 18:50:24">2024/08/06</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/c-11%E7%B1%BB%E5%9E%8B%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11类型强制转换">c++11类型强制转换</span>
+            <span class="post-date" title="2024-08-05 21:53:46">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/c-%E7%9A%84const/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++的const">c++的const</span>
+            <span class="post-date" title="2024-08-05 21:49:15">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/08/05/cmp%E6%8A%A5%E9%94%99/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="cmp报错">cmp报错</span>
+            <span class="post-date" title="2024-08-05 21:30:27">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/08/05/C-11%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="C++11智能指针">C++11智能指针</span>
+            <span class="post-date" title="2024-08-05 16:58:34">2024/08/05</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/29/%E6%B6%88%E6%81%AF%E9%AA%8C%E8%AF%81%E7%A0%81%E5%92%8C%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="消息验证码和数字签名">消息验证码和数字签名</span>
+            <span class="post-date" title="2024-07-29 20:02:34">2024/07/29</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="设计模式">设计模式</span>
+            <span class="post-date" title="2024-07-29 10:29:57">2024/07/29</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/07/26/Linux%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Linux配置环境变量">Linux配置环境变量</span>
+            <span class="post-date" title="2024-07-26 20:05:24">2024/07/26</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/05/06/c-11%E7%BA%BF%E7%A8%8B%E5%BA%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11线程库">c++11线程库</span>
+            <span class="post-date" title="2024-05-06 18:32:10">2024/05/06</span>
+        </a>
+        
+        
+        <a  class="All C/C++ "
+           href="/2024/05/06/c-11%E4%BA%92%E6%96%A5%E4%BD%93/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="c++11互斥体">c++11互斥体</span>
+            <span class="post-date" title="2024-05-06 17:46:53">2024/05/06</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/03/02/redis/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="redis数据库存取结构体数组数据">redis数据库存取结构体数组数据</span>
+            <span class="post-date" title="2024-03-02 18:23:42">2024/03/02</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2024/02/01/127%E6%8A%A5%E9%94%99/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="解决spawn-fcgi:child exited with:127报错">解决spawn-fcgi:child exited with:127报错</span>
+            <span class="post-date" title="2024-02-01 13:53:22">2024/02/01</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="Toggle full screen shortcut key s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-c-11线程库" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">c++11线程库</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="C/C++">C/C++</a>
+            
+        </span>
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2024-11-02 17:22:54'>2024-05-06 18:32</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-std-thread"><span class="toc-text">1. std::thread</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B"><span class="toc-text">创建线程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-std-this-thread"><span class="toc-text">2. std::this_thread</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD"><span class="toc-text">常用功能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-text">1. 函数原型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="toc-text">2. 工作机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">3. 使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-text">4. 示例代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">5. 注意事项</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-std-future-%E5%92%8C-std-promise"><span class="toc-text">3. std::future 和 std::promise</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#std-promise-%E5%92%8C-std-future"><span class="toc-text">std::promise 和 std::future</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="toc-text">代码解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-std-async"><span class="toc-text">4. std::async</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-std-async"><span class="toc-text">使用 std::async</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E9%87%8A"><span class="toc-text">代码解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BA%E5%88%AB"><span class="toc-text">区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-3"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#std-thread-%E5%92%8C-std-async%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="toc-text">std::thread 和 std::async区别：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#std-thread"><span class="toc-text">std::thread</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#std-async"><span class="toc-text">std::async</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB"><span class="toc-text">主要区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-4"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-std-atomic"><span class="toc-text">5. std::atomic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-std-atomic"><span class="toc-text">使用 std::atomic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-text">原子操作的常用方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-5"><span class="toc-text">总结</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-std-thread"><a href="#1-std-thread" class="headerlink" title="1. std::thread"></a>1. <code>std::thread</code></h2><p><code>std::thread</code> 类用于创建和管理线程。每个 <code>std::thread</code> 对象表示一个线程，能够执行任何可调用的对象。</p>
+<h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><ul>
+<li><p><strong>构造函数</strong>：创建线程并执行指定的函数或可调用对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_message</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; message &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(print_message, <span class="string">&quot;Hello from thread!&quot;</span>)</span></span>; <span class="comment">// 创建线程并传递参数</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程完成</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>join()</code> 和 <code>detach()</code></strong>：</p>
+<ul>
+<li><strong><code>join()</code></strong>：等待线程执行完成。主线程会阻塞，直到 <code>join()</code> 的线程完成。</li>
+<li><strong><code>detach()</code></strong>：将线程分离，让它在后台继续运行，不会阻塞主线程。如果线程对象超出作用域，分离线程的资源会被自动释放，但主线程不会等待它完成。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::thread <span class="title">t</span><span class="params">(print_message, <span class="string">&quot;Hello from detached thread!&quot;</span>)</span></span>;</span><br><span class="line">t.<span class="built_in">detach</span>(); <span class="comment">// 让线程在后台运行</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2-std-this-thread"><a href="#2-std-this-thread" class="headerlink" title="2. std::this_thread"></a>2. <code>std::this_thread</code></h2><p><code>std::this_thread</code> 提供了与当前线程相关的功能。</p>
+<h3 id="常用功能"><a href="#常用功能" class="headerlink" title="常用功能"></a>常用功能</h3><ul>
+<li><p><strong><code>std::this_thread::sleep_for()</code></strong>：让当前线程休眠指定的时间段。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>)); <span class="comment">// 休眠 2 秒</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>std::this_thread::sleep_until()</code></strong>：让当前线程休眠直到指定的时间点。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> wake_up_time = std::chrono::steady_clock::<span class="built_in">now</span>() + std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>);</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_until</span>(wake_up_time); <span class="comment">// 休眠直到指定时间点</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>std::this_thread::get_id()</code></strong>：获取当前线程的 ID。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Current thread ID: &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ul>
+<li><p><code>std::this_thread::yield()</code> 是 C++11 引入的一种函数，用于在多线程程序中使当前线程自愿让出 CPU 时间，以便其他线程可以执行。这是一个简洁而有效的方法，用于实现线程的协作和调度，尤其是在涉及线程优先级和负载均衡时。</p>
+<h4 id="1-函数原型"><a href="#1-函数原型" class="headerlink" title="1. 函数原型"></a>1. 函数原型</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">yield</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>std::this_thread::yield()</code></strong>：使当前线程让出 CPU 时间，将其从运行状态转变为就绪状态，让调度器有机会安排其他线程运行。</li>
+</ul>
+<h4 id="2-工作机制"><a href="#2-工作机制" class="headerlink" title="2. 工作机制"></a>2. 工作机制</h4><ul>
+<li><p><strong>让出 CPU</strong>：调用 <code>std::this_thread::yield()</code> 让当前线程放弃它的剩余时间片，从而允许其他线程（包括优先级较高的线程或同等优先级的线程）获得 CPU 时间。线程在调用 <code>yield</code> 后会回到就绪队列等待重新调度。</p>
+</li>
+<li><p><strong>调度行为</strong>：<code>yield</code> 的具体行为依赖于操作系统和线程调度策略。在某些操作系统中，<code>yield</code> 可能不会立即让当前线程放弃 CPU 时间，而是在当前时间片结束时调度其他线程。在其他系统中，<code>yield</code> 可能会更快地将当前线程移到就绪队列中。</p>
+</li>
+</ul>
+<h4 id="3-使用场景"><a href="#3-使用场景" class="headerlink" title="3. 使用场景"></a>3. 使用场景</h4><ul>
+<li><p><strong>避免忙等待</strong>：在某些多线程应用中，线程可能需要等待某些条件的改变。在这种情况下，使用 <code>std::this_thread::yield()</code> 可以避免忙等待（即不断循环检查条件），从而降低 CPU 使用率并允许其他线程运行。</p>
+</li>
+<li><p><strong>线程协作</strong>：当线程间需要协调工作时，<code>yield</code> 可以让线程主动让出控制权，从而允许其他线程执行某些操作，尤其是在没有严格的优先级要求时。</p>
+</li>
+<li><p><strong>测试和调试</strong>：在调试多线程应用时，<code>yield</code> 可以帮助模拟不同的线程调度情况，观察系统的行为和性能。</p>
+</li>
+</ul>
+<h4 id="4-示例代码"><a href="#4-示例代码" class="headerlink" title="4. 示例代码"></a>4. 示例代码</h4><p>下面的示例展示了如何使用 <code>std::this_thread::yield</code> 来实现简单的线程协作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal">false</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (!flag.<span class="built_in">load</span>()) &#123;</span><br><span class="line">        std::this_thread::<span class="built_in">yield</span>(); <span class="comment">// 让出 CPU 时间</span></span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread 1 finished&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>)); <span class="comment">// 模拟工作</span></span><br><span class="line">    flag.<span class="built_in">store</span>(<span class="literal">true</span>);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread 2 finished&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(thread1)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(thread2)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个示例中：</p>
+<ul>
+<li><code>thread1</code> 线程会在 <code>flag</code> 为 <code>false</code> 时不断调用 <code>std::this_thread::yield()</code>，让出 CPU 时间。</li>
+<li><code>thread2</code> 线程在睡眠一秒后设置 <code>flag</code> 为 <code>true</code>，使 <code>thread1</code> 能够继续执行。</li>
+</ul>
+<h4 id="5-注意事项"><a href="#5-注意事项" class="headerlink" title="5. 注意事项"></a>5. 注意事项</h4><ul>
+<li><p><strong>性能影响</strong>：<code>yield</code> 的使用可能会影响性能，特别是在高负载或高频率调用时。需要在合适的场景下使用，以避免不必要的性能开销。</p>
+</li>
+<li><p><strong>操作系统依赖</strong>：<code>yield</code> 的行为依赖于底层操作系统的线程调度实现，因此不同操作系统可能会有不同的行为表现。</p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>std::this_thread::yield</code> 是一个用于线程协作和调度的有用工具，使当前线程主动让出 CPU 时间，从而允许其他线程执行。它在多线程程序中能够有效地避免忙等待、实现线程协作，并帮助调试和测试。正确使用 <code>yield</code> 可以提高线程间的协调性，但也需要注意它对性能的潜在影响。</p>
+</li>
+</ul>
+<h2 id="3-std-future-和-std-promise"><a href="#3-std-future-和-std-promise" class="headerlink" title="3. std::future 和 std::promise"></a>3. <code>std::future</code> 和 <code>std::promise</code></h2><p><code>std::future</code> 和 <code>std::promise</code> 用于异步操作的结果传递和同步。</p>
+<h3 id="std-promise-和-std-future"><a href="#std-promise-和-std-future" class="headerlink" title="std::promise 和 std::future"></a><code>std::promise</code> 和 <code>std::future</code></h3><ul>
+<li><p><strong><code>std::promise</code></strong>：用于设置一个值或异常，供其他线程通过 <code>std::future</code> 获取。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">produce</span><span class="params">(std::promise&lt;<span class="type">int</span>&gt;&amp;&amp; prom)</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    prom.<span class="built_in">set_value</span>(<span class="number">42</span>); <span class="comment">// 设置结果值</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::promise&lt;<span class="type">int</span>&gt; prom;</span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = prom.<span class="built_in">get_future</span>(); <span class="comment">// 获取 future 对象</span></span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(produce, std::move(prom))</span></span>; <span class="comment">// 将 promise 移动到线程</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span></span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这段代码演示了如何使用 <code>std::promise</code> 和 <code>std::future</code> 在多线程程序中传递结果。以下是对这段代码的详细解释：</p>
+<h3 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h3><ol>
+<li><p><strong>创建 <code>std::promise</code> 对象</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::promise&lt;<span class="type">int</span>&gt; prom;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::promise&lt;int&gt;</code> 用于在线程之间传递结果。它允许一个线程设置一个值，另一个线程获取这个值。</p>
+</li>
+<li><p><strong>获取 <code>std::future</code> 对象</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::future&lt;<span class="type">int</span>&gt; fut = prom.<span class="built_in">get_future</span>();</span><br></pre></td></tr></table></figure>
+
+<p>从 <code>std::promise</code> 对象中获取 <code>std::future</code> 对象。<code>std::future</code> 用于异步获取 <code>std::promise</code> 设置的值。</p>
+</li>
+<li><p><strong>将 <code>std::promise</code> 移动到线程中</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::thread <span class="title">t</span><span class="params">(produce, std::move(prom))</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::promise</code> 对象通过 <code>std::move</code> 被移动到新线程中执行。移动是必须的，因为 <code>std::promise</code> 对象在线程间传递时不支持拷贝。</p>
+</li>
+<li><p><strong>在新线程中设置值</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">produce</span><span class="params">(std::promise&lt;<span class="type">int</span>&gt;&amp;&amp; prom)</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    prom.<span class="built_in">set_value</span>(<span class="number">42</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>produce</code> 函数模拟一个耗时操作（通过 <code>std::this_thread::sleep_for</code>），然后使用 <code>prom.set_value(42)</code> 设置 <code>std::promise</code> 的值。这个值将被传递到 <code>std::future</code> 中。</p>
+</li>
+<li><p><strong>获取结果并输出</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<p><code>fut.get()</code> 阻塞当前线程，直到 <code>std::promise</code> 设置的值可用。<code>fut.get()</code> 返回这个值，并输出到控制台。</p>
+</li>
+<li><p><strong>等待线程完成</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t.<span class="built_in">join</span>();</span><br></pre></td></tr></table></figure>
+
+<p><code>t.join()</code> 等待 <code>produce</code> 线程完成执行，确保程序在退出前 <code>produce</code> 线程已经执行完毕。</p>
+</li>
+</ol>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>这段代码演示了如何使用 <code>std::promise</code> 和 <code>std::future</code> 来实现线程间的结果传递：</p>
+<ul>
+<li><code>std::promise</code> 用于设置一个值。</li>
+<li><code>std::future</code> 用于获取这个值。</li>
+<li>通过 <code>std::move</code> 将 <code>std::promise</code> 移动到线程中进行设置。</li>
+<li>使用 <code>fut.get()</code> 获取结果并输出。</li>
+</ul>
+<p>这种方式在处理异步操作和线程间的结果传递时非常有用。</p>
+<ul>
+<li><p><strong><code>std::future</code></strong>：用于获取异步操作的结果。可以通过 <code>get()</code> 方法获取结果，或者使用 <code>wait()</code> 和 <code>wait_for()</code> 等方法等待结果的到来。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value); <span class="comment">// 异步计算</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="4-std-async"><a href="#4-std-async" class="headerlink" title="4. std::async"></a>4. <code>std::async</code></h2><p><code>std::async</code> 用于启动一个异步任务并返回 <code>std::future</code> 对象，可以用于获取异步操作的结果。</p>
+<h3 id="使用-std-async"><a href="#使用-std-async" class="headerlink" title="使用 std::async"></a>使用 <code>std::async</code></h3><ul>
+<li><p><strong><code>std::launch::async</code></strong>：强制异步执行。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value); <span class="comment">// 异步计算</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码演示了如何在 C++ 中让程序在后台异步地执行任务，并在稍后的时间获取任务的结果。我们将任务分配给一个后台线程去处理，而主线程则可以继续执行其他操作。</p>
+<h3 id="代码解释"><a href="#代码解释" class="headerlink" title="代码解释"></a>代码解释</h3><ol>
+<li><p><strong>定义任务</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里定义了一个函数 <code>compute_value</code>，它模拟一个耗时的计算过程。函数内部使用 <code>std::this_thread::sleep_for</code> 暂停 1 秒钟，然后返回一个固定的结果 <code>42</code>。</li>
+</ul>
+</li>
+<li><p><strong>启动异步任务</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这一行代码的作用是启动一个异步任务。<code>std::async</code> 函数会创建一个后台线程来执行 <code>compute_value</code> 函数。这意味着 <code>compute_value</code> 函数会在后台运行，而不会阻塞主线程。</li>
+<li><code>std::future&lt;int&gt; fut</code> 是用来接收这个任务的结果的。它提供了一个机制来检查任务是否完成，并获取计算结果。</li>
+</ul>
+</li>
+<li><p><strong>继续执行其他操作</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在任务运行时，主线程会继续执行其他操作。在这个例子中，它输出一条消息，表明程序正在等待计算结果。</li>
+</ul>
+</li>
+<li><p><strong>获取并显示结果</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>fut.get()</code> 会阻塞主线程，直到后台任务完成并返回结果。它从后台线程获取计算结果并输出。</li>
+<li>由于 <code>compute_value</code> 函数总是返回 <code>42</code>，所以这里输出的结果是 <code>42</code>。</li>
+</ul>
+</li>
+<li><p><strong>结束程序</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>程序的主函数结束，返回 <code>0</code> 表示程序成功执行。</li>
+</ul>
+</li>
+</ol>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>异步任务</strong>：使用 <code>std::async</code> 启动一个后台线程来执行计算任务。</li>
+<li><strong>获取结果</strong>：通过 <code>std::future</code> 对象 <code>fut</code> 获取异步计算的结果。</li>
+<li><strong>主线程</strong>：在后台线程执行任务时，主线程可以继续进行其他操作。</li>
+</ul>
+<p>这样，你的程序可以同时进行计算和执行其他操作，提高了效率和响应性。</p>
+</li>
+<li><p><strong><code>std::launch::deferred</code></strong>：推迟执行，直到 <code>get()</code> 或 <code>wait()</code> 被调用。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Computing...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::deferred, compute_value); <span class="comment">// 推迟执行</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Waiting for result...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 执行并获取结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><ol>
+<li><p><strong>执行时机</strong></p>
+<ul>
+<li><p><strong><code>std::launch::async</code></strong>: </p>
+<ul>
+<li>使用 <code>std::launch::async</code> 启动的任务会立即在一个新的线程中异步执行。</li>
+<li>任务会在后台线程中运行，主线程可以继续执行其他操作，直到任务完成或被 <code>fut.get()</code> 阻塞等待结果。</li>
+<li>在上述代码中，<code>compute_value</code> 会在后台线程中运行，主线程会立即输出 <code>&quot;Waiting for result...&quot;</code>。</li>
+</ul>
+</li>
+<li><p><strong><code>std::launch::deferred</code></strong>:</p>
+<ul>
+<li>使用 <code>std::launch::deferred</code> 启动的任务会被推迟到调用 <code>fut.get()</code> 时才执行。</li>
+<li>任务不会在后台线程中立即执行，而是在调用 <code>fut.get()</code> 时在主线程中执行。</li>
+<li>在上述代码中，主线程首先输出 <code>&quot;Waiting for result...&quot;</code>，然后调用 <code>fut.get()</code> 时才开始执行 <code>compute_value</code>，并输出 <code>&quot;Computing...&quot;</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>线程使用</strong></p>
+<ul>
+<li><p><strong><code>std::launch::async</code></strong>:</p>
+<ul>
+<li>使用新的线程来执行任务，可能会使用额外的线程资源和上下文切换开销。</li>
+</ul>
+</li>
+<li><p><strong><code>std::launch::deferred</code></strong>:</p>
+<ul>
+<li>不会创建新线程，任务在调用 <code>fut.get()</code> 时由当前线程（主线程）执行，这样可以节省线程创建的开销。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>适用场景</strong></p>
+<ul>
+<li><p><strong><code>std::launch::async</code></strong>:</p>
+<ul>
+<li>适用于需要并行处理、后台计算或需要更高响应性场景。任务在后台线程中运行，可以充分利用多核处理器的优势。</li>
+</ul>
+</li>
+<li><p><strong><code>std::launch::deferred</code></strong>:</p>
+<ul>
+<li>适用于任务可能不一定需要执行的情况，或者希望延迟任务执行直到需要结果时。避免了不必要的计算开销。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong><code>std::launch::async</code></strong>：立即在后台线程中异步执行任务，适用于需要并发计算的情况。</li>
+<li><strong><code>std::launch::deferred</code></strong>：推迟任务执行，直到调用 <code>fut.get()</code> 时才执行，适用于计算可能不一定需要的情况或希望延迟计算的场景。</li>
+</ul>
+<p>这两个选项提供了不同的任务执行策略，可以根据实际需求选择合适的方式来优化程序的性能和资源使用。</p>
+<h4 id="std-thread-和-std-async区别："><a href="#std-thread-和-std-async区别：" class="headerlink" title="std::thread 和 std::async区别："></a><code>std::thread</code> 和 <code>std::async</code>区别：</h4><p><code>std::thread</code> 和 <code>std::async</code> 是 C++11 中用于并发编程的两种不同工具，它们在使用方式和适用场景上有一些重要区别。下面详细比较这两者的区别：</p>
+<h3 id="std-thread"><a href="#std-thread" class="headerlink" title="std::thread"></a><code>std::thread</code></h3><ul>
+<li><p><strong>用法</strong>: 用于直接创建和管理线程。</p>
+</li>
+<li><p><strong>创建线程</strong>: 通过构造 <code>std::thread</code> 对象并传递一个可调用对象（如函数、函数对象或 Lambda 表达式）来创建线程。</p>
+</li>
+<li><p><strong>控制线程</strong>: 需要手动管理线程的生命周期，包括启动、同步（例如使用 <code>join()</code>）和终止。</p>
+</li>
+<li><p><strong>线程间通信</strong>: 通常需要使用其他同步机制（如互斥量、条件变量）来处理线程间的通信和数据共享。</p>
+</li>
+<li><p><strong>示例</strong>:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_message</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Hello from thread!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(print_message)</span></span>; <span class="comment">// 创建并启动线程</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程完成</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="std-async"><a href="#std-async" class="headerlink" title="std::async"></a><code>std::async</code></h3><ul>
+<li><p><strong>用法</strong>: 用于启动异步任务，自动管理线程的生命周期。</p>
+</li>
+<li><p><strong>启动任务</strong>: 通过调用 <code>std::async</code> 来异步执行一个任务。可以指定任务的启动策略（如 <code>std::launch::async</code> 或 <code>std::launch::deferred</code>）。</p>
+</li>
+<li><p><strong>结果管理</strong>: <code>std::async</code> 返回一个 <code>std::future</code> 对象，可以用来获取异步计算的结果或处理任务完成的状态。</p>
+</li>
+<li><p><strong>线程间通信</strong>: <code>std::future</code> 提供了一种简单的方式来等待任务结果，并进行线程间的同步，避免了手动管理线程。</p>
+</li>
+<li><p><strong>示例</strong>:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute_value</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute_value); <span class="comment">// 异步计算</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 获取结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h3><ol>
+<li><p><strong>线程管理</strong></p>
+<ul>
+<li><strong><code>std::thread</code></strong>: 需要手动管理线程的创建和同步（例如使用 <code>join()</code> 确保线程完成）。你直接控制线程的生命周期和行为。</li>
+<li><strong><code>std::async</code></strong>: 由系统自动管理线程的生命周期。你只需关注任务的提交和结果获取。任务的执行和线程的管理是透明的，减少了直接线程管理的复杂性。</li>
+</ul>
+</li>
+<li><p><strong>结果获取</strong></p>
+<ul>
+<li><strong><code>std::thread</code></strong>: 需要通过共享变量、互斥量等机制来进行线程间的数据传递和结果获取，通常需要更多的代码和同步机制。</li>
+<li><strong><code>std::async</code></strong>: 提供了 <code>std::future</code> 对象，通过 <code>get()</code> 方法可以方便地获取计算结果，减少了线程间同步的复杂性。</li>
+</ul>
+</li>
+<li><p><strong>启动策略</strong></p>
+<ul>
+<li><strong><code>std::thread</code></strong>: 线程一经创建便立即执行。</li>
+<li><strong><code>std::async</code></strong>: 允许指定启动策略。可以选择立即在后台线程中执行（<code>std::launch::async</code>），或推迟到调用 <code>get()</code> 时才执行（<code>std::launch::deferred</code>）。</li>
+</ul>
+</li>
+<li><p><strong>适用场景</strong></p>
+<ul>
+<li><strong><code>std::thread</code></strong>: 适用于需要手动控制线程行为、需要直接与线程交互的场景。适合那些线程管理逻辑复杂的应用。</li>
+<li><strong><code>std::async</code></strong>: 适用于需要简化异步任务管理和结果获取的场景。特别适合那些希望以简单方式执行并获取结果的任务。</li>
+</ul>
+</li>
+</ol>
+<h3 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong><code>std::thread</code></strong> 提供了对线程创建和管理的直接控制，适用于需要复杂线程操作的情况。</li>
+<li><strong><code>std::async</code></strong> 提供了一个更高级的接口来简化异步任务的执行和结果获取，适合需要异步计算但不希望直接管理线程的场景。</li>
+</ul>
+<h2 id="5-std-atomic"><a href="#5-std-atomic" class="headerlink" title="5. std::atomic"></a>5. <code>std::atomic</code></h2><p><code>std::atomic</code> 提供原子操作，用于处理共享数据时避免数据竞争。适用于基本数据类型，如 <code>int</code>、<code>bool</code> 等。</p>
+<h3 id="使用-std-atomic"><a href="#使用-std-atomic" class="headerlink" title="使用 std::atomic"></a>使用 <code>std::atomic</code></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">counter</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        ++counter; <span class="comment">// 原子操作，避免数据竞争</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Counter: &quot;</span> &lt;&lt; counter &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="原子操作的常用方法"><a href="#原子操作的常用方法" class="headerlink" title="原子操作的常用方法"></a>原子操作的常用方法</h3><ul>
+<li><strong><code>store()</code></strong>：设置值。</li>
+<li><strong><code>load()</code></strong>：获取值。</li>
+<li><strong><code>fetch_add()</code></strong>、<strong><code>fetch_sub()</code></strong>：原子性加法和减法。</li>
+<li><strong><code>compare_exchange_weak()</code></strong>、<strong><code>compare_exchange_strong()</code></strong>：原子比较和交换操作。</li>
+</ul>
+<h2 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h2><p>C++11 的线程库引入了多个功能强大的组件来支持多线程编程：</p>
+<ul>
+<li><strong><code>std::thread</code></strong>：创建和管理线程。</li>
+<li><strong><code>std::this_thread</code></strong>：提供与当前线程相关的功能，如休眠和获取线程 ID。</li>
+<li><strong><code>std::future</code> 和 <code>std::promise</code></strong>：用于异步操作的结果传递和同步。</li>
+<li><strong><code>std::async</code></strong>：启动异步任务并返回 <code>std::future</code> 对象。</li>
+<li><strong><code>std::atomic</code></strong>：提供原子操作，处理多线程中的基本数据类型。</li>
+</ul>
+<p>这些工具和类使得 C++11 在处理并发编程时更加强大和灵活。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">💰</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 Yelog
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="Toggle full screen shortcut key s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>Help us with donation</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">alipay</label></span><span><label><input type="radio" name="pay" value="weixin">weixin</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+    #post .pjax article :not(pre) > code {
+        color: #24292e;
+        font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+        background-color: rgba(27,31,35,.05);
+        border-radius: 3px;
+        font-size: 85%;
+        margin: 0;
+        padding: .2em .4em;
+    }
+    
+</style>
+
+
+
+
+
+
+
+</html>
